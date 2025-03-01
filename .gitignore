@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#Others
+!/.env
+!/postgres-data/
+!/.idea/
+!/.prettierrc
+postgres-data/
+.idea
+.prettierrc
+.env
+.next!/postgres-data/
