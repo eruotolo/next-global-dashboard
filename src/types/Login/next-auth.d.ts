@@ -1,5 +1,4 @@
-import NextAuth, { DefaultSession } from 'next-auth';
-import { CustomUser } from './login/CustomUser'; // Importa tu tipo CustomUser
+import type { CustomUser } from './login/CustomUser'; // Importa tu tipo CustomUser
 
 declare module 'next-auth' {
     /**

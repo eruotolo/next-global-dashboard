@@ -1,0 +1,145 @@
+'use client';
+
+import Form from 'next/form';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { updateUser } from '@/actions/users';
+import type { EditModalProps, UserFormPassData } from '@/types/Users/UsersInterface';
+import { useFormStatus } from 'react-dom';
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
+
+function SubmitButton({
+    isValid,
+    password,
+    confirmPassword,
+}: {
+    isValid: boolean;
+    password: string;
+    confirmPassword: string;
+}) {
+    const { pending } = useFormStatus();
+    return (
+        <button
+            type="submit"
+            disabled={pending || !isValid || password !== confirmPassword}
+            className="custom-button"
+        >
+            {pending ? 'Actualizando...' : 'Actualizar'}
+        </button>
+    );
+}
+
+export default function ChangeUserPassModal({ id, refresh, open, onClose }: EditModalProps) {
+    const [error, setError] = useState('');
+    const {
+        register,
+        watch,
+        reset,
+        formState: { errors, isValid },
+    } = useForm<UserFormPassData>({
+        mode: 'onChange',
+    });
+
+    const password = watch('password');
+    const confirmPassword = watch('confirmPassword');
+
+    const onSubmit = async (formData: FormData) => {
+        try {
+            const result = await updateUser(id.toString(), formData);
+            if (result.error) {
+                setError(result.error);
+                toast.error('Change Password Failed', {
+                    description: result.error,
+                });
+                return;
+            }
+            refresh();
+            reset();
+            setError('');
+            onClose(false);
+            toast.success('Change Password Successful', {
+                description: 'El password se ha cambiado correctamente.',
+            });
+        } catch (err) {
+            console.error('Error changing password:', err);
+            setError('Error al cambiar la contraseña. Inténtalo de nuevo.');
+            toast.error('Change Password Failed', {
+                description: 'Error al intentar cambiar el password',
+            });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Cambiar Contraseña</DialogTitle>
+                    <DialogDescription>
+                        Introduce una nueva contraseña para el usuario. Asegúrate de que cumpla con
+                        los requisitos de seguridad antes de guardar los cambios.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form action={onSubmit}>
+                    <div className="grid mb-[15px]">
+                        <div className="mb-[15px]">
+                            <Label className="my-[10px]">Ingrese La Nueva Contraseña</Label>
+                            <Input
+                                id="password"
+                                type="password"
+                                placeholder="Contraseña"
+                                {...register('password', {
+                                    required: 'La contraseña es obligatoria',
+                                    minLength: {
+                                        value: 6,
+                                        message: 'Mínimo 6 caracteres',
+                                    },
+                                })}
+                            />
+                            {errors.password && (
+                                <p className="custome-form-error">{errors.password.message}</p>
+                            )}
+                        </div>
+                        <div className="mb-[15px]">
+                            <Label className="my-[10px]">Confirmar La Nueva Contraseña</Label>
+                            <Input
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="Ingresar nuevamente la contraseña"
+                                {...register('confirmPassword', {
+                                    required: 'Contenido Requerido',
+                                    validate: (value) =>
+                                        value === password || 'Las contraseñas no coinciden',
+                                })}
+                            />
+                            {errors.confirmPassword && (
+                                <p className="custome-form-error">
+                                    {errors.confirmPassword.message}
+                                </p>
+                            )}
+                        </div>
+                        {error && <p className="custome-form-error">{error}</p>}
+                    </div>
+                    <DialogFooter>
+                        <SubmitButton
+                            isValid={isValid}
+                            password={password}
+                            confirmPassword={confirmPassword}
+                        />
+                    </DialogFooter>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+}

@@ -5,7 +5,6 @@ import {
     LifeBuoy,
     Map,
     PieChart,
-    Send,
     Settings2,
     SquareTerminal,
 } from 'lucide-react';
@@ -119,9 +118,23 @@ export const navData = {
 
     navSetting: [
         {
-            title: 'Configuración',
+            title: 'Settings',
             url: '#',
             icon: Settings2,
+            items: [
+                {
+                    title: 'Usuarios',
+                    url: '/dashboard/users',
+                },
+                /*{
+                    title: 'Billing',
+                    url: '#',
+                },
+                {
+                    title: 'Limits',
+                    url: '#',
+                },*/
+            ],
         },
         {
             title: 'Ayuda',

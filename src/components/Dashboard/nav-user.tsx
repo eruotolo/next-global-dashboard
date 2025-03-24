@@ -1,13 +1,13 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 import useAuthStore from '@/store/authStore';
 
-import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react';
 
 import {
     DropdownMenu,
@@ -28,16 +28,14 @@ import {
 
 export default function NavUser() {
     const { isMobile } = useSidebar();
-    const pathname = usePathname();
+    const _pathname = usePathname();
     const router = useRouter();
     const session = useAuthStore((state) => state.session);
 
-    const avatar: string | undefined = session && session.user ? session.user.image : '';
+    const avatar: string | undefined = session?.user ? session.user.image : '';
 
     const handleSignOut = async () => {
-        console.log('Cerrando sesión...');
         await signOut({ redirect: false });
-        console.log('Sesión cerrada');
         router.push('/login');
     };
 
@@ -50,28 +48,25 @@ export default function NavUser() {
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            <Avatar className="h-8 w-8 rounded-lg">
+                            <Avatar className="w-8 h-8 rounded-lg">
                                 <AvatarImage
                                     src={avatar}
                                     alt={
-                                        session && session.user
-                                            ? session.user.name + ' ' + session.user.lastName
+                                        session?.user
+                                            ? `${session.user.name} ${session.user.lastName}`
                                             : 'Cargando...'
                                     }
                                 />
                                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
-                            <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">
-                                    {session && session.user
-                                        ? session.user.name + ' ' + session.user.lastName
+                            <div className="grid flex-1 text-sm leading-tight text-left">
+                                <span className="font-semibold truncate">
+                                    {session?.user
+                                        ? `${session.user.name} ${session.user.lastName}`
                                         : 'Cargando...'}
                                 </span>
-                                <span className="truncate text-xs">
-                                    {session &&
-                                    session.user &&
-                                    session.user.roles &&
-                                    session.user.roles.length > 0
+                                <span className="text-xs truncate">
+                                    {session?.user?.roles && session.user.roles.length > 0
                                         ? session.user.roles.join(', ')
                                         : 'Cargando...'}
                                 </span>
@@ -80,34 +75,32 @@ export default function NavUser() {
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                        className="rounded-lg w-[--radix-dropdown-menu-trigger-width] min-w-56"
                         side={isMobile ? 'bottom' : 'right'}
                         align="end"
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className="p-0 font-normal">
-                            <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                <Avatar className="h-8 w-8 rounded-lg">
+                            <div className="flex gap-2 items-center py-1.5 px-1 text-sm text-left">
+                                <Avatar className="w-8 h-8 rounded-lg">
                                     <AvatarImage
                                         src={avatar}
                                         alt={
-                                            session && session.user
-                                                ? session.user.name + ' ' + session.user.lastName
+                                            session?.user
+                                                ? `${session.user.name} ${session.user.lastName}`
                                                 : 'Cargando...'
                                         }
                                     />
                                     <AvatarFallback className="rounded-lg">ER</AvatarFallback>
                                 </Avatar>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">
-                                        {session && session.user
-                                            ? session.user.name + ' ' + session.user.lastName
+                                <div className="grid flex-1 text-sm leading-tight text-left">
+                                    <span className="font-semibold truncate">
+                                        {session?.user
+                                            ? `${session.user.name} ${session.user.lastName}`
                                             : 'Cargando...'}
                                     </span>
-                                    <span className="truncate text-xs">
-                                        {session && session.user
-                                            ? session.user.email
-                                            : 'Cargando...'}
+                                    <span className="text-xs truncate">
+                                        {session?.user ? session.user.email : 'Cargando...'}
                                     </span>
                                 </div>
                             </div>

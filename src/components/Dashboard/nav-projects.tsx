@@ -19,7 +19,7 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 
-import { ProjectsNav } from '@/types/Sidebar/ProjectsNav';
+import type { ProjectsNav } from '@/types/Sidebar/ProjectsNav';
 
 export default function NavProjects({ projects }: { projects: ProjectsNav[] }) {
     const { isMobile } = useSidebar();

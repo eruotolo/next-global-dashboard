@@ -6,10 +6,10 @@ const logo: string = '/logo-sm-wh.svg';
 
 export default function LoginPage() {
     return (
-        <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-            <div className="flex w-full max-w-sm flex-col gap-6">
-                <Link href="#" className="flex items-center gap-2 self-center font-medium">
-                    <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+        <div className="flex flex-col gap-6 justify-center items-center p-6 md:p-10 bg-muted min-h-svh">
+            <div className="flex flex-col gap-6 w-full max-w-sm">
+                <Link href="#" className="flex gap-2 items-center self-center font-medium">
+                    <div className="flex justify-center items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground aspect-square size-8">
                         <Image
                             src={logo}
                             alt="Logo"
@@ -18,8 +18,8 @@ export default function LoginPage() {
                             className="h-[23px] w-[24px]"
                         />
                     </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate text-[16px] font-semibold">Chubby</span>
+                    <div className="grid flex-1 text-sm leading-tight text-left">
+                        <span className="font-semibold truncate text-[16px]">Chubby</span>
                         <span className="truncate text-[11px]">Dashboard</span>
                     </div>
                 </Link>

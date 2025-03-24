@@ -1,21 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
-import useAuthStore from '@/store/authStore';
 import SessionMonitor from '@/components/SessionMonitor/SessionMonitor';
+import useAuthStore from '@/store/authStore';
+import { useEffect } from 'react';
 
 import AppSidebar from '@/components/Dashboard/app-sidebar';
-
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+
+import { DynamicBreadcrumb } from '@/components/DynamicBreadcrumb/DynamicBreadcrumb';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const fetchSession = useAuthStore((state) => state.fetchSession);
@@ -30,26 +23,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
-                    <header className="flex h-16 shrink-0 items-center gap-2">
-                        <div className="flex items-center gap-2 px-4">
+                    <header className="flex gap-2 items-center h-16 shrink-0">
+                        <div className="flex gap-2 items-center px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator orientation="vertical" className="mr-2 h-4" />
-                            <Breadcrumb>
-                                <BreadcrumbList>
-                                    <BreadcrumbItem className="hidden md:block">
-                                        <BreadcrumbLink href="#">
-                                            Building Your Application
-                                        </BreadcrumbLink>
-                                    </BreadcrumbItem>
-                                    <BreadcrumbSeparator className="hidden md:block" />
-                                    <BreadcrumbItem>
-                                        <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                    </BreadcrumbItem>
-                                </BreadcrumbList>
-                            </Breadcrumb>
+                            <DynamicBreadcrumb />
                         </div>
                     </header>
-                    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+                    <div className="flex flex-col flex-1 gap-4 p-4 pt-0">{children}</div>
                 </SidebarInset>
             </SidebarProvider>
         </>

@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <html lang="es" className={`${inter.className} antialiased`}>
             <body>
                 <main>{children}</main>
-                <Toaster />
+                <Toaster richColors />
             </body>
         </html>
     );

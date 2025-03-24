@@ -16,12 +16,14 @@ export function handlePrismaError(error: any, operation: string) {
                 { error: 'Database constraint violation', details: error.meta },
                 { status: 409 },
             );
-        } else if (error.code === 'P2025') {
+        }
+        if (error.code === 'P2025') {
             return NextResponse.json(
                 { error: 'Record not found', details: error.meta },
                 { status: 404 },
             );
-        } else if (error.code.startsWith('P1')) {
+        }
+        if (error.code.startsWith('P1')) {
             // P1xxx errors are query engine errors
             return NextResponse.json(
                 { error: 'Database query error', code: error.code },

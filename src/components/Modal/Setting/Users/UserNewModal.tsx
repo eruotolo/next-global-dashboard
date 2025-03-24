@@ -1,0 +1,264 @@
+'use client';
+
+import Form from 'next/form';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { createUser } from '@/actions/users';
+import type { UpdateData, UserFormData } from '@/types/Users/UsersInterface';
+
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { FilePenLine, SquarePlus } from 'lucide-react';
+import { toast } from 'sonner';
+
+export default function UserNewModal({ refresh }: UpdateData) {
+    const {
+        register,
+        formState: { errors, isValid },
+        reset,
+    } = useForm<UserFormData>({ mode: 'onChange' });
+    const [error, setError] = useState('');
+    const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
+
+    // Manejar cambio de imagen y vista previa
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        const maxSizeInBytes = 1000000; // 1MB
+
+        if (file) {
+            if (file.size > maxSizeInBytes) {
+                setError('La imagen no puede superar 1MB.');
+                e.target.value = '';
+                setImagePreview('/shadcn.jpg');
+                return;
+            }
+            setError('');
+            const previewUrl = URL.createObjectURL(file);
+            setImagePreview(previewUrl);
+        }
+    };
+
+    // Enviar formulario con Server Action
+    const onSubmit = async (formData: FormData) => {
+        try {
+            const response = await createUser(formData);
+
+            if (response.error) {
+                setError(response.error);
+                return;
+            }
+
+            // Éxito: cerrar modal, refrescar tabla y resetear formulario
+            refresh();
+            reset();
+            toast.success('Nuevo Usuario Successful', {
+                description: 'El usuario se ha creado correctamente.',
+            });
+            setImagePreview('/shadcn.jpg');
+            setError('');
+        } catch (err) {
+            reset();
+            toast.error('Nuevo Usuario Failed', {
+                description: 'Error al intentar crear el usuario',
+            });
+            setImagePreview('/shadcn.jpg');
+            setError('Error al crear el usuario. Inténtalo de nuevo.');
+            console.error(err);
+        }
+    };
+
+    return (
+        <Dialog>
+            <DialogTrigger className="botones">
+                <SquarePlus className="mr-2 w-4 h-4" />
+                Nuevo
+            </DialogTrigger>
+            <DialogContent className="overflow-hidden sm:max-w-[800px]">
+                <DialogHeader>
+                    <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+                    <DialogDescription>
+                        Introduce los datos del nuevo usuario, como el nombre y correo electrónico.
+                        Asegúrate de que toda la información esté correcta antes de proceder a crear
+                        la cuenta.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form action={onSubmit}>
+                    <div className="grid grid-cols-3">
+                        <div className="col-span-2">
+                            <div className="flex mb-[15px]">
+                                <div className="flex flex-col w-full mr-[10px]">
+                                    <Input
+                                        id="name"
+                                        type="text"
+                                        placeholder="Nombre"
+                                        className="w-full"
+                                        autoComplete="off"
+                                        {...register('name', {
+                                            required: 'El nombre es obligatorio',
+                                        })}
+                                    />
+                                    {errors.name && (
+                                        <p className="custome-form-error">{errors.name.message}</p>
+                                    )}
+                                </div>
+                                <div className="flex flex-col w-full">
+                                    <Input
+                                        id="lastName"
+                                        type="text"
+                                        placeholder="Apellido"
+                                        autoComplete="off"
+                                        {...register('lastName', {
+                                            required: 'El apellido es obligatorio',
+                                        })}
+                                    />
+                                    {errors.lastName && (
+                                        <p className="custome-form-error">
+                                            {errors.lastName.message}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="mb-[15px]">
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Email"
+                                    autoComplete="off"
+                                    {...register('email', {
+                                        required: 'El email es obligatorio',
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: 'Email inválido',
+                                        },
+                                    })}
+                                />
+                                {errors.email && (
+                                    <p className="custome-form-error">{errors.email.message}</p>
+                                )}
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 mb-[15px]">
+                                <div className="col-span-2 w-full">
+                                    <Input
+                                        id="phone"
+                                        type="tel"
+                                        placeholder="Teléfono"
+                                        autoComplete="off"
+                                        {...register('phone', {
+                                            required: 'El teléfono es obligatorio',
+                                        })}
+                                    />
+                                    {errors.phone && (
+                                        <p className="custome-form-error">{errors.phone.message}</p>
+                                    )}
+                                </div>
+                                <div className="col-span-1">
+                                    <Input
+                                        id="birthdate"
+                                        type="date"
+                                        autoComplete="off"
+                                        {...register('birthdate', {
+                                            required: 'La fecha de nacimiento es obligatoria',
+                                        })}
+                                    />
+                                    {errors.birthdate && (
+                                        <p className="custome-form-error">
+                                            {errors.birthdate.message}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="mb-[15px]">
+                                <Input
+                                    id="address"
+                                    type="text"
+                                    placeholder="Dirección"
+                                    autoComplete="off"
+                                    {...register('address', {
+                                        required: 'La dirección es obligatoria',
+                                    })}
+                                />
+                                {errors.address && (
+                                    <p className="custome-form-error">{errors.address.message}</p>
+                                )}
+                            </div>
+                            <div className="mb-[15px]">
+                                <Input
+                                    id="city"
+                                    type="text"
+                                    placeholder="Ciudad"
+                                    autoComplete="off"
+                                    {...register('city', {
+                                        required: 'La ciudad es obligatoria',
+                                    })}
+                                />
+                                {errors.city && (
+                                    <p className="custome-form-error">{errors.city.message}</p>
+                                )}
+                            </div>
+                            <div className="mb-[15px]">
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Contraseña"
+                                    {...register('password', {
+                                        required: 'La contraseña es obligatoria',
+                                        minLength: {
+                                            value: 6,
+                                            message: 'Mínimo 6 caracteres',
+                                        },
+                                    })}
+                                />
+                                {errors.password && (
+                                    <p className="custome-form-error">{errors.password.message}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-span-1 pl-[20px]">
+                            <Image
+                                src={imagePreview}
+                                width={220}
+                                height={220}
+                                alt="Vista previa de la imagen"
+                                className="h-[220px] w-[220px] rounded-[50%] object-cover"
+                            />
+                            <label
+                                htmlFor="file-upload"
+                                className="flex justify-center items-center py-2 px-4 w-full font-medium text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none mt-[34px] text-[13px]"
+                            >
+                                <FilePenLine className="mr-2 w-5 h-5" />
+                                Cambiar foto de perfil
+                            </label>
+                            <Input
+                                id="file-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                {...register('image')}
+                                onChange={handleImageChange}
+                            />
+                        </div>
+                    </div>
+                    {error && <p className="text-sm text-red-500">{error}</p>}
+                    <DialogFooter className="mt-6">
+                        <DialogClose asChild>
+                            <button type="submit" className="custom-button" disabled={!isValid}>
+                                Crear
+                            </button>
+                        </DialogClose>
+                    </DialogFooter>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+}

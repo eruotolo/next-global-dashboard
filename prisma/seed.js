@@ -4,12 +4,10 @@ const { hash } = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function seed() {
-    console.log('Creando roles, usuarios y relaciones...');
-
     const SUPER_ADMIN = '1';
 
     // Crear roles si no existen
-    const superRole = await prisma.role.upsert({
+    const _superRole = await prisma.role.upsert({
         where: { id: SUPER_ADMIN },
         update: {},
         create: {
@@ -51,7 +49,6 @@ async function seed() {
             },
         });
     } else {
-        console.log(`El usuario con email ${superAdminEmail} ya existe. No se creó un duplicado.`);
     }
 
     // Desconectar Prisma
@@ -63,6 +60,4 @@ seed()
         console.error('Error al ejecutar la semilla:', error);
         process.exit(1);
     })
-    .finally(() => {
-        console.log('Semilla completada.');
-    });
+    .finally(() => {});

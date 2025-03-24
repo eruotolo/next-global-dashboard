@@ -1,0 +1,63 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.8.0/schema.json",
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUnusedImports": "error",
+                "noUnusedVariables": "warn"
+            },
+            "suspicious": {
+                "noConsole": {
+                    "level": "warn",
+                    "options": {
+                        "allow": ["warn", "error"]
+                    }
+                }
+            },
+            "style": {
+                "useConst": "error",
+                "useEnumInitializers": "off",
+                "noUselessElse": "error"
+            },
+            "a11y": {
+                "useKeyWithClickEvents": "warn"
+            }
+        },
+        "ignore": [".next/**", "node_modules/**", "public/**", "dist/**", ".vercel/**"]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100,
+        "lineEnding": "lf"
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single",
+            "semicolons": "always",
+            "trailingCommas": "all",
+            "quoteProperties": "asNeeded",
+            "arrowParentheses": "always"
+        },
+        "parser": {
+            "unsafeParameterDecoratorsEnabled": true
+        }
+    },
+    "css": {
+        "linter": {
+            "enabled": false
+        },
+        "formatter": {
+            "enabled": false
+        }
+    },
+    "files": {
+        "ignore": [".next/**", "node_modules/**", "public/**", "dist/**", ".vercel/**", "**/*.css"]
+    }
+}

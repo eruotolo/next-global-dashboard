@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import '../globals.css';
-import { inter } from '@/app/fonts';
 import AdminLayout from '@/app/(admin)/AdminLayout';
+import { inter } from '@/app/fonts';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
     title: 'Chubby Dashboard',
@@ -13,6 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <html lang="es" className={`${inter.className} antialiased`}>
             <body>
                 <AdminLayout>{children}</AdminLayout>
+                <Toaster richColors />
             </body>
         </html>
     );

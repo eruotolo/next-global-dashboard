@@ -1,8 +1,8 @@
 export default async function DashboardPage() {
     return (
-        <div className="bg-muted/50 aspect-video rounded-xl">
+        <div className="rounded-xl bg-muted/50 aspect-video">
             <div className="p-4">
-                <p className="font-inter p-4">Dashboard</p>
+                <p className="p-4 font-inter">Dashboard</p>
             </div>
         </div>
     );

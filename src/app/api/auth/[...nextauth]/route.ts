@@ -1,11 +1,11 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import AuthAdapter from '@/lib/authAdapter';
 import prisma from '@/lib/db';
 import bcrypt from 'bcrypt';
-import AuthAdapter from '@/lib/authAdapter';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 // Definimos un tipo simple para el usuario personalizado
-import { CustomUser } from '@/types/Login/CustomUser';
+import type { CustomUser } from '@/types/Login/CustomUser';
 
 // Configuración de opciones para NextAuth
 export const authOptions: NextAuthOptions = {
@@ -13,10 +13,18 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                email: { label: 'Email', type: 'text', placeholder: 'ejemplo@ejemplo.com' },
-                password: { label: 'Password', type: 'password', placeholder: '*************' },
+                email: {
+                    label: 'Email',
+                    type: 'text',
+                    placeholder: 'ejemplo@ejemplo.com',
+                },
+                password: {
+                    label: 'Password',
+                    type: 'password',
+                    placeholder: '*************',
+                },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials, _req) {
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error('Email and password are required');
                 }

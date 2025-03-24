@@ -2,20 +2,20 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { toast } from 'sonner';
-import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import type { LoginFormInputs } from '@/types/Login/LoginFormInputs';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import type { LoginFormInputs } from '@/types/Login/LoginFormInputs';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
     const [isPasswordHidden, setPasswordHidden] = useState(true);
@@ -54,7 +54,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     description: 'Has iniciado sesión correctamente.',
                 });
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Login Failed', {
                 description: 'Ha ocurrido un error inesperado. Por favor, intenta de nuevo.',
             });
@@ -67,10 +67,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className="font-inter text-[25px] leading-[25px] font-normal">
+                    <CardTitle className="font-normal font-inter text-[25px] leading-[25px]">
                         Bienvenido de nuevo
                     </CardTitle>
-                    <CardDescription className="font-inter text-[14px] leading-[14px] font-normal">
+                    <CardDescription className="font-normal font-inter text-[14px] leading-[14px]">
                         Inicia sesión para continuar
                     </CardDescription>
                 </CardHeader>
@@ -92,7 +92,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     })}
                                 />
                                 {errors.email && (
-                                    <p className="text-destructive text-sm">
+                                    <p className="text-sm text-destructive">
                                         {errors.email.message}
                                     </p>
                                 )}
@@ -102,7 +102,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     <Label htmlFor="password">Password</Label>
                                     <Link
                                         href="/recovery"
-                                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                                        className="ml-auto text-sm hover:underline underline-offset-4"
                                     >
                                         ¿Olvidaste tu contraseña?
                                     </Link>
@@ -117,18 +117,18 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     />
                                     <button
                                         type="button"
-                                        className="absolute inset-y-0 right-3 flex items-center"
+                                        className="flex absolute inset-y-0 right-3 items-center"
                                         onClick={() => setPasswordHidden(!isPasswordHidden)}
                                     >
                                         {isPasswordHidden ? (
-                                            <Eye className="h-4 w-4 cursor-pointer text-gray-400" />
+                                            <Eye className="w-4 h-4 text-gray-400 cursor-pointer" />
                                         ) : (
-                                            <EyeOff className="h-4 w-4 cursor-pointer text-gray-400" />
+                                            <EyeOff className="w-4 h-4 text-gray-400 cursor-pointer" />
                                         )}
                                     </button>
                                 </div>
                                 {errors.password && (
-                                    <p className="text-destructive text-sm">
+                                    <p className="text-sm text-destructive">
                                         {errors.password.message}
                                     </p>
                                 )}

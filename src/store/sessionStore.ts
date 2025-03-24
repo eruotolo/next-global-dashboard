@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { signOut } from 'next-auth/react';
+import { create } from 'zustand';
 
 const INACTIVITY_TIME = 20 * 60 * 1000; // 20 minutos
 
