@@ -23,15 +23,3 @@ export interface UserRoleQuery {
         state: number;
     } | null;
 }
-
-export interface AssignRoleUserModalProps {
-    id: string; // ID del usuario
-    refresh: () => Promise<void>; // Función para refrescar la tabla o estado padre
-    open: boolean;
-    onClose: () => void;
-}
-
-export interface RoleFormData {
-    name?: string;
-    state?: number;
-}

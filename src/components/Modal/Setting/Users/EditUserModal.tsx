@@ -6,7 +6,9 @@ import Image from 'next/image';
 import { FilePenLine } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
-import type { EditModalProps, UserQueryWithDetails } from '@/types/Users/UsersInterface';
+import type { UserQueryWithDetails } from '@/types/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
+
 import { getUserById, updateUser } from '@/actions/users';
 
 import {
@@ -29,7 +31,7 @@ function SubmitButton() {
     );
 }
 
-export default function EditUserModal({ id, refresh, open, onClose }: EditModalProps) {
+export default function EditUserModal({ id, refresh, open, onClose }: EditModalPropsAlt) {
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
@@ -72,7 +74,7 @@ export default function EditUserModal({ id, refresh, open, onClose }: EditModalP
             if (result?.error) {
                 setError(result.error);
             } else {
-                refresh();
+                refresh?.();
                 onClose(false);
                 toast.success('Editado Successful', {
                     description: 'El usuario se ha editado correctamente.',

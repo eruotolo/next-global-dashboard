@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { createUser } from '@/actions/users';
-import type { UpdateData, UserFormData } from '@/types/Users/UsersInterface';
+import type { UserFormData } from '@/types/Users/UsersInterface';
+import type { UpdateData } from '@/types/Generic/InterfaceGeneric';
 
 import {
     Dialog,

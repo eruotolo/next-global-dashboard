@@ -14,13 +14,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { UserInterface } from '@/types/Users/UsersInterface';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, Trash2, Key, UserPen, Eye, UserCog } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { deleteUser } from '@/actions/users';
 
 const DynamicChangeUserPassModal = dynamic(
-    () => import('@/components/Modal/Setting/Users/ChangeUserPassModal'),
+    () => import('@/components/Modal/Setting/Users/ChangeUserPasswordModal'),
     { ssr: false },
 );
 
@@ -101,18 +101,23 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenPreviewUser(true)}>
+                        <Eye />
                         Ver perfil
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenEditUser(true)}>
+                        <UserPen />
                         Editar usuario
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenChangePass(true)}>
+                        <Key />
                         Cambiar Password
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenAssignRoles(true)}>
+                        <UserCog />
                         Asignar Roles
                     </DropdownMenuItem>
                     <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(userId)}>
+                        <Trash2 />
                         Eliminar usuario
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -124,6 +129,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                     refresh={refreshTable}
                     open={openChangePass}
                     onClose={handleChangePassCloseModal}
+                    successMessage="El password se ha cambiado correctamente."
                 />
             )}
             {openAssignRoles && (

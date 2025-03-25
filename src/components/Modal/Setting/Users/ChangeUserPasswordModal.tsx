@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { updateUser } from '@/actions/users';
-import type { EditModalProps, UserFormPassData } from '@/types/Users/UsersInterface';
+import type { UserFormPassData } from '@/types/Users/UsersInterface';
+import type { ChangePassModalProps } from '@/types/Users/UsersInterface';
 import { useFormStatus } from 'react-dom';
 
 import {
@@ -41,7 +42,18 @@ function SubmitButton({
     );
 }
 
-export default function ChangeUserPassModal({ id, refresh, open, onClose }: EditModalProps) {
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export default function ChangePasswordModal({
+    id,
+    refresh,
+    open,
+    onClose,
+    signOut,
+    successMessage,
+    shouldSignOut = false,
+    signOutDelay = 5000,
+}: ChangePassModalProps) {
     const [error, setError] = useState('');
     const {
         register,
@@ -65,13 +77,19 @@ export default function ChangeUserPassModal({ id, refresh, open, onClose }: Edit
                 });
                 return;
             }
-            refresh();
+
+            refresh?.();
             reset();
             setError('');
             onClose(false);
             toast.success('Change Password Successful', {
-                description: 'El password se ha cambiado correctamente.',
+                description: successMessage,
             });
+
+            if (shouldSignOut && signOut) {
+                await delay(signOutDelay); // espera configurable
+                await signOut();
+            }
         } catch (err) {
             console.error('Error changing password:', err);
             setError('Error al cambiar la contraseña. Inténtalo de nuevo.');
@@ -101,16 +119,14 @@ export default function ChangeUserPassModal({ id, refresh, open, onClose }: Edit
                                 placeholder="Contraseña"
                                 {...register('password', {
                                     required: 'La contraseña es obligatoria',
-                                    minLength: {
-                                        value: 6,
-                                        message: 'Mínimo 6 caracteres',
-                                    },
+                                    minLength: { value: 6, message: 'Mínimo 6 caracteres' },
                                 })}
                             />
                             {errors.password && (
                                 <p className="custome-form-error">{errors.password.message}</p>
                             )}
                         </div>
+
                         <div className="mb-[15px]">
                             <Label className="my-[10px]">Confirmar La Nueva Contraseña</Label>
                             <Input
@@ -129,6 +145,7 @@ export default function ChangeUserPassModal({ id, refresh, open, onClose }: Edit
                                 </p>
                             )}
                         </div>
+
                         {error && <p className="custome-form-error">{error}</p>}
                     </div>
                     <DialogFooter>

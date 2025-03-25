@@ -2,11 +2,9 @@
 
 import { getAllRoles } from '@/actions/roles';
 import { getUserRoles, updateUserRoles } from '@/actions/userRoles';
-import type {
-    AssignRoleUserModalProps,
-    RoleQuery,
-    UserRoleQuery,
-} from '@/types/Roles/RolesInterface';
+import type { RoleQuery, UserRoleQuery } from '@/types/Roles/RolesInterface';
+import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
+
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -32,12 +30,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
     );
 }
 
-export default function AssignRoleUserModal({
-    id,
-    open,
-    onClose,
-    refresh,
-}: AssignRoleUserModalProps) {
+export default function AssignRoleUserModal({ id, open, onClose, refresh }: EditModalPropsAlt) {
     const [roleData, setRoleData] = useState<RoleQuery[]>([]);
     const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -93,8 +86,8 @@ export default function AssignRoleUserModal({
             const roles = formData.getAll('roles') as string[];
             const result = await updateUserRoles(id, roles);
             if (result.success) {
-                await refresh();
-                onClose();
+                await refresh?.();
+                onClose(false);
                 toast.success('Asignado Successful', {
                     description: 'Nuevo Rol Asignado Correctamente.',
                 });

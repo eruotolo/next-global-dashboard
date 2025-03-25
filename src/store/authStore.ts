@@ -12,6 +12,7 @@ interface Session {
         city?: string;
         image?: string;
         state?: number | null;
+        birthdate?: string | Date;
         roles: string[];
     };
     expires?: string;

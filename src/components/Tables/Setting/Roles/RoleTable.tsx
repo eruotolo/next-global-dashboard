@@ -7,7 +7,7 @@ import { getAllRoles } from '@/actions/roles';
 import { RolesColumns } from '@/components/Tables/Setting/Roles/RolesColumns';
 import type { RoleInterface } from '@/types/Roles/RolesInterface';
 
-import NewRoleModal from '@/components/Modal/Setting/roles/NewRoleModal';
+import NewRoleModal from '@/components/Modal/Setting/Roles/NewRoleModal';
 
 export default function RoleTable() {
     const [rolesData, setRolesData] = useState<RoleInterface[]>([]);

@@ -3,7 +3,7 @@
 import Form from 'next/form';
 import { useState } from 'react';
 import { createRole } from '@/actions/roles';
-import type { UpdateData } from '@/types/generic/InterfaceGeneric';
+import type { UpdateData } from '@/types/Generic/InterfaceGeneric';
 
 import {
     Dialog,

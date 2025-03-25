@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-import type { EditModalProps, UserQueryWithDetails } from '@/types/Users/UsersInterface';
+import type { UserQueryWithDetails } from '@/types/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
 import { getUserById } from '@/actions/users';
 
 import {
@@ -17,7 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
-export default function ViewUserModal({ id, open, onClose }: EditModalProps) {
+export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) {
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
 

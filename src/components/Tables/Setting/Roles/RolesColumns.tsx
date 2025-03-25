@@ -1,4 +1,8 @@
 'use client';
+
+import dynamic from 'next/dynamic';
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -8,27 +12,34 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { RoleInterface } from '@/types/Roles/RolesInterface';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { deleteRole } from '@/actions/roles';
 
-interface RolesColumnsProps {
-    id: string;
-    name: string;
-    state: number;
-}
+const DynamicEditRoleModal = dynamic(
+    () => import('@/components/Modal/Setting/Roles/EditRoleModal'),
+    {
+        ssr: false,
+    },
+);
 
 interface ActionCellProps {
     row: {
-        original: RolesColumnsProps;
+        original: RoleInterface;
     };
     refreshTable: () => void;
 }
 
 function ActionCell({ row, refreshTable }: ActionCellProps) {
     const roleId = row.original.id;
+    const [openEditRole, setOpenEditRole] = useState(false);
+
+    const handleEditRoleCloseModal = () => {
+        setOpenEditRole(false);
+    };
 
     const handleDelete = async (roleId: string) => {
         try {
@@ -61,18 +72,30 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Ver rol</DropdownMenuItem>
-                    <DropdownMenuItem>Editar rol</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenEditRole(true)}>
+                        <FilePenLine />
+                        Editar rol
+                    </DropdownMenuItem>
                     <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(roleId)}>
+                        <Trash2 />
                         Eliminar rol
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {openEditRole && (
+                <DynamicEditRoleModal
+                    id={roleId}
+                    refresh={refreshTable}
+                    open={openEditRole}
+                    onClose={handleEditRoleCloseModal}
+                />
+            )}
         </>
     );
 }
 
-export const RolesColumns = (refreshTable: () => void): ColumnDef<RolesColumnsProps>[] => [
+export const RolesColumns = (refreshTable: () => void): ColumnDef<RoleInterface>[] => [
     {
         accessorKey: 'name',
         header: ({ column }) => {

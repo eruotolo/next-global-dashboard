@@ -1,7 +1,3 @@
-export interface UpdateData {
-    refresh: () => void;
-}
-
 export interface UserFormData {
     name?: string;
     lastName?: string;
@@ -40,6 +36,13 @@ export interface EditModalProps {
     refresh: () => void;
     open: boolean;
     onClose: (open: boolean) => void;
+}
+
+export interface EditProfilModalProps {
+    id: string | number;
+    open: boolean;
+    onClose: (open: boolean) => void;
+    signOut?: () => Promise<void>;
 }
 
 export interface UserFormPassData {
@@ -94,4 +97,15 @@ export interface UserQueryWithDetails {
     address: string | null;
     city: string | null;
     image?: string | null;
+}
+
+export interface ChangePassModalProps {
+    id: string;
+    open: boolean;
+    onClose: (open: boolean) => void;
+    refresh?: () => void; // opcional
+    signOut?: () => Promise<void>; // opcional
+    successMessage: string;
+    shouldSignOut?: boolean; // indica explícitamente si debe cerrar sesión
+    signOutDelay?: number; // opcional: tiempo antes de cerrar sesión
 }
