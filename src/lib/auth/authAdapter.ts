@@ -1,4 +1,4 @@
-import prisma from '@/lib/db';
+import prisma from '@/lib/db/db';
 import type { User } from '@prisma/client'; // Importa los tipos generados automáticamente por Prisma
 
 const AuthAdapter = () => {

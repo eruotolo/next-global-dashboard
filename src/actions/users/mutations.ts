@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/db';
+import prisma from '@/lib/db/db';
 import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';

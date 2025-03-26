@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/db';
+import prisma from '@/lib/db/db';
 import type { UserRoleQuery } from '@/types/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 

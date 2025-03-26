@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/db';
+import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
 import type { RoleInterface } from '@/types/Roles/RolesInterface';
 

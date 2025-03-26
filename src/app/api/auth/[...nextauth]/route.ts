@@ -1,14 +1,15 @@
-import AuthAdapter from '@/lib/authAdapter';
-import prisma from '@/lib/db';
+import AuthAdapter from '@/lib/auth/authAdapter';
+import prisma from '@/lib/db/db';
 import bcrypt from 'bcrypt';
-import NextAuth, { type NextAuthOptions } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import NextAuth from 'next-auth';
 
 // Definimos un tipo simple para el usuario personalizado
 import type { CustomUser } from '@/types/Login/CustomUser';
 
 // Configuración de opciones para NextAuth
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
