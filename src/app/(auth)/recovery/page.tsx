@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { RecoveryForm } from '@/components/Login/recovery-form';
+import { ForgotPassword } from '@/components/Login/forgotPassword';
 const logo: string = '/logo-sm-wh.svg';
 
 export default function RecoveryPage() {
@@ -23,7 +23,7 @@ export default function RecoveryPage() {
                         <span className="truncate text-[11px]">Dashboard</span>
                     </div>
                 </Link>
-                <RecoveryForm />
+                <ForgotPassword />
             </div>
         </div>
     );

@@ -2,7 +2,11 @@
 
 import prisma from '@/lib/db/db';
 import bcrypt from 'bcrypt';
-import { sendMail } from '@/lib/mail/mail';
+import Brevo from '@getbrevo/brevo';
+
+// Configuración de Brevo
+const apiInstance = new Brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY || '');
 
 function generateRandomPassword(length = 12) {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
@@ -14,30 +18,15 @@ function generateRandomPassword(length = 12) {
     return password;
 }
 
-export async function recoveryAccount(
-    prevState: { success: boolean; message: string | null },
-    formData: FormData,
-): Promise<{ success: boolean; message: string | null }> {
+export async function recoverPassword(email: string) {
     try {
-        const email = formData.get('email') as string;
-
-        if (!email) {
-            return {
-                success: false,
-                message: 'El correo electrónico es requerido',
-            };
-        }
-
         // Verificar si el usuario existe
         const user = await prisma.user.findUnique({
             where: { email },
         });
 
         if (!user) {
-            return {
-                success: false,
-                message: 'No se encontró una cuenta con este correo',
-            };
+            return { message: 'Error: No se encontró un usuario con ese email' };
         }
 
         // Generar nueva contraseña
@@ -47,33 +36,27 @@ export async function recoveryAccount(
         // Actualizar la contraseña en la base de datos
         await prisma.user.update({
             where: { email },
-            data: {
-                password: hashedPassword,
-                createdAt: new Date(),
-            },
+            data: { password: hashedPassword },
         });
 
-        // Enviar email con la nueva contraseña
-        await sendMail({
-            to: email,
-            subject: 'Recuperación de contraseña',
-            html: `
-        <h1>Recuperación de cuenta</h1>
-        <p>Su nueva contraseña es: <strong>${newPassword}</strong></p>
-        <p>Por favor, cambie esta contraseña después de iniciar sesión.</p>
-      `,
-        });
+        // Configurar el email
+        const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        sendSmtpEmail.subject = 'Recuperación de Contraseña';
+        sendSmtpEmail.to = [{ email: email }];
+        sendSmtpEmail.sender = { name: 'Chubby Dashboard', email: 'crowadvancegx@gmail.com' };
+        sendSmtpEmail.htmlContent = `
+          <h1>Recuperación de Contraseña</h1>
+          <p>Tu nueva contraseña es: <strong>${newPassword}</strong></p>
+          <p>Por favor, cámbiala después de iniciar sesión.</p>
+        `;
 
-        return {
-            success: true,
-            message: 'Se ha enviado una nueva contraseña a su correo',
-        };
+        // Enviar el email
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        return { message: 'Se ha enviado una nueva contraseña a tu email' };
     } catch (error) {
-        console.error('Error en recuperación:', error);
-        return {
-            success: false,
-            message: 'Ocurrió un error al procesar su solicitud',
-        };
+        console.error('Error en recoverPassword:', error);
+        return { message: 'Error: No se pudo procesar la solicitud' };
     } finally {
         await prisma.$disconnect();
     }

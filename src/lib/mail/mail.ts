@@ -18,10 +18,16 @@ export async function sendMail({
         },
     });
 
-    await transporter.sendMail({
-        from: process.env.EMAIL_FROM || 'no-reply@tudominio.com',
-        to,
-        subject,
-        html,
-    });
+    try {
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_FROM || 'no-reply@tudominio.com',
+            to,
+            subject,
+            html,
+        });
+        console.log('Correo enviado:', info.messageId);
+    } catch (error) {
+        console.error('Error al enviar correo:', error);
+        throw error; // Relanza el error para que `recoveryAccount` lo capture
+    }
 }
