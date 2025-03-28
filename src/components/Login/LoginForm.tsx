@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils/utils';
-import type { LoginFormInputs } from '@/types/Login/LoginFormInputs';
+import { cn } from '@/lib/utils';
+import type { LoginFormInputs } from '@/tipos/Login/LoginFormInputs';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
     const [isPasswordHidden, setPasswordHidden] = useState(true);

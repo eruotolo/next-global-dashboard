@@ -138,7 +138,7 @@ export const navData = {
         },
         {
             title: 'Ayuda',
-            url: '#',
+            url: '/dashboard/tickets',
             icon: LifeBuoy,
         },
     ],

@@ -2,12 +2,11 @@
 
 import Form from 'next/form';
 import { useState, useEffect } from 'react';
-import type { EditModalProps } from '@/types/Generic/InterfaceGeneric';
-import { getRoleById, updateRole } from '@/actions/roles';
+import type { EditModalProps } from '@/tipos/Generic/InterfaceGeneric';
+import { getRoleById, updateRole } from '@/actions/Roles';
 
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -15,6 +14,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 export default function EditRoleModal({ id, refresh, open, onClose }: EditModalProps) {
@@ -87,19 +87,10 @@ export default function EditRoleModal({ id, refresh, open, onClose }: EditModalP
                             />
                             {error && <p className="custome-form-error">{error}</p>}
                         </div>
-                        <DialogFooter className="mt-6">
-                            <DialogClose asChild>
-                                <button
-                                    type="button"
-                                    className="custom-button-cancel"
-                                    onClick={() => onClose(false)}
-                                >
-                                    Cancelar
-                                </button>
-                            </DialogClose>
-                            <button type="submit" className="custom-button">
+                        <DialogFooter className="mt-6 items-end">
+                            <Button type="submit" className="custom-button">
                                 Actualizar
-                            </button>
+                            </Button>
                         </DialogFooter>
                     </Form>
                 </DialogContent>

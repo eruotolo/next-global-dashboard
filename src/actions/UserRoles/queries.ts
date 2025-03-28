@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/lib/db/db';
-import type { UserRoleQuery } from '@/types/Roles/RolesInterface';
+import prisma from '@/dbprisma/db';
+import type { UserRoleQuery } from '@/tipos/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 
 export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {

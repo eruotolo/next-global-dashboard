@@ -52,3 +52,32 @@ model UserRole {
     user      User?    @relation(fields: [userId], references: [id])
     createdAt DateTime @default(now())
 }
+
+enum TicketStatus {
+    OPEN
+    IN_PROGRESS
+    RESOLVED
+    CLOSED
+}
+
+enum TicketPriority {
+    LOW
+    MEDIUM
+    HIGH
+    URGENT
+}
+
+model Ticket {
+    id           String         @id @default(uuid())
+    code         String
+    title        String
+    description  String?
+    image        String?
+    userId       String
+    userName     String
+    userLastName String
+    status       TicketStatus   @default(OPEN)
+    priority     TicketPriority @default(LOW)
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+}

@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllRoles } from '@/actions/roles';
-import { getUserRoles, updateUserRoles } from '@/actions/userRoles';
-import type { RoleQuery, UserRoleQuery } from '@/types/Roles/RolesInterface';
-import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
+import { getAllRoles } from '@/actions/Roles';
+import { getUserRoles, updateUserRoles } from '@/actions/UserRoles';
+import type { RoleQuery, UserRoleQuery } from '@/tipos/Roles/RolesInterface';
+import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
 
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
@@ -30,7 +30,12 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
     );
 }
 
-export default function AssignRoleUserModal({ id, open, onClose, refresh }: EditModalPropsAlt) {
+export default function AssignRoleUserModal({
+    id,
+    open,
+    onClose,
+    refreshAction,
+}: EditModalPropsAlt) {
     const [roleData, setRoleData] = useState<RoleQuery[]>([]);
     const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -86,7 +91,7 @@ export default function AssignRoleUserModal({ id, open, onClose, refresh }: Edit
             const roles = formData.getAll('roles') as string[];
             const result = await updateUserRoles(id, roles);
             if (result.success) {
-                await refresh?.();
+                refreshAction?.();
                 onClose(false);
                 toast.success('Asignado Successful', {
                     description: 'Nuevo Rol Asignado Correctamente.',

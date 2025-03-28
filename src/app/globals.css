@@ -114,7 +114,7 @@
         @apply inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 ml-auto h-8 cursor-pointer
     }
     .custom-button {
-        @apply font-inter h-[36px] w-[120px] mt-[20px] rounded-[10px] border-0 bg-gray-600 text-[13px] font-normal text-white hover:bg-gray-400 hover:text-white 2xl:w-[120px] disabled:opacity-50 cursor-pointer
+        @apply font-inter h-[36px] w-[120px] mt-[20px] rounded-[10px] border-0 bg-gray-600 text-[13px] font-normal text-white hover:bg-gray-300 hover:text-white 2xl:w-[120px] disabled:opacity-50 cursor-pointer
     }
     .custome-form-error{
         @apply font-inter text-[13px] text-red-300 font-normal tracking-tight

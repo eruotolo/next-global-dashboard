@@ -6,10 +6,10 @@ import Image from 'next/image';
 import { FilePenLine } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
-import type { UserQueryWithDetails } from '@/types/Users/UsersInterface';
-import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
+import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
 
-import { getUserById, updateUser } from '@/actions/users';
+import { getUserById, updateUser } from '@/actions/Users';
 
 import {
     Dialog,
@@ -31,7 +31,7 @@ function SubmitButton() {
     );
 }
 
-export default function EditUserModal({ id, refresh, open, onClose }: EditModalPropsAlt) {
+export default function EditUserModal({ id, refreshAction, open, onClose }: EditModalPropsAlt) {
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
@@ -74,7 +74,7 @@ export default function EditUserModal({ id, refresh, open, onClose }: EditModalP
             if (result?.error) {
                 setError(result.error);
             } else {
-                refresh?.();
+                refreshAction?.();
                 onClose(false);
                 toast.success('Editado Successful', {
                     description: 'El usuario se ha editado correctamente.',
@@ -99,7 +99,6 @@ export default function EditUserModal({ id, refresh, open, onClose }: EditModalP
                                         id="name"
                                         name="name"
                                         type="text"
-                                        placeholder="Nombre"
                                         autoComplete="off"
                                         defaultValue={userData?.name || ''}
                                         required

@@ -4,7 +4,7 @@ import SessionMonitor from '@/components/SessionMonitor/SessionMonitor';
 import useAuthStore from '@/store/authStore';
 import { useEffect } from 'react';
 
-import AppSidebar from '@/components/Dashboard/app-sidebar';
+import AppSidebar from '@/components/Dashboard/AppSidebar';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 

@@ -2,8 +2,8 @@
 
 import Form from 'next/form';
 import { useState } from 'react';
-import { createRole } from '@/actions/roles';
-import type { UpdateData } from '@/types/Generic/InterfaceGeneric';
+import { createRole } from '@/actions/Roles';
+import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 
 import {
     Dialog,
@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { SquarePlus } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function NewRoleModal({ refresh }: UpdateData) {
+export default function NewRoleModal({ refreshAction }: UpdateData) {
     const [error, setError] = useState('');
     const [name, setName] = useState('');
 
@@ -44,7 +44,7 @@ export default function NewRoleModal({ refresh }: UpdateData) {
                 return;
             }
 
-            refresh();
+            refreshAction();
             reset();
             toast.success('Nuevo Role Successful', {
                 description: 'El role se ha creado correctamente.',

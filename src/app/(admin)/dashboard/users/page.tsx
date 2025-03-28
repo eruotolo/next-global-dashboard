@@ -1,13 +1,17 @@
+'use client';
+
 import RoleTable from '@/components/Tables/Setting/Roles/RoleTable';
 import UserTable from '@/components/Tables/Setting/User/UserTable';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Dashboard | Usuarios',
-    description: 'Gestión de usuarios del sistema',
-};
+import { useEffect } from 'react';
+import { useUserRoleStore } from '@/store/userroleStore';
 
 export default function UsersPage() {
+    const { refreshAll } = useUserRoleStore();
+
+    useEffect(() => {
+        refreshAll(); // carga inicial de los datos generales
+    }, [refreshAll]);
+
     return (
         <div>
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">

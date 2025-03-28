@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/lib/db/db';
-import type { RoleQuery, RolesArray } from '@/types/Roles/RolesInterface';
+import prisma from '@/dbprisma/db';
+import type { RoleQuery, RolesArray } from '@/tipos/Roles/RolesInterface';
 
 export async function getAllRoles(): Promise<RoleQuery[]> {
     try {
@@ -15,6 +15,9 @@ export async function getAllRoles(): Promise<RoleQuery[]> {
                 id: true,
                 name: true,
                 state: true,
+            },
+            orderBy: {
+                name: 'asc',
             },
         });
         return getAllRoles;

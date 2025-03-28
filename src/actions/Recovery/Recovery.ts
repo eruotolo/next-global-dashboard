@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/db/db';
+import prisma from '@/dbprisma/db';
 import bcrypt from 'bcrypt';
 import Brevo from '@getbrevo/brevo';
 

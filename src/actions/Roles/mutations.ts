@@ -1,8 +1,8 @@
 'use server';
 
-import prisma from '@/lib/db/db';
+import prisma from '@/dbprisma/db';
 import { revalidatePath } from 'next/cache';
-import type { RoleInterface } from '@/types/Roles/RolesInterface';
+import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
 
 export async function createRole(formData: FormData) {
     try {

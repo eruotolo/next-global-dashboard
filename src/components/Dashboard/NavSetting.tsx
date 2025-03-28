@@ -15,7 +15,7 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import type { ItemsNavSetting } from '@/types/Sidebar/ItemsNavSetting';
+import type { ItemsNavSetting } from '@/tipos/Sidebar/ItemsNavSetting';
 
 export default function NavSetting({
     items,

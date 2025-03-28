@@ -12,12 +12,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { RoleInterface } from '@/types/Roles/RolesInterface';
+
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteRole } from '@/actions/roles';
+import { deleteRole } from '@/actions/Roles';
+import { useUserRoleStore } from '@/store/userroleStore';
 
 const DynamicEditRoleModal = dynamic(
     () => import('@/components/Modal/Setting/Roles/EditRoleModal'),
@@ -26,16 +27,17 @@ const DynamicEditRoleModal = dynamic(
     },
 );
 
+import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
 interface ActionCellProps {
     row: {
         original: RoleInterface;
     };
-    refreshTable: () => void;
 }
 
-function ActionCell({ row, refreshTable }: ActionCellProps) {
+function ActionCell({ row }: ActionCellProps) {
     const roleId = row.original.id;
     const [openEditRole, setOpenEditRole] = useState(false);
+    const { refreshAll } = useUserRoleStore();
 
     const handleEditRoleCloseModal = () => {
         setOpenEditRole(false);
@@ -45,7 +47,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
         try {
             const success = await deleteRole(roleId);
             if (success) {
-                await refreshTable();
+                await refreshAll();
                 toast.success('Delete successful', {
                     description: 'El rol se ha eliminado.',
                 });
@@ -86,7 +88,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
             {openEditRole && (
                 <DynamicEditRoleModal
                     id={roleId}
-                    refresh={refreshTable}
+                    refresh={refreshAll}
                     open={openEditRole}
                     onClose={handleEditRoleCloseModal}
                 />
@@ -116,6 +118,6 @@ export const RolesColumns = (refreshTable: () => void): ColumnDef<RoleInterface>
     },
     {
         id: 'acciones',
-        cell: ({ row }) => <ActionCell row={row} refreshTable={refreshTable} />,
+        cell: ({ row }) => <ActionCell row={row} />,
     },
 ];

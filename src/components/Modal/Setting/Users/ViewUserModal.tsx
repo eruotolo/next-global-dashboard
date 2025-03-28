@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-import type { UserQueryWithDetails } from '@/types/Users/UsersInterface';
-import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
-import { getUserById } from '@/actions/users';
+import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
+import { getUserById } from '@/actions/Users';
 
 import {
     Dialog,

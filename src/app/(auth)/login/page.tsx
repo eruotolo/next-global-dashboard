@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { LoginForm } from '@/components/Login/login-form';
+import { LoginForm } from '@/components/Login/LoginForm';
 const logo: string = '/logo-sm-wh.svg';
 
 export default function LoginPage() {

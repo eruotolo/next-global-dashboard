@@ -34,9 +34,9 @@ const useSessionStore = create<SessionStore>((set, get) => ({
             'touchstart',
         ];
 
-        events.forEach((event) => {
+        for (const event of events) {
             document.addEventListener(event, resetTimer);
-        });
+        }
         resetTimer();
     },
 
@@ -50,9 +50,9 @@ const useSessionStore = create<SessionStore>((set, get) => ({
             'touchstart',
         ];
 
-        events.forEach((event) => {
+        for (const event of events) {
             document.removeEventListener(event, resetTimer);
-        });
+        }
 
         if (timeoutId) clearTimeout(timeoutId);
     },

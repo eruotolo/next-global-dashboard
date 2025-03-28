@@ -16,7 +16,7 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import type { ItemsNavPrincipal } from '@/types/Sidebar/ItemsNavPrincipal';
+import type { ItemsNavPrincipal } from '@/tipos/Sidebar/ItemsNavPrincipal';
 
 export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
     return (

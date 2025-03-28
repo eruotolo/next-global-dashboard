@@ -12,12 +12,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { UserInterface } from '@/types/Users/UsersInterface';
+import type { UserInterface } from '@/tipos/Users/UsersInterface';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal, Trash2, Key, UserPen, Eye, UserCog } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteUser } from '@/actions/users';
+import { deleteUser } from '@/actions/Users';
 
 const DynamicChangeUserPassModal = dynamic(
     () => import('@/components/Modal/Setting/Users/ChangeUserPasswordModal'),
@@ -135,7 +135,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
             {openAssignRoles && (
                 <DynamicAssignRoleUserModal
                     id={userId}
-                    refresh={refreshTable}
+                    refreshAction={refreshTable}
                     open={openAssignRoles}
                     onClose={handleAssignRolesCloseModal}
                 />
@@ -143,7 +143,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
             {openEditUser && (
                 <DynamicEditUserModal
                     id={userId}
-                    refresh={refreshTable}
+                    refreshAction={refreshTable}
                     open={openEditUser}
                     onClose={handleEditUserCloseModal}
                 />
@@ -151,7 +151,6 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
             {openPreviewUser && (
                 <DynamicPreviewUserModal
                     id={userId}
-                    refresh={refreshTable}
                     open={openPreviewUser}
                     onClose={handlePreviewUserCloseModal}
                 />

@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createUser } from '@/actions/users';
-import type { UserFormData } from '@/types/Users/UsersInterface';
-import type { UpdateData } from '@/types/Generic/InterfaceGeneric';
+import { createUser } from '@/actions/Users';
+import type { UserFormData } from '@/tipos/Users/UsersInterface';
+import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 
 import {
     Dialog,
@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { FilePenLine, SquarePlus } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function UserNewModal({ refresh }: UpdateData) {
+export default function UserNewModal({ refreshAction }: UpdateData) {
     const {
         register,
         formState: { errors, isValid },
@@ -61,7 +61,7 @@ export default function UserNewModal({ refresh }: UpdateData) {
             }
 
             // Éxito: cerrar modal, refrescar tabla y resetear formulario
-            refresh();
+            await refreshAction();
             reset();
             toast.success('Nuevo Usuario Successful', {
                 description: 'El usuario se ha creado correctamente.',

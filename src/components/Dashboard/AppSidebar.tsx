@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import NavMain from '@/components/Dashboard/nav-main';
-import NavProjects from '@/components/Dashboard/nav-projects';
-import NavSetting from '@/components/Dashboard/nav-setting';
-import NavUser from '@/components/Dashboard/nav-user';
+import NavMain from '@/components/Dashboard/NavMain';
+import NavProjects from '@/components/Dashboard/NavProjects';
+import NavSetting from '@/components/Dashboard/NavSetting';
+import NavUser from '@/components/Dashboard/NavUser';
 
 import {
     Sidebar,

@@ -1,10 +1,10 @@
 'use server';
 
-import prisma from '@/lib/db/db';
+import prisma from '@/dbprisma/db';
 import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
-import type { UserData } from '@/types/Users/UsersInterface';
+import type { UserData } from '@/tipos/Users/UsersInterface';
 
 export async function createUser(formData: FormData) {
     try {

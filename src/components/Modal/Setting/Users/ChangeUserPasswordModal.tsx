@@ -4,9 +4,9 @@ import Form from 'next/form';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { updateUser } from '@/actions/users';
-import type { UserFormPassData } from '@/types/Users/UsersInterface';
-import type { ChangePassModalProps } from '@/types/Users/UsersInterface';
+import { updateUser } from '@/actions/Users';
+import type { UserFormPassData } from '@/tipos/Users/UsersInterface';
+import type { ChangePassModalProps } from '@/tipos/Users/UsersInterface';
 import { useFormStatus } from 'react-dom';
 
 import {
