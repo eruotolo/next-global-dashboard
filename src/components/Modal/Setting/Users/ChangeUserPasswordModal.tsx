@@ -112,7 +112,7 @@ export default function ChangePasswordModal({
                 <Form action={onSubmit}>
                     <div className="grid mb-[15px]">
                         <div className="mb-[15px]">
-                            <Label className="my-[10px]">Ingrese La Nueva Contraseña</Label>
+                            <Label className="custom-label">Ingrese La Nueva Contraseña</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -128,7 +128,7 @@ export default function ChangePasswordModal({
                         </div>
 
                         <div className="mb-[15px]">
-                            <Label className="my-[10px]">Confirmar La Nueva Contraseña</Label>
+                            <Label className="custom-label">Confirmar La Nueva Contraseña</Label>
                             <Input
                                 id="confirmPassword"
                                 type="password"

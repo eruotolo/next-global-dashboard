@@ -17,6 +17,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) {
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
@@ -56,6 +57,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                         <div className="col-span-2">
                             <div className="flex mb-[15px] gap-2">
                                 <div className="flex flex-col w-full">
+                                    <Label className="custom-label">Nombre</Label>
                                     <Input
                                         id="name"
                                         name="name"
@@ -65,6 +67,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                                     />
                                 </div>
                                 <div className="flex flex-col w-full">
+                                    <Label className="custom-label">Apellido</Label>
                                     <Input
                                         id="lastName"
                                         name="lastName"
@@ -76,6 +79,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                             </div>
 
                             <div className="mb-[15px]">
+                                <Label className="custom-label">Correo Electrónico</Label>
                                 <Input
                                     id="email"
                                     name="email"
@@ -87,6 +91,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
 
                             <div className="flex mb-[15px] gap-2">
                                 <div className="flex flex-col w-full">
+                                    <Label className="custom-label">Teléfono</Label>
                                     <Input
                                         id="phone"
                                         name="phone"
@@ -96,6 +101,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                                     />
                                 </div>
                                 <div className="flex flex-col w-full">
+                                    <Label className="custom-label">Fecha de Nacimiento</Label>
                                     <Input
                                         id="birthdate"
                                         name="birthdate"
@@ -113,6 +119,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                             </div>
 
                             <div className="mb-[15px]">
+                                <Label className="custom-label">Dirección</Label>
                                 <Input
                                     id="address"
                                     name="address"
@@ -123,6 +130,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                             </div>
 
                             <div className="mb-[15px]">
+                                <Label className="custom-label">Ciudad</Label>
                                 <Input
                                     id="city"
                                     name="city"

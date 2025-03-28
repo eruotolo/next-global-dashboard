@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
 
 export default function EditRoleModal({ id, refresh, open, onClose }: EditModalProps) {
     const [error, setError] = useState('');
@@ -76,6 +77,7 @@ export default function EditRoleModal({ id, refresh, open, onClose }: EditModalP
                     </DialogHeader>
                     <Form action={onSubmit}>
                         <div className="mb-[15px] grid grid-cols-1">
+                            <Label className="custom-label">Nombre del Rol</Label>
                             <Input
                                 id="name"
                                 name="name"

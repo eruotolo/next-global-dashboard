@@ -75,7 +75,7 @@ export function DynamicBreadcrumb() {
                         const isLast = index === filteredSegments.length - 1;
 
                         const breadcrumbItem = (
-                            <BreadcrumbItem key={`${segment}-${index}`} className="hidden md:block">
+                            <BreadcrumbItem key={href} className="hidden md:block">
                                 {isLast ? (
                                     <BreadcrumbPage>{name}</BreadcrumbPage>
                                 ) : (
@@ -88,7 +88,7 @@ export function DynamicBreadcrumb() {
 
                         const separator = !isLast ? (
                             <BreadcrumbSeparator
-                                key={`${segment}-${index}-separator`}
+                                key={`${href}-separator`}
                                 className="hidden md:block"
                             />
                         ) : null;

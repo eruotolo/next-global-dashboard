@@ -138,16 +138,12 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                     <div className="grid grid-cols-4 gap-4">
                         <div className="col-span-2 mb-[15px]">
                             <div className="mb-[15px]">
-                                <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
-                                    Titulo del ticket
-                                </Label>
+                                <Label className="custom-label">Titulo del ticket</Label>
                                 <Input id="title" {...register('title')} type="text" disabled />
                             </div>
                             <div className="grid grid-cols-2 mb-[15px] gap-4">
                                 <div className="col-span-1">
-                                    <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
-                                        Estado
-                                    </Label>
+                                    <Label className="custom-label">Estado</Label>
                                     <Select
                                         value={status}
                                         onValueChange={(value: TicketStatus) => {
@@ -180,9 +176,7 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                                     )}
                                 </div>
                                 <div className="col-span-1">
-                                    <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
-                                        Prioridad
-                                    </Label>
+                                    <Label className="custom-label">Prioridad</Label>
                                     <Select
                                         value={priority}
                                         onValueChange={(value: TicketPriority) => {
@@ -219,9 +213,7 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                                 </div>
                             </div>
                             <div className="mb-[15px]">
-                                <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
-                                    Descripción
-                                </Label>
+                                <Label className="custom-label">Descripción</Label>
                                 <RichTextDisplay content={ticketData?.description ?? ''} />
                                 <input type="hidden" {...register('description')} />
                             </div>
