@@ -14,9 +14,10 @@ export async function getAllTickets(): Promise<SimpleTicketQuery[]> {
                 userLastName: true,
                 status: true,
                 priority: true,
+                createdAt: true,
             },
             orderBy: {
-                code: 'desc',
+                createdAt: 'desc',
             },
         });
 

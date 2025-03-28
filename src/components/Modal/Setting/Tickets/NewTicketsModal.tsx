@@ -10,6 +10,7 @@ import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 import { TicketStatus, TicketPriority } from '@prisma/client';
 import useAuthStore from '@/store/authStore';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 
 import {
     Dialog,
@@ -22,7 +23,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+//import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
@@ -51,6 +52,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/soporte.png');
     const session = useAuthStore((state) => state.session);
+    const [description, setDescription] = useState('');
 
     // Manejar cambio de imagen y vista previa
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,6 +76,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
         formData.append('userId', session?.user?.id || '');
         formData.append('userName', session?.user?.name || '');
         formData.append('userLastName', session?.user?.lastName || '');
+        formData.append('description', description);
 
         try {
             const response = await createTicket(formData);
@@ -90,6 +93,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                 description: 'El ticket se ha creado correctamente.',
             });
             setImagePreview('/soporte.png');
+            setDescription('');
             setError('');
         } catch (error) {
             reset();
@@ -206,13 +210,15 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                     </div>
                                 </div>
                                 <div className="mb-[15px]">
-                                    <Textarea
-                                        id="description"
-                                        placeholder="Ingrese la descripcion"
-                                        {...register('description', {
-                                            required: 'La descripcion es obligatoria',
-                                        })}
-                                        className="h-[200px]"
+                                    <RichTextEditor
+                                        content={description}
+                                        onChange={(content) => {
+                                            setDescription(content);
+                                            // Opcional: si necesitas actualizar el valor en react-hook-form
+                                            setValue('description', content, {
+                                                shouldValidate: true,
+                                            });
+                                        }}
                                     />
                                 </div>
                             </div>

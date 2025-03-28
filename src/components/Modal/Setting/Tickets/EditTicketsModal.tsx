@@ -21,6 +21,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import {
     Select,
@@ -29,7 +30,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+
+import RichTextDisplay from '@/components/RichTextDisplay/RichTextDisplay';
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -136,47 +138,51 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                     <div className="grid grid-cols-4 gap-4">
                         <div className="col-span-2 mb-[15px]">
                             <div className="mb-[15px]">
+                                <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
+                                    Titulo del ticket
+                                </Label>
                                 <Input id="title" {...register('title')} type="text" disabled />
                             </div>
                             <div className="grid grid-cols-2 mb-[15px] gap-4">
                                 <div className="col-span-1">
-                                    <div>
-                                        <Select
-                                            value={status}
-                                            onValueChange={(value: TicketStatus) => {
-                                                setStatus(value);
-                                                setValue('status', value);
-                                            }}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Seleccionar estado" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {Object.values(TicketStatus).map((statusOption) => (
-                                                    <SelectItem
-                                                        key={statusOption}
-                                                        value={statusOption}
-                                                    >
-                                                        {STATUS_LABELS[statusOption]}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                    <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
+                                        Estado
+                                    </Label>
+                                    <Select
+                                        value={status}
+                                        onValueChange={(value: TicketStatus) => {
+                                            setStatus(value);
+                                            setValue('status', value);
+                                        }}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Seleccionar estado" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Object.values(TicketStatus).map((statusOption) => (
+                                                <SelectItem key={statusOption} value={statusOption}>
+                                                    {STATUS_LABELS[statusOption]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
 
-                                        <input
-                                            type="hidden"
-                                            {...register('status', {
-                                                required: 'El estado es obligatorio',
-                                            })}
-                                        />
-                                        {errors.status && (
-                                            <p className="custome-form-error">
-                                                {errors.status.message}
-                                            </p>
-                                        )}
-                                    </div>
+                                    <input
+                                        type="hidden"
+                                        {...register('status', {
+                                            required: 'El estado es obligatorio',
+                                        })}
+                                    />
+                                    {errors.status && (
+                                        <p className="custome-form-error">
+                                            {errors.status.message}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="col-span-1">
+                                    <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
+                                        Prioridad
+                                    </Label>
                                     <Select
                                         value={priority}
                                         onValueChange={(value: TicketPriority) => {
@@ -213,15 +219,11 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                                 </div>
                             </div>
                             <div className="mb-[15px]">
-                                <Textarea
-                                    id="description"
-                                    placeholder="Ingrese la descripcion"
-                                    {...register('description', {
-                                        required: 'La descripcion es obligatoria',
-                                    })}
-                                    className="h-[200px]"
-                                    disabled
-                                />
+                                <Label className="font-inter mb-2 block text-[14px] font-medium text-gray-700">
+                                    Descripción
+                                </Label>
+                                <RichTextDisplay content={ticketData?.description ?? ''} />
+                                <input type="hidden" {...register('description')} />
                             </div>
                         </div>
                         <div className="col-span-2 mb-[15px]">
