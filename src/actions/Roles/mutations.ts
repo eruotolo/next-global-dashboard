@@ -19,7 +19,7 @@ export async function createRole(formData: FormData) {
             },
         });
 
-        revalidatePath('/dashboard/users');
+        revalidatePath('/admin/settings/users');
         return { role };
     } catch (error) {
         if (error instanceof Error) {
@@ -41,7 +41,7 @@ export async function deleteRole(id: string) {
             where: { id },
         });
 
-        revalidatePath('/dashboard/users');
+        revalidatePath('/admin/setting/users');
 
         return { role: roleRemoved, message: 'Rol eliminado exitosamente' };
     } catch (error) {
@@ -67,7 +67,7 @@ export async function updateRole(id: string, formData: FormData) {
             data,
         });
 
-        revalidatePath('/dashboard/users');
+        revalidatePath('/admin/settings/users');
 
         return { role: roleUpdated, message: 'Rol actualizado exitosamente' };
     } catch (error) {

@@ -36,7 +36,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             const res = await signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                redirect: false,
+                redirect: true,
+                callbackUrl: '/admin/dashboard',
             });
 
             if (res?.error) {
@@ -49,7 +50,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                               : 'Ha ocurrido un error durante el inicio de sesión',
                 });
             } else if (res?.ok) {
-                router.push('/dashboard');
+                //window.location.href = '/admin/dashboard';
                 toast.success('Login successful', {
                     description: 'Has iniciado sesión correctamente.',
                 });
@@ -145,7 +146,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 </CardContent>
             </Card>
             <div className="text-muted-foreground [&_a]:hover:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-                By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+                By clicking continue, you agree to our <a href="/oyto">Terms of Service</a> and{' '}
                 <Link href="#">Privacy Policy</Link>.
             </div>
         </div>

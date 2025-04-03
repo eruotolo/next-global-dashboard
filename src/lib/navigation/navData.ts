@@ -1,13 +1,4 @@
-import {
-    BookOpen,
-    Bot,
-    Frame,
-    LifeBuoy,
-    Map,
-    PieChart,
-    Settings2,
-    SquareTerminal,
-} from 'lucide-react';
+import { BookOpen, Bot, Frame, LifeBuoy, PieChart, Settings2, SquareTerminal } from 'lucide-react';
 
 export const navData = {
     navMain: [
@@ -19,7 +10,7 @@ export const navData = {
             items: [
                 {
                     title: 'Dashboard',
-                    url: '/dashboard',
+                    url: '/admin/dashboard',
                 },
                 {
                     title: 'Starred',
@@ -109,11 +100,6 @@ export const navData = {
             url: '#',
             icon: PieChart,
         },
-        {
-            name: 'Travel',
-            url: '#',
-            icon: Map,
-        },
     ],
 
     navSetting: [
@@ -124,7 +110,7 @@ export const navData = {
             items: [
                 {
                     title: 'Usuarios',
-                    url: '/dashboard/users',
+                    url: '/admin/settings/users',
                 },
                 /*{
                     title: 'Billing',
@@ -138,7 +124,7 @@ export const navData = {
         },
         {
             title: 'Ayuda',
-            url: '/dashboard/tickets',
+            url: '/admin/settings/tickets',
             icon: LifeBuoy,
         },
     ],

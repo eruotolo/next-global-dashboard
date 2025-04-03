@@ -1,6 +1,6 @@
 {
     "name": "next-global-dashboard",
-    "version": "0.1.1",
+    "version": "0.1.9",
     "private": true,
     "prisma": {
         "seed": "node prisma/seed.js"

@@ -2,11 +2,6 @@
 
 import prisma from '@/dbprisma/db';
 import bcrypt from 'bcrypt';
-import Brevo from '@getbrevo/brevo';
-
-// Configuración de Brevo
-const apiInstance = new Brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY || '');
 
 function generateRandomPassword(length = 12) {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
@@ -39,8 +34,19 @@ export async function recoverPassword(email: string) {
             data: { password: hashedPassword },
         });
 
+        // Importar Brevo de manera correcta
+        const brevoModule = await import('@getbrevo/brevo');
+
+        // Crear la instancia de la API
+        const apiKey = process.env.BREVO_API_KEY || '';
+        const apiInstance = new brevoModule.TransactionalEmailsApi();
+
+        // Configurar la clave API
+        const apiKeyInstance = brevoModule.TransactionalEmailsApiApiKeys.apiKey;
+        apiInstance.setApiKey(apiKeyInstance, apiKey);
+
         // Configurar el email
-        const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        const sendSmtpEmail = new brevoModule.SendSmtpEmail();
         sendSmtpEmail.subject = 'Recuperación de Contraseña';
         sendSmtpEmail.to = [{ email: email }];
         sendSmtpEmail.sender = { name: 'Chubby Dashboard', email: 'crowadvancegx@gmail.com' };

@@ -5,6 +5,7 @@ import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { TicketStatus, TicketPriority } from '@prisma/client';
 
+// Generar código para tickets
 const generateTicketCode = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -62,7 +63,33 @@ export async function createTicket(formData: FormData) {
                 priority: priority as TicketPriority,
             },
         });
-        revalidatePath('/dashboard/tickets');
+
+        // Importar Brevo de manera correcta
+        const brevoModule = await import('@getbrevo/brevo');
+
+        // Crear la instancia de la API
+        const apiKey = process.env.BREVO_API_KEY || '';
+        const apiInstance = new brevoModule.TransactionalEmailsApi();
+
+        // Configurar la clave API
+        const apiKeyInstance = brevoModule.TransactionalEmailsApiApiKeys.apiKey;
+        apiInstance.setApiKey(apiKeyInstance, apiKey);
+
+        // Configuración de envio de email
+        const sendSmtpEmail = new brevoModule.SendSmtpEmail();
+        sendSmtpEmail.subject = 'Nuevo ticket creado';
+        sendSmtpEmail.to = [{ email: 'edgardoruotolo@crowadvance.com' }];
+        sendSmtpEmail.sender = { name: 'Chubby Dashboard', email: 'crowadvancegx@gmail.com' };
+        sendSmtpEmail.htmlContent = `
+            <h1>Se ha creado un nuevo ticket.</h1>
+            <p>El número del ticket es: <strong>${code}</strong>.</p>
+            <p>La prioridad del ticket es: <strong>${priority}</strong>.</p>           
+        `;
+
+        // Enviar el email
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        revalidatePath('/admin/setting/tickets');
         return { newTickets, message: 'Ticket creado exitosamente' };
     } catch (error) {
         console.error('Error creating ticket:', error);
@@ -82,7 +109,7 @@ export async function deleteTicket(id: string) {
             where: { id },
         });
 
-        revalidatePath('/dashboard/tickets');
+        revalidatePath('/admin/setting/tickets');
 
         return { ticket: ticketRemoved, message: 'Ticket eliminado exitosamente' };
     } catch (error) {
@@ -118,7 +145,7 @@ export async function updateTicket(id: string, formData: FormData) {
             data: { status, priority },
         });
 
-        revalidatePath('/dashboard/tickets');
+        revalidatePath('/admin/setting/tickets');
 
         return {
             ticket: updatedTicket,

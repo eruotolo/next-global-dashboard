@@ -88,7 +88,7 @@ export async function updateUserRoles(id: string, roles: string[]) {
             };
         });
 
-        revalidatePath('/dashboard/users');
+        revalidatePath('/admin/settings/users');
         return result;
     } catch (error) {
         console.error('Error al actualizar los roles del usuario:', error);

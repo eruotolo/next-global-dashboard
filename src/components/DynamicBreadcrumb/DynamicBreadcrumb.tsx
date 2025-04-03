@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 // Mapeo personalizado para nombres específicos de rutas
-import { customRouteNames } from '@/data/customRouteNames';
+import { customRouteNames } from '@/lib/navigation/customRouteNames';
 
 // Función para formatear nombres automáticamente
 const formatSegmentName = (segment: string, _index: number, _segments: string[]) => {

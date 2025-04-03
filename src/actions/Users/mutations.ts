@@ -59,7 +59,7 @@ export async function createUser(formData: FormData) {
             },
         });
 
-        revalidatePath('/dashboard/users');
+        revalidatePath('/admin/settings/users');
         return { user, message: 'Usuario creado exitosamente' };
     } catch (error) {
         console.error('Error creating user:', error);
@@ -79,7 +79,7 @@ export async function deleteUser(id: string) {
             where: { id },
         });
 
-        revalidatePath('/dashboard/users'); // Refresca la caché para la tabla
+        revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla
 
         return { user: userRemoved, message: 'Usuario eliminado exitosamente' };
     } catch (error) {
@@ -133,7 +133,7 @@ export async function updateUser(id: string, formData: FormData) {
             data,
         });
 
-        revalidatePath('/dashboard/users'); // Refresca la caché para la tabla
+        revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla
 
         return {
             user: userUpdated,

@@ -18,7 +18,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import { navData } from '@/data/navData';
+import { navData } from '@/lib/navigation/navData';
 
 const logo: string = '/logo-sm-wh.svg';
 

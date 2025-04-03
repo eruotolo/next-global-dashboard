@@ -101,13 +101,13 @@
     body {
         @apply bg-background text-foreground;
     }
-    h1 {
+    .tiptap > h1 {
         @apply text-2xl font-bold;
     }
-    h2 {
+    .tiptap > h2 {
         @apply text-xl font-bold;
     }
-    h3 {
+    .tiptap > h3 {
         @apply text-lg font-bold;
     }
 }

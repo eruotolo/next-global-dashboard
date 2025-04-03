@@ -3,14 +3,27 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
     /* config options here */
     images: {
-        domains: ['ne03u8ci5d2wddbb.public.blob.vercel-storage.com'],
-        // O alternativamente, usa remotePatterns para más flexibilidad
         remotePatterns: [
             {
                 protocol: 'https',
                 hostname: '**.public.blob.vercel-storage.com',
+                port: '',
             },
         ],
+    },
+    async redirects() {
+        return [
+            {
+                source: '/admin',
+                destination: '/admin/dashboard',
+                permanent: true,
+            },
+            {
+                source: '/admin/settings',
+                destination: '/admin/settings/users',
+                permanent: true,
+            },
+        ];
     },
 };
 
