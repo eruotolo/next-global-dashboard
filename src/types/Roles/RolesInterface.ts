@@ -12,6 +12,21 @@ export interface RoleInterface {
     state: number;
 }
 
+export interface RolePermissionInterface {
+    id: string;
+    name: string;
+    state: number;
+    permissionRole?: {
+        id: string;
+        roleId: string | null;
+        permissionId: string | null;
+        permission: {
+            id: string;
+            name: string;
+        } | null;
+    }[];
+}
+
 export interface UserRoleQuery {
     id: string;
     userId: string | null;

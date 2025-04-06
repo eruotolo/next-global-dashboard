@@ -3,11 +3,11 @@ import { create } from 'zustand';
 import { getAllUsers } from '@/actions/Users';
 import { getAllRoles } from '@/actions/Roles';
 import type { UserInterface } from '@/tipos/Table/UserInterface';
-import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
+import type { RolePermissionInterface } from '@/tipos/Roles/RolesInterface';
 
 interface UserRoleState {
     userData: UserInterface[];
-    rolesData: RoleInterface[];
+    rolesData: RolePermissionInterface[];
     isLoadingUsers: boolean;
     isLoadingRoles: boolean;
     error: string | null;
@@ -65,6 +65,18 @@ export const useUserRoleStore = create<UserRoleState>((set) => ({
                     id: role.id,
                     name: role.name,
                     state: role.state,
+                    permissionRole:
+                        role.permissionRole?.map((permission) => ({
+                            id: permission.id,
+                            roleId: permission.roleId,
+                            permissionId: permission.permissionId,
+                            permission: permission.permission
+                                ? {
+                                      id: permission.permission.id,
+                                      name: permission.permission.name,
+                                  }
+                                : null,
+                        })) || [],
                 })) || [];
             set({ rolesData: transformedData });
         } catch (err) {

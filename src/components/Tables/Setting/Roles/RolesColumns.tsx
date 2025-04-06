@@ -14,14 +14,22 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2 } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2, Cog } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { deleteRole } from '@/actions/Roles';
 import { useUserRoleStore } from '@/store/userroleStore';
+import type { RolePermissionInterface } from '@/types/Roles/RolesInterface';
 
 const DynamicEditRoleModal = dynamic(
     () => import('@/components/Modal/Setting/Roles/EditRoleModal'),
+    {
+        ssr: false,
+    },
+);
+
+const DynamicAssignPermissionModal = dynamic(
+    () => import('@/components/Modal/Setting/Roles/AssignPermissionRoleModal'),
     {
         ssr: false,
     },
@@ -37,10 +45,15 @@ interface ActionCellProps {
 function ActionCell({ row }: ActionCellProps) {
     const roleId = row.original.id;
     const [openEditRole, setOpenEditRole] = useState(false);
+    const [openAssignPermission, setOpenAssignPermission] = useState(false);
     const { refreshAll } = useUserRoleStore();
 
     const handleEditRoleCloseModal = () => {
         setOpenEditRole(false);
+    };
+
+    const handleAssignPermissionCloseModal = () => {
+        setOpenAssignPermission(false);
     };
 
     const handleDelete = async (roleId: string) => {
@@ -78,6 +91,10 @@ function ActionCell({ row }: ActionCellProps) {
                         <FilePenLine />
                         Editar rol
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenAssignPermission(true)}>
+                        <Cog />
+                        Asignar permisos
+                    </DropdownMenuItem>
                     <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(roleId)}>
                         <Trash2 />
                         Eliminar rol
@@ -93,11 +110,19 @@ function ActionCell({ row }: ActionCellProps) {
                     onClose={handleEditRoleCloseModal}
                 />
             )}
+            {openAssignPermission && (
+                <DynamicAssignPermissionModal
+                    id={roleId}
+                    refreshAction={refreshAll}
+                    open={openAssignPermission}
+                    onClose={handleAssignPermissionCloseModal}
+                />
+            )}
         </>
     );
 }
 
-export const RolesColumns = (refreshTable: () => void): ColumnDef<RoleInterface>[] => [
+export const RolesColumns = (refreshTable: () => void): ColumnDef<RolePermissionInterface>[] => [
     {
         accessorKey: 'name',
         header: ({ column }) => {
@@ -114,6 +139,21 @@ export const RolesColumns = (refreshTable: () => void): ColumnDef<RoleInterface>
         cell: ({ row }) => {
             const roleName = `${row.original.name}`;
             return <div>{roleName}</div>;
+        },
+    },
+    {
+        id: 'Permisos',
+        header: () => (
+            <div className="flex  font-semibold whitespace-nowrap min-w-[100px]">Permisos</div>
+        ),
+        cell: ({ row }) => {
+            const permissions = row.original.permissionRole || [];
+            const permissionNames =
+                permissions
+                    .map((perm) => perm.permission?.name)
+                    .filter(Boolean)
+                    .join(', ') || 'Sin permisos';
+            return <div className="w-[100px] flex">{permissionNames}</div>;
         },
     },
     {

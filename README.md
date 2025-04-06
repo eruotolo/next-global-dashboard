@@ -14,6 +14,7 @@ npm install nodemailer
 npm install prisma --save-dev // Instalar Prisma
 npx prisma init --datasource-provider postgresql // Inicializa prisma
 npx prisma migrate dev --name nombre_de_tu_migracion // Crea una migración
+npx prisma generate // Esto asegura que los modelos de TypeScript utilizados en tu código estén en sincronía con tu base de datos.
 npx prisma migrate deploy // Ejecuta la migración
 npx prisma studio // Abre el panel de prisma
 

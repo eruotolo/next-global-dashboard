@@ -5,7 +5,7 @@ import type { UserRoleQuery } from '@/tipos/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 
 export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
-    if (!id || typeof id !== 'string') {
+    if (!id) {
         throw new Error('El ID del usuario es inválido');
     }
 

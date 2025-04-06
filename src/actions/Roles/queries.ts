@@ -1,11 +1,12 @@
 'use server';
 
 import prisma from '@/dbprisma/db';
-import type { RoleQuery, RolesArray } from '@/tipos/Roles/RolesInterface';
+import type { RoleQuery, RolePermissionInterface } from '@/tipos/Roles/RolesInterface';
 
-export async function getAllRoles(): Promise<RoleQuery[]> {
+export async function getAllRoles(): Promise<RolePermissionInterface[]> {
+    // Cambiamos el tipo
     try {
-        const getAllRoles: RolesArray = await prisma.role.findMany({
+        const getAllRoles = await prisma.role.findMany({
             where: {
                 name: {
                     not: 'SuperAdministrador',
@@ -15,11 +16,25 @@ export async function getAllRoles(): Promise<RoleQuery[]> {
                 id: true,
                 name: true,
                 state: true,
+                permissionRole: {
+                    select: {
+                        id: true,
+                        permissionId: true,
+                        roleId: true,
+                        permission: {
+                            select: {
+                                id: true,
+                                name: true,
+                            },
+                        },
+                    },
+                },
             },
             orderBy: {
                 name: 'asc',
             },
         });
+        console.log('Datos devueltos por getAllRoles:', JSON.stringify(getAllRoles, null, 2));
         return getAllRoles;
     } catch (error) {
         console.error('Error fetching roles:', error);
