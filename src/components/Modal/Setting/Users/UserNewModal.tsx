@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { createUser } from '@/actions/Users';
+import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { UserFormData } from '@/tipos/Users/UsersInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 
@@ -17,10 +18,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { FilePenLine, SquarePlus } from 'lucide-react';
+import { FilePenLine } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function UserNewModal({ refreshAction }: UpdateData) {
@@ -81,10 +81,7 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
 
     return (
         <Dialog>
-            <DialogTrigger className="botones">
-                <SquarePlus className="mr-2 w-4 h-4" />
-                Nuevo
-            </DialogTrigger>
+            <BtnActionNew label="Nuevo" permission={['Crear']} />
             <DialogContent className="overflow-hidden sm:max-w-[800px]">
                 <DialogHeader>
                     <DialogTitle>Crear Nuevo Usuario</DialogTitle>

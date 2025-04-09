@@ -20,6 +20,7 @@ import type { LoginFormInputs } from '@/tipos/Login/LoginFormInputs';
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
     const [isPasswordHidden, setPasswordHidden] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const {
         register,
@@ -31,17 +32,19 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         setIsLoading(true);
+        setError(null);
 
         try {
             const res = await signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                redirect: true,
-                callbackUrl: '/admin/dashboard',
+                redirect: false, // Manejo manual de redirecciones local host
+                //redirect: true, // Para probar la version Start en locahost
+                //callbackUrl: '/admin/dashboard', // Para probar la version Start en locahost
             });
 
             if (res?.error) {
-                toast.error('Login Failed', {
+                toast.error('Error al iniciar sesión', {
                     description:
                         res.error === 'No users found'
                             ? 'Usuario no encontrado'
@@ -49,16 +52,17 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                               ? 'Contraseña incorrecta'
                               : 'Ha ocurrido un error durante el inicio de sesión',
                 });
-            } else if (res?.ok) {
-                //window.location.href = '/admin/dashboard';
-                toast.success('Login successful', {
+            } else {
+                toast.success('Inicio de sesión exitoso', {
                     description: 'Has iniciado sesión correctamente.',
                 });
+                router.push('/admin/dashboard'); // Manejo manual de redirecciones local host
             }
-        } catch (_error) {
-            toast.error('Login Failed', {
+        } catch (error) {
+            toast.error('Error inesperado', {
                 description: 'Ha ocurrido un error inesperado. Por favor, intenta de nuevo.',
             });
+            setError('Ha ocurrido un error inesperado. Por favor, intenta de nuevo.');
         } finally {
             setIsLoading(false);
         }

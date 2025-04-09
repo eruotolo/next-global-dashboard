@@ -9,7 +9,7 @@ export default function UnauthorizedPage() {
                     Lo sentimos, pero no tienes permiso para ver esta página.
                 </p>
                 <Link
-                    href="/dashboard"
+                    href="/admin/dashboard"
                     className="font-inter h-[36px] px-[20px] mt-[20px] rounded-[10px] border-0 bg-gray-600 text-[13px] font-normal text-white hover:bg-gray-300 hover:text-white  disabled:opacity-50 cursor-pointer flex items-center justify-center"
                 >
                     Regresar al Dashboard

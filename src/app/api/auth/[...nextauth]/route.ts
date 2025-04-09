@@ -5,7 +5,7 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
 
-// Definimos un tipo simple para el usuario personalizado
+// Tipo personalizado para el usuario
 import type { CustomUser } from '@/tipos/Login/CustomUser';
 
 // Configuración de opciones para NextAuth
@@ -14,29 +14,29 @@ const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                email: {
-                    label: 'Email',
-                    type: 'text',
-                    placeholder: 'ejemplo@ejemplo.com',
-                },
-                password: {
-                    label: 'Password',
-                    type: 'password',
-                    placeholder: '*************',
-                },
+                email: { label: 'Email', type: 'text', placeholder: 'ejemplo@ejemplo.com' },
+                password: { label: 'Password', type: 'password', placeholder: '*************' },
             },
             async authorize(credentials, _req) {
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error('Email and password are required');
                 }
 
-                // Busca al usuario en la base de datos usando Prisma
+                // Busca al usuario en la base de datos con Prisma, incluyendo roles y permisos
                 const userFound = await prisma.user.findUnique({
                     where: { email: credentials.email },
                     include: {
                         roles: {
                             include: {
-                                role: true,
+                                role: {
+                                    include: {
+                                        permissionRole: {
+                                            include: {
+                                                permission: true, // Incluye los permisos asociados al rol
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -51,7 +51,6 @@ const authOptions: NextAuthOptions = {
                     credentials.password,
                     userFound.password,
                 );
-
                 if (!matchPassword) {
                     throw new Error('Wrong Password');
                 }
@@ -61,8 +60,15 @@ const authOptions: NextAuthOptions = {
                     throw new Error('El usuario no tiene roles asignados');
                 }
 
-                // Extrae los roles asociados como un array de strings
+                // Extrae los roles como un array de strings
                 const roles = userFound.roles.map((userRole) => userRole.role?.name || '');
+
+                // Extrae los permisos asociados a los roles
+                const permissions = userFound.roles
+                    .flatMap((userRole) =>
+                        userRole.role?.permissionRole.map((pr) => pr.permission?.name || ''),
+                    )
+                    .filter(Boolean); // Filtra valores vacíos
 
                 return {
                     id: userFound.id,
@@ -75,7 +81,8 @@ const authOptions: NextAuthOptions = {
                     image: userFound.image || undefined,
                     state: userFound.state || null,
                     roles, // Roles asignados al usuario
-                } as CustomUser;
+                    permissions, // Permisos asociados a los roles
+                } as CustomUser & { permissions: string[] };
             },
         }),
     ],
@@ -94,7 +101,7 @@ const authOptions: NextAuthOptions = {
     callbacks: {
         async session({ session, token }) {
             try {
-                const { getUserById } = AuthAdapter(); // Inicializa el adaptador
+                const { getUserById } = AuthAdapter();
 
                 // Obtener la información más reciente del usuario
                 const freshUserData = await getUserById(token.id as string);
@@ -112,16 +119,18 @@ const authOptions: NextAuthOptions = {
                     state: token.state as number | null,
                     ...freshUserData,
                     roles: token.roles as string[],
+                    permissions: token.permissions as string[], // Asegura que los permisos estén en la sesión
                 };
+
                 return session;
             } catch (error) {
                 console.error('Error actualizando la sesión:', error);
-                return session; // O `return null;` para invalidar la sesión
+                return session; // Devuelve la sesión incluso si falla la actualización
             }
         },
         async jwt({ token, user }) {
             if (user) {
-                const customUser = user as CustomUser;
+                const customUser = user as CustomUser & { permissions: string[] };
 
                 token.id = customUser.id;
                 token.name = customUser.name;
@@ -133,8 +142,9 @@ const authOptions: NextAuthOptions = {
                 token.image = customUser.image;
                 token.state = customUser.state;
                 token.roles = customUser.roles;
+                token.permissions = customUser.permissions; // Asegura que los permisos estén en el token
             }
-            //console.log(token);
+
             return token;
         },
     },

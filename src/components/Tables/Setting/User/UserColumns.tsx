@@ -2,19 +2,25 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import {
+    BtnViewCell,
+    BtnEditCell,
+    BtnChangePasswordCell,
+    BtnConfigCell,
+    BtnDeleteCell,
+} from '@/components/BtnActionCell/BtnActionCell';
 
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { UserInterface } from '@/tipos/Users/UsersInterface';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, Trash2, Key, UserPen, Eye, UserCog } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { deleteUser } from '@/actions/Users';
@@ -100,26 +106,27 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpenPreviewUser(true)}>
-                        <Eye />
-                        Ver perfil
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenEditUser(true)}>
-                        <UserPen />
-                        Editar usuario
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenChangePass(true)}>
-                        <Key />
-                        Cambiar Password
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenAssignRoles(true)}>
-                        <UserCog />
-                        Asignar Roles
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(userId)}>
-                        <Trash2 />
-                        Eliminar usuario
-                    </DropdownMenuItem>
+
+                    <BtnViewCell onAction={() => setOpenPreviewUser(true)} label="Ver perfil" />
+
+                    <BtnEditCell onAction={() => setOpenEditUser(true)} label="Editar usuario" />
+
+                    <BtnChangePasswordCell
+                        onAction={() => setOpenChangePass(true)}
+                        label="Cambiar contraseña"
+                    />
+
+                    <BtnConfigCell
+                        onAction={() => setOpenAssignRoles(true)}
+                        label="Asignar roles"
+                    />
+
+                    <BtnDeleteCell
+                        itemId={userId}
+                        onDelete={handleDelete}
+                        permission={['Eliminar']}
+                        label="Eliminar usuario"
+                    />
                 </DropdownMenuContent>
             </DropdownMenu>
 

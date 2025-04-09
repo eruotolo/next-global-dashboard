@@ -2,19 +2,23 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import {
+    BtnEditCell,
+    BtnDeleteCell,
+    BtnConfigCell,
+} from '@/components/BtnActionCell/BtnActionCell';
 
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2, Cog } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { deleteRole } from '@/actions/Roles';
@@ -87,18 +91,20 @@ function ActionCell({ row }: ActionCellProps) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpenEditRole(true)}>
-                        <FilePenLine />
-                        Editar rol
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenAssignPermission(true)}>
-                        <Cog />
-                        Asignar permisos
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(roleId)}>
-                        <Trash2 />
-                        Eliminar rol
-                    </DropdownMenuItem>
+
+                    <BtnEditCell onAction={() => setOpenEditRole(true)} label="Editar rol" />
+
+                    <BtnConfigCell
+                        onAction={() => setOpenAssignPermission(true)}
+                        label="Asignar permisos"
+                    />
+
+                    <BtnDeleteCell
+                        itemId={roleId}
+                        onDelete={handleDelete}
+                        label="Eliminar rol"
+                        className="text-red-600"
+                    />
                 </DropdownMenuContent>
             </DropdownMenu>
 

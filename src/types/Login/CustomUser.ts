@@ -9,4 +9,5 @@ export interface CustomUser {
     image?: string;
     state?: number | null;
     roles: string[];
+    permissions: string[];
 }

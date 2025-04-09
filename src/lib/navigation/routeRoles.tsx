@@ -1,4 +1,10 @@
-const commonDashboardApiRoles = ['SuperAdministrador', 'Administrador', 'Editor'];
+const commonDashboardApiRoles = [
+    'SuperAdministrador',
+    'Administrador',
+    'Editor',
+    'Colaborador',
+    'Suscriptor',
+];
 
 const routeRoles = {
     '/api': commonDashboardApiRoles,

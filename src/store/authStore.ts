@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 
 // Definimos la interfaz para la sesión
 interface Session {
@@ -14,6 +15,7 @@ interface Session {
         state?: number | null;
         birthdate?: string | Date;
         roles: string[];
+        permissions?: string[]; // Agregamos permisos como opcional
     };
     expires?: string;
 }
@@ -29,7 +31,13 @@ const API_SESSION_URL = '/api/auth/session';
 
 const useAuthStore = create<AuthStore>((set) => ({
     session: null,
-    setSession: (session) => set({ session }),
+    setSession: (session) => {
+        set({ session });
+        // Sincroniza los permisos con useUserPermissionStore
+        if (session?.user?.permissions) {
+            useUserPermissionStore.getState().setPermissions(session.user.permissions);
+        }
+    },
     fetchSession: async () => {
         try {
             const response = await fetch(API_SESSION_URL);
@@ -37,8 +45,11 @@ const useAuthStore = create<AuthStore>((set) => ({
                 throw new Error('Failed to fetch session');
             }
             const data: Session = await response.json();
-            //console.log('Fetched session:', data); // Log para depuración
             set({ session: data });
+            // Sincroniza los permisos cuando se obtiene la sesión
+            if (data?.user?.permissions) {
+                useUserPermissionStore.getState().setPermissions(data.user.permissions);
+            }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 console.error('Failed to fetch session:', error.message);

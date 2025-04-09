@@ -34,7 +34,7 @@ export async function getAllRoles(): Promise<RolePermissionInterface[]> {
                 name: 'asc',
             },
         });
-        console.log('Datos devueltos por getAllRoles:', JSON.stringify(getAllRoles, null, 2));
+        //console.log('Datos devueltos por getAllRoles:', JSON.stringify(getAllRoles, null, 2));
         return getAllRoles;
     } catch (error) {
         console.error('Error fetching roles:', error);

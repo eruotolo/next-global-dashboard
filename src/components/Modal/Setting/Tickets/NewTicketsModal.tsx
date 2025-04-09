@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { createTicket } from '@/actions/Tickets';
+import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 import { TicketStatus, TicketPriority } from '@prisma/client';
@@ -20,7 +21,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 //import { Textarea } from '@/components/ui/textarea';
@@ -32,7 +32,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-import { FilePenLine, SquarePlus } from 'lucide-react';
+import { FilePenLine } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function NewTicketsModal({ refreshAction }: UpdateData) {
@@ -109,10 +109,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
     return (
         <>
             <Dialog>
-                <DialogTrigger className="botones">
-                    <SquarePlus className="mr-2 w-4 h-4" />
-                    Nuevo
-                </DialogTrigger>
+                <BtnActionNew label="Nuevo" permission={['Crear']} />
                 <DialogContent className="overflow-hidden sm:max-w-[900px]">
                     <DialogHeader>
                         <DialogTitle>Crear Nuevo Tickets</DialogTitle>

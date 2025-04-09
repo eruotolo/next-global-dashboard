@@ -136,7 +136,7 @@ export default function AssignPermissionRoleModal({
 
                                 <Label
                                     htmlFor={`permission-${permission.id}`}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="text-gris text-[15px] curosor-pointer"
                                 >
                                     {permission.name}
                                 </Label>
