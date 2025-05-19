@@ -54,6 +54,25 @@ model UserRole {
     createdAt DateTime @default(now())
 }
 
+model AuditLog {
+    id          String   @id @default(uuid())
+    userId      String? // ID del usuario que realizó la acción (puede ser nulo para acciones del sistema)
+    userName    String? // Nombre del usuario para referencia rápida
+    action      String // Tipo de acción (login, logout, create_role, update_permissions, etc.)
+    entity      String? // Entidad afectada (User, Role, Permission, etc.)
+    entityId    String? // ID de la entidad afectada
+    description String // Descripción detallada de la acción
+    ipAddress   String? // Dirección IP desde donde se realizó la acción
+    userAgent   String? // Navegador/dispositivo utilizado
+    metadata    Json? // Datos adicionales en formato JSON (cambios realizados, etc.)
+    createdAt   DateTime @default(now())
+
+    @@index([userId])
+    @@index([action])
+    @@index([entity, entityId])
+    @@index([createdAt])
+}
+
 enum TicketStatus {
     OPEN
     IN_PROGRESS

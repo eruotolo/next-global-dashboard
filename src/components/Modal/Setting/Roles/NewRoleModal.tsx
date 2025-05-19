@@ -2,7 +2,9 @@
 
 import Form from 'next/form';
 import { useState } from 'react';
+
 import { createRole } from '@/actions/Roles';
+import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 
 import {
@@ -13,10 +15,8 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { SquarePlus } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function NewRoleModal({ refreshAction }: UpdateData) {
@@ -60,10 +60,7 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
 
     return (
         <Dialog>
-            <DialogTrigger className="botones">
-                <SquarePlus className="mr-2 w-4 h-4" />
-                Nuevo
-            </DialogTrigger>
+            <BtnActionNew label="Nuevo" permission={['Crear']} />
             <DialogContent className="sm:max-w-[400px]">
                 <DialogHeader>
                     <DialogTitle>Crear Nuevo Rol</DialogTitle>

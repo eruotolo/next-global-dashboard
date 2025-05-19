@@ -9,6 +9,7 @@ import { createTicket } from '@/actions/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
+
 import { TicketStatus, TicketPriority } from '@prisma/client';
 import useAuthStore from '@/store/authStore';
 import RichTextEditor from '@/components/ui/rich-text-editor';
@@ -109,7 +110,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
     return (
         <>
             <Dialog>
-                <BtnActionNew label="Nuevo" permission={['Crear']} />
+                <BtnActionNew label="Nuevo" permission={['Ver']} />
                 <DialogContent className="overflow-hidden sm:max-w-[900px]">
                     <DialogHeader>
                         <DialogTitle>Crear Nuevo Tickets</DialogTitle>

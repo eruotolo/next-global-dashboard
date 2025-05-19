@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
 
 // Tipo personalizado para el usuario
 import type { CustomUser } from '@/tipos/Login/CustomUser';
@@ -17,12 +18,19 @@ const authOptions: NextAuthOptions = {
                 email: { label: 'Email', type: 'text', placeholder: 'ejemplo@ejemplo.com' },
                 password: { label: 'Password', type: 'password', placeholder: '*************' },
             },
-            async authorize(credentials, _req) {
+            async authorize(credentials, req) {
                 if (!credentials?.email || !credentials?.password) {
+                    // Registrar intento fallido de inicio de sesión (datos incompletos)
+                    await logAuditEvent({
+                        action: 'login_failed',
+                        entity: 'User',
+                        description: 'Intento de inicio de sesión con datos incompletos',
+                        metadata: { email: credentials?.email || 'no proporcionado' },
+                    });
                     throw new Error('Email and password are required');
                 }
 
-                // Busca al usuario en la base de datos con Prisma, incluyendo roles y permisos
+                // Buscar usuario en la base de datos, incluyendo roles/permisos
                 const userFound = await prisma.user.findUnique({
                     where: { email: credentials.email },
                     include: {
@@ -32,7 +40,7 @@ const authOptions: NextAuthOptions = {
                                     include: {
                                         permissionRole: {
                                             include: {
-                                                permission: true, // Incluye los permisos asociados al rol
+                                                permission: true,
                                             },
                                         },
                                     },
@@ -43,32 +51,71 @@ const authOptions: NextAuthOptions = {
                 });
 
                 if (!userFound) {
+                    // Registrar intento fallido de inicio de sesión (usuario no encontrado)
+                    await logAuditEvent({
+                        action: 'login_failed',
+                        entity: 'User',
+                        description: 'Intento de inicio de sesión con email no registrado',
+                        metadata: { email: credentials.email },
+                    });
                     throw new Error('No users found');
                 }
 
-                // Valida la contraseña
+                // Validar contraseña
                 const matchPassword = await bcrypt.compare(
                     credentials.password,
                     userFound.password,
                 );
                 if (!matchPassword) {
+                    // Registrar intento fallido de inicio de sesión (contraseña incorrecta)
+                    await logAuditEvent({
+                        action: 'login_failed',
+                        entity: 'User',
+                        entityId: userFound.id,
+                        description: 'Intento de inicio de sesión con contraseña incorrecta',
+                        metadata: { email: credentials.email, userId: userFound.id },
+                        userId: userFound.id,
+                        userName: `${userFound.name} ${userFound.lastName || ''}`.trim(),
+                    });
                     throw new Error('Wrong Password');
                 }
 
-                // Verifica que el usuario tenga roles asociados
+                // Verificar que tenga roles
                 if (!userFound.roles || userFound.roles.length === 0) {
+                    // Registrar intento fallido de inicio de sesión (sin roles)
+                    await logAuditEvent({
+                        action: 'login_failed',
+                        entity: 'User',
+                        entityId: userFound.id,
+                        description: 'Intento de inicio de sesión de usuario sin roles asignados',
+                        metadata: { email: credentials.email, userId: userFound.id },
+                        userId: userFound.id,
+                        userName: `${userFound.name} ${userFound.lastName || ''}`.trim(),
+                    });
                     throw new Error('El usuario no tiene roles asignados');
                 }
 
-                // Extrae los roles como un array de strings
+                // Obtener roles y permisos en arrays simples
                 const roles = userFound.roles.map((userRole) => userRole.role?.name || '');
-
-                // Extrae los permisos asociados a los roles
                 const permissions = userFound.roles
                     .flatMap((userRole) =>
                         userRole.role?.permissionRole.map((pr) => pr.permission?.name || ''),
                     )
-                    .filter(Boolean); // Filtra valores vacíos
+                    .filter(Boolean);
+
+                // Registrar inicio de sesión exitoso
+                await logAuditEvent({
+                    action: 'login_success',
+                    entity: 'User',
+                    entityId: userFound.id,
+                    description: 'Inicio de sesión exitoso',
+                    metadata: {
+                        email: userFound.email,
+                        roles: roles,
+                    },
+                    userId: userFound.id,
+                    userName: `${userFound.name} ${userFound.lastName || ''}`.trim(),
+                });
 
                 return {
                     id: userFound.id,
@@ -80,8 +127,8 @@ const authOptions: NextAuthOptions = {
                     city: userFound.city || undefined,
                     image: userFound.image || undefined,
                     state: userFound.state || null,
-                    roles, // Roles asignados al usuario
-                    permissions, // Permisos asociados a los roles
+                    roles,
+                    permissions,
                 } as CustomUser & { permissions: string[] };
             },
         }),
@@ -102,8 +149,6 @@ const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             try {
                 const { getUserById } = AuthAdapter();
-
-                // Obtener la información más reciente del usuario
                 const freshUserData = await getUserById(token.id as string);
 
                 session.user = {
@@ -119,13 +164,13 @@ const authOptions: NextAuthOptions = {
                     state: token.state as number | null,
                     ...freshUserData,
                     roles: token.roles as string[],
-                    permissions: token.permissions as string[], // Asegura que los permisos estén en la sesión
+                    permissions: token.permissions as string[],
                 };
 
                 return session;
             } catch (error) {
                 console.error('Error actualizando la sesión:', error);
-                return session; // Devuelve la sesión incluso si falla la actualización
+                return session;
             }
         },
         async jwt({ token, user }) {
@@ -142,13 +187,36 @@ const authOptions: NextAuthOptions = {
                 token.image = customUser.image;
                 token.state = customUser.state;
                 token.roles = customUser.roles;
-                token.permissions = customUser.permissions; // Asegura que los permisos estén en el token
+                token.permissions = customUser.permissions;
             }
 
             return token;
+        },
+    },
+
+    // Evento de cierre de sesión
+    events: {
+        async signOut({ token }) {
+            if (token) {
+                try {
+                    await logAuditEvent({
+                        action: 'logout',
+                        entity: 'User',
+                        entityId: token.id as string,
+                        description: 'Cierre de sesión',
+                        userId: token.id as string,
+                        userName: `${token.name} ${token.lastName || ''}`.trim(),
+                    });
+                } catch (error) {
+                    console.error('Error al registrar cierre de sesión:', error);
+                }
+            }
         },
     },
 };
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+
+// Agrega esta línea para exportar las opciones de autenticación
+export { authOptions };

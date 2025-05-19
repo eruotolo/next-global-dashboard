@@ -92,16 +92,22 @@ function ActionCell({ row }: ActionCellProps) {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    <BtnEditCell onAction={() => setOpenEditRole(true)} label="Editar rol" />
+                    <BtnEditCell
+                        onAction={() => setOpenEditRole(true)}
+                        label="Editar rol"
+                        permission={['Editar']}
+                    />
 
                     <BtnConfigCell
                         onAction={() => setOpenAssignPermission(true)}
                         label="Asignar permisos"
+                        permission={['Editar']}
                     />
 
                     <BtnDeleteCell
                         itemId={roleId}
                         onDelete={handleDelete}
+                        permission={['Eliminar']}
                         label="Eliminar rol"
                         className="text-red-600"
                     />

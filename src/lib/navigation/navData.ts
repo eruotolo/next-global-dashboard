@@ -112,14 +112,10 @@ export const navData = {
                     title: 'Usuarios',
                     url: '/admin/settings/users',
                 },
-                /*{
-                    title: 'Billing',
-                    url: '#',
-                },
                 {
-                    title: 'Limits',
-                    url: '#',
-                },*/
+                    title: 'Auditoria',
+                    url: '/admin/settings/audit',
+                },
             ],
         },
         {

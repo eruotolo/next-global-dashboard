@@ -2,18 +2,18 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import { BtnDeleteCell, BtnEditCell, BtnViewCell } from '@/components/BtnActionCell/BtnActionCell';
 
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, FilePenLine, Trash2 } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { clsx } from 'clsx';
 import { toast } from 'sonner';
 
@@ -73,17 +73,23 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpenEditTicket(true)}>
-                        <FilePenLine />
-                        Editar ticket
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
+                    <BtnViewCell
+                        onAction={() => setOpenEditTicket(true)}
+                        label="Ver ticket"
+                        permission={['Ver']}
+                    />
+                    <BtnEditCell
+                        onAction={() => setOpenEditTicket(true)}
+                        label="Editar ticket"
+                        permission={['Editar']}
+                    />
+                    <BtnDeleteCell
+                        itemId={ticketId}
+                        onDelete={handleDelete}
+                        permission={['Eliminar']}
+                        label="Eliminar ticket"
                         className="text-red-600"
-                        onClick={() => handleDelete(ticketId)}
-                    >
-                        <Trash2 />
-                        Eliminar ticket
-                    </DropdownMenuItem>
+                    />
                 </DropdownMenuContent>
             </DropdownMenu>
             {openEditTicket && (

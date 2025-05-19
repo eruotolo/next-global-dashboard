@@ -107,18 +107,28 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    <BtnViewCell onAction={() => setOpenPreviewUser(true)} label="Ver perfil" />
+                    <BtnViewCell
+                        onAction={() => setOpenPreviewUser(true)}
+                        label="Ver perfil"
+                        permission={['Ver']}
+                    />
 
-                    <BtnEditCell onAction={() => setOpenEditUser(true)} label="Editar usuario" />
+                    <BtnEditCell
+                        onAction={() => setOpenEditUser(true)}
+                        label="Editar usuario"
+                        permission={['Editar']}
+                    />
 
                     <BtnChangePasswordCell
                         onAction={() => setOpenChangePass(true)}
                         label="Cambiar contraseña"
+                        permission={['Editar']}
                     />
 
                     <BtnConfigCell
                         onAction={() => setOpenAssignRoles(true)}
                         label="Asignar roles"
+                        permission={['Editar']}
                     />
 
                     <BtnDeleteCell
@@ -126,6 +136,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                         onDelete={handleDelete}
                         permission={['Eliminar']}
                         label="Eliminar usuario"
+                        className="text-red-600"
                     />
                 </DropdownMenuContent>
             </DropdownMenu>

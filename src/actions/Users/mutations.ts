@@ -5,6 +5,9 @@ import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
 import type { UserData } from '@/tipos/Users/UsersInterface';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function createUser(formData: FormData) {
     try {
@@ -59,6 +62,25 @@ export async function createUser(formData: FormData) {
             },
         });
 
+        // Registrar la creación del usuario en la auditoría
+        const session = await getServerSession(authOptions);
+        await logAuditEvent({
+            action: 'create_user',
+            entity: 'User',
+            entityId: user.id,
+            description: `Usuario "${name} ${lastName}" creado`,
+            metadata: { 
+                userId: user.id,
+                email,
+                name,
+                lastName
+            },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
+        });
+
         revalidatePath('/admin/settings/users');
         return { user, message: 'Usuario creado exitosamente' };
     } catch (error) {
@@ -75,8 +97,36 @@ export async function deleteUser(id: string) {
             return { error: 'El ID del usuario es obligatorio' };
         }
 
+        // Obtener información del usuario antes de eliminarlo
+        const userToDelete = await prisma.user.findUnique({
+            where: { id },
+        });
+
+        if (!userToDelete) {
+            return { error: 'El usuario no existe' };
+        }
+
         const userRemoved = await prisma.user.delete({
             where: { id },
+        });
+
+        // Registrar la eliminación del usuario en la auditoría
+        const session = await getServerSession(authOptions);
+        await logAuditEvent({
+            action: 'delete_user',
+            entity: 'User',
+            entityId: id,
+            description: `Usuario "${userToDelete.name} ${userToDelete.lastName || ''}" eliminado`,
+            metadata: { 
+                userId: id,
+                email: userToDelete.email,
+                name: userToDelete.name,
+                lastName: userToDelete.lastName
+            },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
         });
 
         revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla
@@ -94,6 +144,15 @@ export async function updateUser(id: string, formData: FormData) {
     try {
         if (!id) {
             return { error: 'El ID del usuario es obligatorio' };
+        }
+
+        // Obtener información del usuario antes de actualizarlo
+        const userBeforeUpdate = await prisma.user.findUnique({
+            where: { id },
+        });
+
+        if (!userBeforeUpdate) {
+            return { error: 'El usuario no existe' };
         }
 
         const name = formData.get('name') as string;
@@ -131,6 +190,48 @@ export async function updateUser(id: string, formData: FormData) {
         const userUpdated = await prisma.user.update({
             where: { id },
             data,
+        });
+
+        // Registrar la actualización del usuario en la auditoría
+        const session = await getServerSession(authOptions);
+        await logAuditEvent({
+            action: 'update_user',
+            entity: 'User',
+            entityId: id,
+            description: `Usuario "${userBeforeUpdate.name} ${userBeforeUpdate.lastName || ''}" actualizado`,
+            metadata: {
+                userId: id,
+                before: {
+                    name: userBeforeUpdate.name,
+                    lastName: userBeforeUpdate.lastName,
+                    email: userBeforeUpdate.email,
+                    phone: userBeforeUpdate.phone,
+                    address: userBeforeUpdate.address,
+                    city: userBeforeUpdate.city,
+                },
+                after: {
+                    name: userUpdated.name,
+                    lastName: userUpdated.lastName,
+                    email: userUpdated.email,
+                    phone: userUpdated.phone,
+                    address: userUpdated.address,
+                    city: userUpdated.city,
+                },
+                changes: {
+                    name: name !== userBeforeUpdate.name ? { from: userBeforeUpdate.name, to: name } : undefined,
+                    lastName: lastName !== userBeforeUpdate.lastName ? { from: userBeforeUpdate.lastName, to: lastName } : undefined,
+                    email: email !== userBeforeUpdate.email ? { from: userBeforeUpdate.email, to: email } : undefined,
+                    phone: phone !== userBeforeUpdate.phone ? { from: userBeforeUpdate.phone, to: phone } : undefined,
+                    address: address !== userBeforeUpdate.address ? { from: userBeforeUpdate.address, to: address } : undefined,
+                    city: city !== userBeforeUpdate.city ? { from: userBeforeUpdate.city, to: city } : undefined,
+                    password: password ? "Password changed" : undefined,
+                    image: data.image ? "Image updated" : undefined,
+                }
+            },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
         });
 
         revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla

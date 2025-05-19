@@ -7,7 +7,7 @@
     },
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "NODE_NO_WARNINGS=1 next build",
+        "build": "next build",
         "start": "next start",
         "lint": "biome lint .",
         "format": "biome format . --write",
@@ -15,7 +15,16 @@
         "clean": "rm -rf .next && npm run build",
         "delete": "rm -rf .next",
         "preview": "next build && next start",
-        "postinstall": "prisma generate"
+        "postinstall": "prisma generate",
+        "bun:dev": "bun --bun next dev --turbopack",
+        "bun:build": "NODE_NO_WARNINGS=1 bun --bun next build",
+        "bun:start": "bun --bun next start",
+        "bun:lint": "bun run biome lint .",
+        "bun:format": "bun run biome format . --write",
+        "bun:sort-tw": "bun run rustywind --write .",
+        "bun:clean": "rm -rf .next && bun run build",
+        "bun:preview": "bun run build && bun run start",
+        "bun:postinstall": "bun prisma generate"
     },
     "dependencies": {
         "@getbrevo/brevo": "^2.2.0",

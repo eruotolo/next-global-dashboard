@@ -5,4 +5,5 @@ export const customRouteNames: { [key: string]: string } = {
     tickets: 'Tickets',
     settings: 'Configuración',
     unauthorized: 'No autorizado',
+    audit: 'Auditoria Interna',
 };

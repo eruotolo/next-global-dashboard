@@ -51,3 +51,4 @@ certs/
 .prettierrc
 .env
 .next!/postgres-data/
+/bun.lock

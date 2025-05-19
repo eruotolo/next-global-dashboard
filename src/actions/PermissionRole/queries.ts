@@ -3,6 +3,9 @@
 import prisma from '@/dbprisma/db';
 import type { PermissionRoleQuery } from '@/types/Permission/PermissionInterface';
 import { revalidatePath } from 'next/cache';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function getPermissionRoles(id: string): Promise<PermissionRoleQuery[]> {
     if (!id) {
@@ -41,6 +44,31 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
     }
 
     try {
+        // Obtener información del rol
+        const role = await prisma.role.findUnique({
+            where: { id },
+            select: { id: true, name: true },
+        });
+
+        if (!role) {
+            throw new Error('El rol no existe');
+        }
+
+        // Obtener permisos actuales antes de la actualización
+        const currentPermissions = await prisma.permissionRole.findMany({
+            where: { roleId: id },
+            include: {
+                permission: {
+                    select: { id: true, name: true },
+                },
+            },
+        });
+
+        const currentPermissionIds = currentPermissions.map((pr) => pr.permissionId);
+        const currentPermissionNames = currentPermissions
+            .map((pr) => pr.permission?.name)
+            .filter(Boolean) as string[];
+
         const result = await prisma.$transaction(async (tx) => {
             await tx.permissionRole.deleteMany({
                 where: { roleId: id },
@@ -58,10 +86,11 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
             // verificar que los permisos existan
             const existingPermissions = await tx.permission.findMany({
                 where: { id: { in: permissions } },
-                select: { id: true },
+                select: { id: true, name: true },
             });
 
             const validPermissionIds = existingPermissions.map((p) => p.id);
+            const validPermissionNames = existingPermissions.map((p) => p.name);
             const invalidPermissions = permissions.filter(
                 (permissionId) => !validPermissionIds.includes(permissionId),
             );
@@ -86,6 +115,45 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
                 message: 'Permisos actualizados correctamente',
                 success: true,
             };
+        });
+
+        // Registrar la actualización de permisos en la auditoría
+        const session = await getServerSession(authOptions);
+        await logAuditEvent({
+            action: 'update_permissions',
+            entity: 'Role',
+            entityId: id,
+            description: `Permisos actualizados para el rol "${role.name}"`,
+            metadata: {
+                roleId: id,
+                roleName: role.name,
+                before: {
+                    permissionIds: currentPermissionIds,
+                    permissionNames: currentPermissionNames,
+                },
+                after: {
+                    permissionIds: permissions,
+                    permissionNames:
+                        permissions.length > 0
+                            ? (
+                                  await prisma.permission.findMany({
+                                      where: { id: { in: permissions } },
+                                      select: { name: true },
+                                  })
+                              ).map((p) => p.name)
+                            : [],
+                },
+                added: permissions.filter(
+                    (p) => !(currentPermissionIds.filter(Boolean) as string[]).includes(p),
+                ),
+                removed: (currentPermissionIds.filter(Boolean) as string[]).filter(
+                    (p) => !permissions.includes(p),
+                ),
+            },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
         });
 
         revalidatePath('/admin/settings/users');
