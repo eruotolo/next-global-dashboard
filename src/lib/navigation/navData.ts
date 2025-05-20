@@ -1,4 +1,13 @@
-import { BookOpen, Bot, Frame, LifeBuoy, PieChart, Settings2, SquareTerminal } from 'lucide-react';
+import {
+    BookOpen,
+    Bot,
+    Frame,
+    LifeBuoy,
+    PieChart,
+    Settings2,
+    Shield,
+    SquareTerminal,
+} from 'lucide-react';
 
 export const navData = {
     navMain: [
@@ -112,16 +121,26 @@ export const navData = {
                     title: 'Usuarios',
                     url: '/admin/settings/users',
                 },
-                {
-                    title: 'Auditoria',
-                    url: '/admin/settings/audit',
-                },
             ],
         },
         {
             title: 'Ayuda',
             url: '/admin/settings/tickets',
             icon: LifeBuoy,
+        },
+    ],
+
+    adminSetting: [
+        {
+            title: 'Privado',
+            url: '#',
+            icon: Shield,
+            items: [
+                {
+                    title: 'Auditoria',
+                    url: '/admin/settings/audit',
+                },
+            ],
         },
     ],
 };

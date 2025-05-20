@@ -35,14 +35,13 @@ export default function TicketTable() {
         } finally {
             setIsLoading(false);
         }
-        setIsLoading(false);
     }, []);
 
     useEffect(() => {
         fetchTickets();
     }, [fetchTickets]);
 
-    const _refreshTable = async () => {
+    const refreshTable = async () => {
         await fetchTickets();
     };
 
@@ -56,13 +55,13 @@ export default function TicketTable() {
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>
                 </div>
                 <div>
-                    <NewTicketsModal refreshAction={_refreshTable} />
+                    <NewTicketsModal refreshAction={refreshTable} />
                 </div>
             </div>
             <div className="mt-[20px]">
                 {error && <p className="mb-4 text-red-500">{error}</p>}
                 <DataTable
-                    columns={TicketColumns(_refreshTable)}
+                    columns={TicketColumns(refreshTable)}
                     data={ticketData}
                     loading={isLoading}
                     filterPlaceholder="Buscar en todos los campos..."

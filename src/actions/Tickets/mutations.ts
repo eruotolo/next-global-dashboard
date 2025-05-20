@@ -68,6 +68,8 @@ export async function createTicket(formData: FormData) {
             },
         });
 
+        // Código de envío de email comentado para pruebas
+        /*
         // Importar Brevo de manera correcta
         const brevoModule = await import('@getbrevo/brevo');
 
@@ -87,11 +89,12 @@ export async function createTicket(formData: FormData) {
         sendSmtpEmail.htmlContent = `
             <h1>Se ha creado un nuevo ticket.</h1>
             <p>El número del ticket es: <strong>${code}</strong>.</p>
-            <p>La prioridad del ticket es: <strong>${priority}</strong>.</p>           
+            <p>La prioridad del ticket es: <strong>${priority}</strong>.</p>
         `;
 
         // Enviar el email
         await apiInstance.sendTransacEmail(sendSmtpEmail);
+        */
 
         // Registrar la creación del ticket en la auditoría
         const session = await getServerSession(authOptions);
@@ -109,7 +112,7 @@ export async function createTicket(formData: FormData) {
                 priority,
                 userId,
                 userName: `${userName} ${userLastName}`.trim(),
-                hasImage: !!imageUrl
+                hasImage: !!imageUrl,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -213,7 +216,13 @@ export async function updateTicket(id: string, formData: FormData) {
         }
 
         // Preparar los datos para actualizar
-        const updateData: any = {
+        const updateData: {
+            title: string;
+            description: string;
+            status: TicketStatus;
+            priority: TicketPriority;
+            image?: string;
+        } = {
             title,
             description,
             status,

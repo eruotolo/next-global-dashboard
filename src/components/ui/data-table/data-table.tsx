@@ -35,6 +35,18 @@ interface DataTableProps<TData, TValue> {
     loading?: boolean;
 }
 
+// Agrega estas interfaces arriba de tu componente DataTable
+interface RoleItem {
+    role: {
+        name: string;
+    };
+}
+
+// Función de tipo guard para verificar si un valor es un array de RoleItem
+function isRoleArray(value: unknown): value is RoleItem[] {
+    return Array.isArray(value) && value.length > 0 && typeof value[0]?.role?.name === 'string';
+}
+
 export function DataTable<TData, TValue>({
     columns,
     data,
@@ -47,16 +59,16 @@ export function DataTable<TData, TValue>({
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
-    // Función de filtrado global personalizada
+    // Función de filtrado global personalizada actualizada
     const customGlobalFilterFn = (row: Row<TData>, _columnId: string, filterValue: string) => {
         const searchValue = filterValue.toLowerCase();
 
-        // Obtenemos todos los valores visibles de la fila
-        const rowValues = Object.values(row.original as Record<string, any>).map((value) => {
-            if (Array.isArray(value) && value.length > 0 && value[0]?.role?.name) {
+        // Obtenemos todos los valores visibles de la fila (sin any)
+        const rowValues = Object.values(row.original as Record<string, unknown>).map((value) => {
+            if (isRoleArray(value)) {
                 // Caso especial para roles: extraemos los nombres de los roles
                 return value
-                    .map((item: any) => item.role.name)
+                    .map((item) => item.role.name)
                     .join(' ')
                     .toLowerCase();
             }
@@ -97,6 +109,8 @@ export function DataTable<TData, TValue>({
                 data={data}
                 globalFilter={globalFilter}
                 setGlobalFilter={setGlobalFilter}
+                columnVisibility={columnVisibility}
+                setColumnVisibility={setColumnVisibility}
             />
 
             <div className="bg-white rounded-md border">

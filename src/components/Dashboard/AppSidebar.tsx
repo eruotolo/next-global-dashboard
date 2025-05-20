@@ -7,6 +7,7 @@ import NavMain from '@/components/Dashboard/NavMain';
 import NavProjects from '@/components/Dashboard/NavProjects';
 import NavSetting from '@/components/Dashboard/NavSetting';
 import NavUser from '@/components/Dashboard/NavUser';
+import NavPrivate from '@/components/Dashboard/NavPrivate';
 
 import {
     Sidebar,
@@ -20,9 +21,15 @@ import {
 
 import { navData } from '@/lib/navigation/navData';
 
+import useAuthStore from '@/store/authStore';
+
 const logo: string = '/logo-sm-wh.svg';
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const session = useAuthStore((state) => state.session);
+    // Revisa si entre los roles existe 'SuperAdministrador'
+    const isSuperAdministrador = session?.user?.roles?.includes('SuperAdministrador');
+
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader>
@@ -54,6 +61,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                 <NavMain items={navData.navMain} />
                 <NavProjects projects={navData.projects} />
                 <NavSetting items={navData.navSetting} className="mt-auto" />
+                {isSuperAdministrador && <NavPrivate items={navData.adminSetting} />}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

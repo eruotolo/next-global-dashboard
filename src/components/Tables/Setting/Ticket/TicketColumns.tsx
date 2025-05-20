@@ -108,7 +108,7 @@ export const TicketColumns = (
     refreshTable: () => Promise<void>,
 ): ColumnDef<SimpleTicketQuery>[] => [
     {
-        accessorKey: 'code',
+        accessorKey: 'Código',
         header: ({ column }) => (
             <div className="flex justify-center font-semibold whitespace-nowrap">
                 <Button
@@ -130,7 +130,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'title',
+        accessorKey: 'Título',
         header: ({ column }) => (
             <Button
                 variant="ghost"
@@ -146,7 +146,7 @@ export const TicketColumns = (
         },
     },
     {
-        id: 'fullName',
+        id: 'Nombre Completo',
         header: ({ column }) => (
             <Button
                 variant="ghost"
@@ -163,7 +163,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'status',
+        accessorKey: 'Estado',
         header: () => (
             <div className="flex justify-center font-semibold whitespace-nowrap min-w-[100px]">
                 Estatus
@@ -201,7 +201,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'priority',
+        accessorKey: 'Prioridad',
         header: () => (
             <div className="flex justify-center font-semibold whitespace-nowrap min-w-[100px]">
                 Prioridad
@@ -236,7 +236,7 @@ export const TicketColumns = (
         },
     },
     {
-        id: 'acciones',
+        id: 'Acciones',
         cell: ({ row }) => <ActionCell row={row} refreshTable={refreshTable} />,
     },
 ];
