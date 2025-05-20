@@ -1,9 +1,15 @@
-export default async function DashboardPage() {
+'use client';
+
+import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+
+export default function DashboardPage() {
     return (
-        <div className="rounded-xl bg-muted/50 aspect-video">
-            <div className="p-4">
-                <p className="p-4 font-inter">Dashboard</p>
+        <ProtectedRoute roles={['Usuario', 'Administrador', 'SuperAdministrador', 'Colaborador', 'Editor']}>
+            <div className="rounded-xl bg-muted/50 aspect-video">
+                <div className="p-4">
+                    <p className="p-4 font-inter">Dashboard</p>
+                </div>
             </div>
-        </div>
+        </ProtectedRoute>
     );
 }

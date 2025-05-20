@@ -37,6 +37,10 @@ const useAuthStore = create<AuthStore>((set) => ({
         if (session?.user?.permissions) {
             useUserPermissionStore.getState().setPermissions(session.user.permissions);
         }
+        // Sincroniza los roles con useUserPermissionStore
+        if (session?.user?.roles) {
+            useUserPermissionStore.getState().setRoles(session.user.roles);
+        }
     },
     fetchSession: async () => {
         try {
@@ -49,6 +53,10 @@ const useAuthStore = create<AuthStore>((set) => ({
             // Sincroniza los permisos cuando se obtiene la sesión
             if (data?.user?.permissions) {
                 useUserPermissionStore.getState().setPermissions(data.user.permissions);
+            }
+            // Sincroniza los roles cuando se obtiene la sesión
+            if (data?.user?.roles) {
+                useUserPermissionStore.getState().setRoles(data.user.roles);
             }
         } catch (error: unknown) {
             if (error instanceof Error) {

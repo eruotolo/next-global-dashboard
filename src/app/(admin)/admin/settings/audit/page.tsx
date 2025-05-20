@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAuditLogs, type AuditAction, type AuditEntity } from '@/lib/audit/auditLogger';
 import type { Prisma } from '@prisma/client';
+import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,7 +60,7 @@ interface AuditLog {
     metadata: Prisma.JsonValue | null;
 }
 
-export default function AuditLogsPage() {
+function AuditLogsContent() {
     const [logs, setLogs] = useState<AuditLog[]>([]);
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState({
@@ -370,5 +371,15 @@ export default function AuditLogsPage() {
                 </CardContent>
             </Card>
         </div>
+    );
+}
+
+export default function AuditLogsPage() {
+    return (
+        <ProtectedRoute 
+            roles={['SuperAdministrador']}
+        >
+            <AuditLogsContent />
+        </ProtectedRoute>
     );
 }

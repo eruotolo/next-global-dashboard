@@ -20,15 +20,27 @@ import {
 } from '@/components/ui/sidebar';
 
 import type { ProjectsNav } from '@/tipos/Sidebar/ProjectsNav';
+import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 
 export default function NavProjects({ projects }: { projects: ProjectsNav[] }) {
     const { isMobile } = useSidebar();
+    const hasAnyRole = useUserPermissionStore((state) => state.hasAnyRole);
+
+    // Filtrar proyectos según roles
+    const filteredProjects = projects.filter(item => {
+        const hasRequiredRole = !item.roles?.length || 
+            hasAnyRole(item.roles);
+
+        return hasRequiredRole;
+    });
+
+    if (filteredProjects.length === 0) return null;
 
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Projects</SidebarGroupLabel>
             <SidebarMenu>
-                {projects.map((item) => (
+                {filteredProjects.map((item) => (
                     <SidebarMenuItem key={item.name}>
                         <SidebarMenuButton asChild>
                             <a href={item.url}>
