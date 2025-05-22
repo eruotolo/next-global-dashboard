@@ -5,7 +5,7 @@ import type { UserRoleQuery } from '@/tipos/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 
 export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
     if (!id) {

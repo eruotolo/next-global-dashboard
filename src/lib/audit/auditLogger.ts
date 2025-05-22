@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import prisma from '@/dbprisma/db';
 import type { Prisma } from '@prisma/client';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 
 // Tipos de acciones que se pueden auditar
 export type AuditAction =

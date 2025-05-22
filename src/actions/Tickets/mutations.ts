@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { TicketStatus, TicketPriority } from '@prisma/client';
 
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 
 // Generar código para tickets

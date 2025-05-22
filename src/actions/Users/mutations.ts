@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 import type { UserData } from '@/tipos/Users/UsersInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 
 export async function createUser(formData: FormData) {
     try {

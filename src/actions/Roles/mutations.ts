@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 
 export async function createRole(formData: FormData) {
     try {

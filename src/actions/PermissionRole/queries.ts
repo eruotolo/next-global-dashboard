@@ -5,7 +5,7 @@ import type { PermissionRoleQuery } from '@/types/Permission/PermissionInterface
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 
 export async function getPermissionRoles(id: string): Promise<PermissionRoleQuery[]> {
     if (!id) {

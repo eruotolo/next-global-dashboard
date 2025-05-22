@@ -3,7 +3,7 @@
 import prisma from '@/dbprisma/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 
 interface CreatePageData {
@@ -38,8 +38,8 @@ export async function createPage(data: CreatePageData) {
         }
 
         await logAuditEvent({
-            action: 'create',
-            entity: 'Page',
+            action: 'create_role',
+            entity: 'System',
             entityId: page.id,
             description: `Página "${page.name}" creada`,
             metadata: { ...data },
@@ -67,8 +67,8 @@ export async function updatePage(id: string, data: Partial<CreatePageData>) {
         });
 
         await logAuditEvent({
-            action: 'update',
-            entity: 'Page',
+            action: 'update_role',
+            entity: 'System',
             entityId: page.id,
             description: `Página "${page.name}" actualizada`,
             metadata: { ...data },
@@ -95,8 +95,8 @@ export async function deletePage(id: string) {
         });
 
         await logAuditEvent({
-            action: 'delete',
-            entity: 'Page',
+            action: 'delete_role',
+            entity: 'System',
             entityId: id,
             description: `Página "${page.name}" eliminada`,
             metadata: { id },
@@ -149,8 +149,8 @@ export async function updatePageRole(
                 ]);
 
                 await logAuditEvent({
-                    action: 'update_page_permissions',
-                    entity: 'Page',
+                    action: 'update_permissions',
+                    entity: 'System',
                     entityId: pageId,
                     description: `Rol "${role?.name}" asignado a la página "${page?.name}"`,
                     metadata: {
@@ -181,8 +181,8 @@ export async function updatePageRole(
             ]);
 
             await logAuditEvent({
-                action: 'update_page_permissions',
-                entity: 'Page',
+                action: 'update_permissions',
+                entity: 'System',
                 entityId: pageId,
                 description: `Rol "${role?.name}" removido de la página "${page?.name}"`,
                 metadata: {
