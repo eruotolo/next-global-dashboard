@@ -1,19 +1,24 @@
-import Link from 'next/link';
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function UnauthorizedPage() {
+    const router = useRouter();
+
     return (
-        <div className="rounded-xl bg-muted/50 aspect-video">
-            <div className="flex flex-col justify-center items-center h-[85vh]">
-                <h1 className="mb-4 text-3xl font-bold text-red-600">Acceso denegado</h1>
-                <p className="mb-6 text-gray-700">
-                    Lo sentimos, pero no tienes permiso para ver esta página.
+        <div className="flex flex-col items-center justify-center min-h-[85vh] bg-background">
+            <div className="text-center space-y-6">
+                <h1 className="text-4xl font-bold text-primary">Acceso No Autorizado</h1>
+                <p className="text-lg text-muted-foreground">
+                    No tienes los permisos necesarios para acceder a esta página.
                 </p>
-                <Link
-                    href="/admin/dashboard"
-                    className="font-inter h-[36px] px-[20px] mt-[20px] rounded-[10px] border-0 bg-gray-600 text-[13px] font-normal text-white hover:bg-gray-300 hover:text-white  disabled:opacity-50 cursor-pointer flex items-center justify-center"
-                >
-                    Regresar al Dashboard
-                </Link>
+                <div className="space-x-4">
+                    <Button onClick={() => router.back()} variant="outline">
+                        Volver
+                    </Button>
+                    <Button onClick={() => router.push('/admin/dashboard')}>Ir al Dashboard</Button>
+                </div>
             </div>
         </div>
     );

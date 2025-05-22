@@ -14,7 +14,7 @@ export default function UsersPage() {
     }, [refreshAll]);
 
     return (
-        <ProtectedRoute roles={['Administrador', 'SuperAdministrador']}>
+        <ProtectedRoute>
             <div>
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="col-span-3 p-6 rounded-xl md:col-span-2 bg-muted/50 aspect-video">

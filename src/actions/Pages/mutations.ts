@@ -1,0 +1,208 @@
+'use server';
+
+import prisma from '@/dbprisma/db';
+import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
+
+interface CreatePageData {
+    name: string;
+    path: string;
+    description?: string;
+}
+
+export async function createPage(data: CreatePageData) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        const page = await prisma.page.create({
+            data: {
+                ...data,
+                state: 1,
+            },
+        });
+
+        // Asignar automáticamente al SuperAdministrador
+        const superAdmin = await prisma.role.findFirst({
+            where: { name: 'SuperAdministrador' },
+        });
+
+        if (superAdmin) {
+            await prisma.pageRole.create({
+                data: {
+                    pageId: page.id,
+                    roleId: superAdmin.id,
+                },
+            });
+        }
+
+        await logAuditEvent({
+            action: 'create',
+            entity: 'Page',
+            entityId: page.id,
+            description: `Página "${page.name}" creada`,
+            metadata: { ...data },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
+        });
+
+        revalidatePath('/admin/settings/permissions');
+        return { success: true, page };
+    } catch (error) {
+        console.error('Error creating page:', error);
+        throw new Error('Failed to create page');
+    }
+}
+
+export async function updatePage(id: string, data: Partial<CreatePageData>) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        const page = await prisma.page.update({
+            where: { id },
+            data,
+        });
+
+        await logAuditEvent({
+            action: 'update',
+            entity: 'Page',
+            entityId: page.id,
+            description: `Página "${page.name}" actualizada`,
+            metadata: { ...data },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
+        });
+
+        revalidatePath('/admin/settings/permissions');
+        return { success: true, page };
+    } catch (error) {
+        console.error('Error updating page:', error);
+        throw new Error('Failed to update page');
+    }
+}
+
+export async function deletePage(id: string) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        const page = await prisma.page.delete({
+            where: { id },
+        });
+
+        await logAuditEvent({
+            action: 'delete',
+            entity: 'Page',
+            entityId: id,
+            description: `Página "${page.name}" eliminada`,
+            metadata: { id },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
+        });
+
+        revalidatePath('/admin/settings/permissions');
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting page:', error);
+        throw new Error('Failed to delete page');
+    }
+}
+
+export async function updatePageRole(
+    pageId: string,
+    roleId: string,
+    action: 'add' | 'remove'
+) {
+    try {
+        if (!pageId || !roleId || !['add', 'remove'].includes(action)) {
+            throw new Error('Invalid parameters');
+        }
+
+        const session = await getServerSession(authOptions);
+
+        if (action === 'add') {
+            const existingPermission = await prisma.pageRole.findFirst({
+                where: {
+                    pageId,
+                    roleId,
+                },
+            });
+
+            if (!existingPermission) {
+                await prisma.pageRole.create({
+                    data: {
+                        pageId,
+                        roleId,
+                    },
+                });
+
+                // Obtener información de la página y el rol para el log
+                const [page, role] = await Promise.all([
+                    prisma.page.findUnique({ where: { id: pageId } }),
+                    prisma.role.findUnique({ where: { id: roleId } })
+                ]);
+
+                await logAuditEvent({
+                    action: 'update_page_permissions',
+                    entity: 'Page',
+                    entityId: pageId,
+                    description: `Rol "${role?.name}" asignado a la página "${page?.name}"`,
+                    metadata: {
+                        pageId,
+                        pageName: page?.name,
+                        roleId,
+                        roleName: role?.name,
+                        action: 'add',
+                    },
+                    userId: session?.user?.id,
+                    userName: session?.user?.name
+                        ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                        : undefined,
+                });
+            }
+        } else {
+            await prisma.pageRole.deleteMany({
+                where: {
+                    pageId,
+                    roleId,
+                },
+            });
+
+            // Obtener información de la página y el rol para el log
+            const [page, role] = await Promise.all([
+                prisma.page.findUnique({ where: { id: pageId } }),
+                prisma.role.findUnique({ where: { id: roleId } })
+            ]);
+
+            await logAuditEvent({
+                action: 'update_page_permissions',
+                entity: 'Page',
+                entityId: pageId,
+                description: `Rol "${role?.name}" removido de la página "${page?.name}"`,
+                metadata: {
+                    pageId,
+                    pageName: page?.name,
+                    roleId,
+                    roleName: role?.name,
+                    action: 'remove',
+                },
+                userId: session?.user?.id,
+                userName: session?.user?.name
+                    ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                    : undefined,
+            });
+        }
+
+        revalidatePath('/admin/settings/pages');
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating page role:', error);
+        throw new Error('Failed to update page role');
+    }
+} 

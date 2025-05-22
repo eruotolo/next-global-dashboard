@@ -1,52 +1,42 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
-
-const publicPaths = ['/', '/login', '/api/auth', '/recovery'];
+import { NextResponse, type NextRequest } from 'next/server';
+import { isPublicPath, isStaticPath } from '@/config/routes';
+import { verifyAuth } from '@/lib/auth';
+import { checkPageAccess } from '@/actions/Pages/queries';
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
-    // Permitir recursos estáticos
-    if (
-        /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(pathname) ||
-        pathname.startsWith('/_next/') ||
-        pathname.includes('favicon.ico')
-    ) {
+    // Permitir rutas públicas y estáticas
+    if (isPublicPath(pathname) || isStaticPath(pathname)) {
         return NextResponse.next();
     }
 
-    // Permitir rutas públicas
-    if (publicPaths.includes(pathname) || pathname.startsWith('/api/auth/')) {
-        return NextResponse.next();
-    }
-
-    // Verificar autenticación
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        secureCookie: false,
-    });
-
-    // Si no hay token, redirigir al inicio
+    // Verificar el token de autenticación
+    const token = await verifyAuth(req);
     if (!token) {
-        return NextResponse.redirect(new URL('/', req.url));
+        return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    // Si hay token y se intenta acceder a login, redirigir al dashboard
-    if (token && pathname === '/login') {
-        return NextResponse.redirect(new URL('/admin/dashboard', req.url));
+    // Si estamos en la ruta del dashboard y acabamos de iniciar sesión, permitir el acceso
+    if (pathname === '/admin/dashboard' && req.headers.get('referer')?.includes('/login')) {
+        return NextResponse.next();
+    }
+
+    try {
+        // Verificar permisos de página
+        const result = await checkPageAccess(pathname, token.roles as string[]);
+        if (!result.hasAccess) {
+            return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
+        }
+    } catch (error) {
+        console.error('Error checking page access:', error);
+        return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
     }
 
     return NextResponse.next();
 }
 
+// Configurar las rutas que deben pasar por el middleware
 export const config = {
-    matcher: [
-        '/api/:path*',
-        '/admin/:path*',
-        '/admin/dashboard/:path*',
-        '/admin/settings/:path*',
-        '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
-    ],
+    matcher: ['/((?!api/uploadthing|_next/static|_next/image|favicon.ico).*)'],
 };

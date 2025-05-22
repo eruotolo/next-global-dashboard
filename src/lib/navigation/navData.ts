@@ -16,7 +16,7 @@ export const navData = {
             url: '#',
             icon: SquareTerminal,
             isActive: true,
-            roles: [], // Sin restricciones
+            roles: [],
             items: [
                 {
                     title: 'Dashboard',
@@ -136,12 +136,12 @@ export const navData = {
             title: 'Settings',
             url: '#',
             icon: Settings2,
-            roles: ['Administrador', 'SuperAdministrador'],
+            roles: [],
             items: [
                 {
                     title: 'Usuarios',
                     url: '/admin/settings/users',
-                    roles: ['Administrador', 'SuperAdministrador'],
+                    roles: [],
                 },
             ],
         },
@@ -149,7 +149,7 @@ export const navData = {
             title: 'Ayuda',
             url: '/admin/settings/tickets',
             icon: LifeBuoy,
-            roles: ['Usuario', 'Administrador', 'SuperAdministrador'],
+            roles: [],
         },
     ],
 
@@ -163,6 +163,11 @@ export const navData = {
                 {
                     title: 'Auditoria',
                     url: '/admin/settings/audit',
+                    roles: ['SuperAdministrador'],
+                },
+                {
+                    title: 'Permisos',
+                    url: '/admin/settings/permissions',
                     roles: ['SuperAdministrador'],
                 },
             ],

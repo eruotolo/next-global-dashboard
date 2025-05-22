@@ -16,20 +16,21 @@ import {
 } from '@/components/ui/sidebar';
 
 import type { ItemsNavSetting } from '@/tipos/Sidebar/ItemsNavSetting';
-import { useUserPermissionStore } from '@/store/useUserPermissionStore';
+import useAuthStore from '@/store/authStore';
 
 export default function NavPrivate({
     items,
     ...props
 }: { items: ItemsNavSetting[] } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
-    const hasAnyRole = useUserPermissionStore((state) => state.hasAnyRole);
+    const session = useAuthStore((state) => state.session);
+    const userRoles = session?.user?.roles || [];
 
     // Filtrar items según roles
     const filteredItems = items.filter(item => {
-        const hasRequiredRole = !item.roles?.length || 
-            hasAnyRole(item.roles);
-
-        return hasRequiredRole;
+        // Si no hay roles definidos, mostrar el item
+        if (!item.roles || item.roles.length === 0) return true;
+        // Si hay roles, verificar si el usuario tiene al menos uno de ellos
+        return item.roles.some(role => userRoles.includes(role));
     });
 
     if (filteredItems.length === 0) return null;
@@ -41,10 +42,8 @@ export default function NavPrivate({
                     {filteredItems.map((item) => {
                         // Filtrar subitems según roles
                         const filteredSubItems = item.items?.filter(subItem => {
-                            const hasSubItemRole = !subItem.roles?.length || 
-                                hasAnyRole(subItem.roles);
-
-                            return hasSubItemRole;
+                            if (!subItem.roles || subItem.roles.length === 0) return true;
+                            return subItem.roles.some(role => userRoles.includes(role));
                         });
 
                         // Si no hay subitems visibles y el item principal no tiene URL, no mostrar

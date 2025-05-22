@@ -4,5 +4,5 @@ export interface ProjectsNav {
     name: string;
     url: string;
     icon: LucideIcon;
-    roles?: string[];
+    roles: string[];
 }

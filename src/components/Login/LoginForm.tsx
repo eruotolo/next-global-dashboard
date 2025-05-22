@@ -38,9 +38,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             const res = await signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                redirect: false, // Manejo manual de redirecciones local host
-                //redirect: true, // Para probar la version Start en locahost
-                //callbackUrl: '/admin/dashboard', // Para probar la version Start en locahost
+                redirect: false,
             });
 
             if (res?.error) {
@@ -53,10 +51,12 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                               : 'Ha ocurrido un error durante el inicio de sesión',
                 });
             } else {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
                 toast.success('Inicio de sesión exitoso', {
                     description: 'Has iniciado sesión correctamente.',
                 });
-                router.push('/admin/dashboard'); // Manejo manual de redirecciones local host
+                router.push('/admin/dashboard');
             }
         } catch (error) {
             toast.error('Error inesperado', {

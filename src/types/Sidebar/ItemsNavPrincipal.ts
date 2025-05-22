@@ -5,10 +5,10 @@ export interface ItemsNavPrincipal {
     url: string;
     icon: LucideIcon;
     isActive?: boolean;
-    roles?: string[];
+    roles: string[];
     items?: {
         title: string;
         url: string;
-        roles?: string[];
+        roles: string[];
     }[];
 }

@@ -1,63 +1,84 @@
-const { PrismaClient } = require('@prisma/client');
-const { hash } = require('bcrypt');
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function seed() {
-    const SUPER_ADMIN = '1';
+async function main() {
+    // Definir las páginas iniciales
+    const pages = [
+        {
+            name: 'Dashboard',
+            path: '/admin/dashboard',
+            description: 'Panel principal del sistema',
+        },
+        {
+            name: 'Usuarios',
+            path: '/admin/settings/users',
+            description: 'Gestión de usuarios del sistema',
+        },
+        {
+            name: 'Auditoria',
+            path: '/admin/settings/audit',
+            description: 'Gestión de auditoria del sistema',
+        },
+        {
+            name: 'Permisos de Páginas',
+            path: '/admin/settings/permissions',
+            description: 'Configuración de acceso a páginas por rol',
+        },
+        {
+            name: 'Tickets',
+            path: '/admin/settings/tickets',
+            description: 'Gestión de tickets del sistema',
+        },
+        // Agrega aquí más páginas según necesites
+    ];
 
-    // Crear roles si no existen
-    const _superRole = await prisma.role.upsert({
-        where: { id: SUPER_ADMIN },
-        update: {},
-        create: {
-            id: SUPER_ADMIN,
+    // Buscar el rol SuperAdministrador
+    const superAdminRole = await prisma.role.findFirst({
+        where: {
             name: 'SuperAdministrador',
         },
     });
 
-    // Verificar si el usuario super admin ya existe
-    const superAdminEmail = process.env.SUPER_EMAIL ?? 'edgardoruotolo@gmail.com';
-    const existingUser = await prisma.user.findUnique({
-        where: { email: superAdminEmail },
-    });
+    if (!superAdminRole) {
+        throw new Error('El rol SuperAdministrador no existe');
+    }
 
-    if (!existingUser) {
-        const userPass = process.env.SUPER_PASSWORD ?? 'Guns026772';
-        const userPassHash = await hash(userPass, 10);
-
-        // Crear usuario super admin
-        const superAdmin = await prisma.user.create({
-            data: {
-                email: superAdminEmail,
-                name: 'Edgardo',
-                lastName: 'Ruotolo Cardozo',
-                phone: '+56967553841',
-                address: 'Antonio Guarategua Lebe S/N',
-                city: 'Castro',
-                password: userPassHash,
-                image: '/shadcn.jpg',
+    // Crear las páginas y asignar permisos al SuperAdministrador
+    for (const pageData of pages) {
+        const page = await prisma.page.upsert({
+            where: { path: pageData.path },
+            update: pageData,
+            create: {
+                ...pageData,
                 state: 1,
             },
         });
 
-        // Crear relación usuario-rol
-        await prisma.userRole.create({
-            data: {
-                userId: superAdmin.id,
-                roleId: SUPER_ADMIN,
+        // Asignar permiso al SuperAdministrador
+        await prisma.pageRole.upsert({
+            where: {
+                pageId_roleId: {
+                    pageId: page.id,
+                    roleId: superAdminRole.id,
+                },
+            },
+            update: {},
+            create: {
+                pageId: page.id,
+                roleId: superAdminRole.id,
             },
         });
-    } else {
-    }
 
-    // Desconectar Prisma
-    await prisma.$disconnect();
+        console.log(`✅ Página ${page.name} creada y asignada a SuperAdministrador`);
+    }
 }
 
-seed()
-    .catch((error) => {
-        console.error('Error al ejecutar la semilla:', error);
+main()
+    .catch((e) => {
+        console.error(e);
         process.exit(1);
     })
-    .finally(() => {});
+    .finally(async () => {
+        await prisma.$disconnect();
+    }); 

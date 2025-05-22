@@ -199,7 +199,8 @@ export async function updateTicket(id: string, formData: FormData) {
 
         // Obtener los datos del formulario
         const title = (formData.get('title') as string) || currentTicket.title;
-        const description = (formData.get('description') as string) || currentTicket.description;
+        const description =
+            (formData.get('description') as string) ?? currentTicket.description ?? '';
         const status = formData.get('status') as TicketStatus;
         const priority = formData.get('priority') as TicketPriority;
         const imageFile = formData.get('image') as File | null;

@@ -41,6 +41,7 @@ model Role {
     createdAt      DateTime         @default(now())
     users          UserRole[]
     permissionRole PermissionRole[]
+    pageRoles      PageRole[]
 
     @@index([name])
 }
@@ -117,4 +118,27 @@ model PermissionRole {
     role         Role?       @relation(fields: [roleId], references: [id], onDelete: Cascade)
     permission   Permission? @relation(fields: [permissionId], references: [id], onDelete: Cascade)
     createdAt    DateTime    @default(now())
+}
+
+model Page {
+    id          String     @id @default(uuid())
+    name        String     // Nombre descriptivo de la página
+    path        String     @unique // Ruta de la página (ej: /admin/dashboard)
+    description String?    // Descripción opcional de la página
+    state       Int       @default(1) // Estado de la página (activo/inactivo)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    pageRoles   PageRole[]
+}
+
+model PageRole {
+    id        String   @id @default(uuid())
+    pageId    String
+    roleId    String
+    page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+    role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([pageId, roleId])
 }

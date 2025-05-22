@@ -22,7 +22,7 @@ const AuthAdapter = () => {
     };
 
     // Recupera un usuario por ID
-    const getUserById = async (userId: string): Promise<User | null> => {
+    const getUserById = async (userId: string): Promise<(User & { roles: string[] }) | null> => {
         if (!userId) {
             throw new Error('User ID must be provided.');
         }
@@ -30,9 +30,25 @@ const AuthAdapter = () => {
         try {
             const user = await prisma.user.findUnique({
                 where: { id: userId },
+                include: {
+                    roles: {
+                        include: {
+                            role: true,
+                        },
+                    },
+                },
             });
 
-            return user; // Devuelve el usuario encontrado o null si no existe
+            if (!user) return null;
+
+            // Extraer los nombres de los roles
+            const roles = user.roles.map(userRole => userRole.role?.name || '').filter(Boolean);
+
+            // Devolver el usuario con los roles
+            return {
+                ...user,
+                roles,
+            };
         } catch (error: any) {
             throw new Error(`Error fetching user: ${error.message}`);
         }

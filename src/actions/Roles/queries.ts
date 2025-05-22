@@ -69,3 +69,22 @@ export async function getRoleById(id: string): Promise<RoleQuery | null> {
         await prisma.$disconnect();
     }
 }
+
+export async function getRoles() {
+    try {
+        const roles = await prisma.role.findMany({
+            where: {
+                state: 1,
+            },
+            select: {
+                id: true,
+                name: true,
+            },
+        });
+
+        return roles;
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        throw new Error('Failed to fetch roles');
+    }
+}

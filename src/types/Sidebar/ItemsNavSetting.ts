@@ -4,10 +4,10 @@ export interface ItemsNavSetting {
     title: string;
     url: string;
     icon: LucideIcon;
-    roles?: string[];
+    roles: string[];
     items?: {
         title: string;
         url: string;
-        roles?: string[];
+        roles: string[];
     }[];
 }
