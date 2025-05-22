@@ -1,27 +1,28 @@
 import prisma from '@/dbprisma/db';
-import type { User } from '@prisma/client'; // Importa los tipos generados automáticamente por Prisma
+import type { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 const AuthAdapter = () => {
-    // Actualiza los datos de un usuario existente
     const updateUserSession = async (userId: string, userData: Partial<User>): Promise<User> => {
         if (!userId || !userData) {
             throw new Error('User ID and data must be provided.');
         }
 
         try {
-            // Actualiza los datos del usuario en la base de datos
             const updatedUser = await prisma.user.update({
                 where: { id: userId },
                 data: userData,
             });
 
-            return updatedUser; // Devuelve el usuario actualizado
-        } catch (error: any) {
-            throw new Error(`Error updating user session: ${error.message}`);
+            return updatedUser;
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                throw new Error(`Error de base de datos: ${error.message}`);
+            }
+            throw new Error('Error al actualizar la sesión del usuario');
         }
     };
 
-    // Recupera un usuario por ID
     const getUserById = async (userId: string): Promise<(User & { roles: string[] }) | null> => {
         if (!userId) {
             throw new Error('User ID must be provided.');
@@ -41,20 +42,20 @@ const AuthAdapter = () => {
 
             if (!user) return null;
 
-            // Extraer los nombres de los roles
-            const roles = user.roles.map(userRole => userRole.role?.name || '').filter(Boolean);
+            const roles = user.roles.map((userRole) => userRole.role?.name || '').filter(Boolean);
 
-            // Devolver el usuario con los roles
             return {
                 ...user,
                 roles,
             };
-        } catch (error: any) {
-            throw new Error(`Error fetching user: ${error.message}`);
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                throw new Error(`Error de base de datos: ${error.message}`);
+            }
+            throw new Error('Error al obtener el usuario');
         }
     };
 
-    // Obtiene todos los roles de un usuario
     const getUserRoles = async (userId: string): Promise<string[]> => {
         if (!userId) {
             throw new Error('User ID must be provided.');
@@ -64,13 +65,16 @@ const AuthAdapter = () => {
             const userRoles = await prisma.userRole.findMany({
                 where: { userId },
                 include: {
-                    role: true, // Incluir información de la tabla `Role`
+                    role: true,
                 },
             });
 
             return userRoles.map((userRole) => userRole.role?.name || '');
-        } catch (error: any) {
-            throw new Error(`Error fetching user roles: ${error.message}`);
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                throw new Error(`Error de base de datos: ${error.message}`);
+            }
+            throw new Error('Error al obtener los roles del usuario');
         }
     };
 
