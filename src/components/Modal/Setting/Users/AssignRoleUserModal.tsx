@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllRoles } from '@/actions/Roles';
-import { getUserRoles, updateUserRoles } from '@/actions/UserRoles';
+import { getAllRoles } from '../../../../actions/Settings/Roles';
+import { getUserRoles, updateUserRoles } from '../../../../actions/Settings/UserRoles';
 import type { RoleQuery, UserRoleQuery } from '@/tipos/Roles/RolesInterface';
 import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
 

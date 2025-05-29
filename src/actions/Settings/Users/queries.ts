@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import type { UserQueryWithRoles, UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
+import prisma from '@/lib/db/db';
+import type { UserQueryWithRoles, UserQueryWithDetails } from '@/types/Users/UsersInterface';
 
 export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
     try {

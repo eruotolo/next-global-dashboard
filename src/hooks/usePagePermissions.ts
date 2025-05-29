@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import useAuthStore from '@/store/authStore';
-import { checkPageAccess } from '@/actions/Pages/queries';
+import { checkPageAccess } from '@/actions/Settings/Pages/queries';
 
 interface UsePagePermissionsProps {
     path: string;
@@ -17,29 +17,59 @@ export const usePagePermissions = ({ path }: UsePagePermissionsProps): PagePermi
     const [hasAccess, setHasAccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const session = useAuthStore((state) => state.session);
+    const isInitialized = useAuthStore((state) => state.isInitialized);
+    const lastCheckedRef = useRef<{ path: string; roles: string[] } | null>(null);
 
     useEffect(() => {
+        let isMounted = true;
+
         const verifyAccess = async () => {
-            if (!session?.user) {
-                setHasAccess(false);
-                setIsLoading(false);
+            if (!isInitialized || !session?.user?.roles || !path) {
+                if (isMounted) {
+                    setHasAccess(false);
+                    setIsLoading(false);
+                }
+                return;
+            }
+
+            const roles = session.user.roles;
+            
+            // Verificar si ya tenemos el resultado en caché
+            if (
+                lastCheckedRef.current &&
+                lastCheckedRef.current.path === path &&
+                JSON.stringify(lastCheckedRef.current.roles) === JSON.stringify(roles)
+            ) {
                 return;
             }
 
             try {
                 const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-                const result = await checkPageAccess(normalizedPath, session.user.roles);
-                setHasAccess(result.hasAccess);
+                const result = await checkPageAccess(normalizedPath, roles);
+                
+                if (isMounted) {
+                    setHasAccess(result.hasAccess);
+                    lastCheckedRef.current = { path, roles };
+                }
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Error checking permissions');
-                setHasAccess(false);
+                if (isMounted) {
+                    setError(err instanceof Error ? err.message : 'Error checking permissions');
+                    setHasAccess(false);
+                }
             } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
 
+        setIsLoading(true);
         verifyAccess();
-    }, [path, session]);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [path, session?.user?.roles, isInitialized]);
 
     return { hasAccess, isLoading, error };
 }; 

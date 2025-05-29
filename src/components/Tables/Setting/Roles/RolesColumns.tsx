@@ -21,7 +21,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteRole } from '@/actions/Roles';
+import { deleteRole } from '../../../../actions/Settings/Roles';
 import { useUserRoleStore } from '@/store/userroleStore';
 import type { RolePermissionInterface } from '@/types/Roles/RolesInterface';
 

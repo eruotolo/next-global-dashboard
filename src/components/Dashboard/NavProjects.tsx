@@ -38,7 +38,7 @@ export default function NavProjects({ projects }: { projects: ProjectsNav[] }) {
 
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarGroupLabel>Administración</SidebarGroupLabel>
             <SidebarMenu>
                 {filteredProjects.map((item) => (
                     <SidebarMenuItem key={item.name}>

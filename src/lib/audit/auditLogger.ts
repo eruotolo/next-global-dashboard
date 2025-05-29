@@ -5,27 +5,7 @@ import prisma from '@/dbprisma/db';
 import type { Prisma } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
-
-// Tipos de acciones que se pueden auditar
-export type AuditAction =
-    | 'login_success'
-    | 'login_failed'
-    | 'logout'
-    | 'create_role'
-    | 'update_role'
-    | 'delete_role'
-    | 'update_permissions'
-    | 'create_user'
-    | 'update_user'
-    | 'delete_user'
-    | 'assign_role_user'
-    | 'remove_role_user'
-    | 'create_ticket'
-    | 'update_ticket'
-    | 'delete_ticket';
-
-// Entidades del sistema que pueden ser auditadas
-export type AuditEntity = 'User' | 'Role' | 'Permission' | 'Ticket' | 'System';
+import type {AuditAction, AuditEntity} from "@/lib/audit/auditType";
 
 // Parámetros para el registro de auditoría
 export interface AuditLogParams {

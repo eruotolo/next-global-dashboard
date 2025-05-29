@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createUser } from '@/actions/Users';
+import { createUser } from '@/actions/Settings/Users';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { UserFormData } from '@/tipos/Users/UsersInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';

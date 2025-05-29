@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { getAllTickets } from '@/actions/Tickets';
+import { getAllTickets } from '../../../../actions/Settings/Tickets';
 import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';

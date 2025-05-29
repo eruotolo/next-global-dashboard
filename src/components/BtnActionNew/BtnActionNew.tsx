@@ -2,7 +2,8 @@
 
 import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 import { DialogTrigger } from '@/components/ui/dialog';
-import { SquarePlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface BtnActionNewProps {
     label: string;
@@ -22,12 +23,14 @@ export default function BtnActionNew({ label, permission = ['Crear'] }: BtnActio
     const permitted = useHasPermission(permission);
 
     return (
-        <DialogTrigger
-            className={`botones ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={!permitted}
-        >
-            <SquarePlus className="mr-2 w-4 h-4" />
-            {label}
+        <DialogTrigger asChild>
+            <Button
+                className={`cursor-pointer ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!permitted}
+            >
+                <Plus className="mr-2 h-4 w-4" />
+                {label}
+            </Button>
         </DialogTrigger>
     );
 }

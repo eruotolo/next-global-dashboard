@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import type { SimpleTicketQuery, GetTicketQuery } from '@/tipos/Tickets/TicketInterface';
+import prisma from '@/lib/db/db';
+import type { SimpleTicketQuery, GetTicketQuery } from '@/types/Tickets/TicketInterface';
 
 export async function getAllTickets(): Promise<SimpleTicketQuery[]> {
     try {

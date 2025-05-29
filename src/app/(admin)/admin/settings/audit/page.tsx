@@ -1,12 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { getAuditLogs, type AuditAction, type AuditEntity } from '@/lib/audit/auditLogger';
+import { getAuditLogs } from '@/lib/audit/auditLogger';
+import {
+    type AuditAction,
+    type AuditEntity,
+    actionTypesForFilter,
+    entityTypesForFilter
+} from '@/lib/audit/auditType';
 import type { Prisma } from '@prisma/client';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -14,37 +19,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { ArrowUpDown } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import type { ColumnDef } from '@tanstack/react-table';
-
-const actionTypes: AuditAction[] = [
-    'login_success',
-    'login_failed',
-    'logout',
-    'create_role',
-    'update_role',
-    'delete_role',
-    'update_permissions',
-    'create_user',
-    'update_user',
-    'delete_user',
-    'assign_role_user',
-    'remove_role_user',
-    'create_ticket',
-    'update_ticket',
-    'delete_ticket',
-];
-
-const entityTypes: AuditEntity[] = ['User', 'Role', 'Permission', 'Ticket', 'System'];
 
 interface AuditLog {
     id: string;
     userId: string | null;
     userName: string | null;
-    action: string;
-    entity: string | null;
+    action: AuditAction;
+    entity: AuditEntity | null;
     description: string;
     ipAddress: string | null;
     createdAt: Date;
@@ -53,12 +37,28 @@ interface AuditLog {
     metadata: Prisma.JsonValue | null;
 }
 
-const getActionBadgeColor = (action: string) => {
-    if (action.includes('login_success') || action.includes('create'))
+const getActionBadgeColor = (action: AuditAction): string => {
+    if (action === 'loginSuccess') {
         return 'text-green-500 bg-green-100 border-green-400';
-    if (action.includes('login_failed') || action.includes('delete'))
+    }
+
+    if (action === 'loginFailed') {
         return 'text-red-500 bg-red-100 border-red-400';
-    if (action.includes('update')) return 'text-blue-500 bg-blue-100 border-blue-400';
+    }
+
+    if (action.startsWith('create')) {
+        return 'text-green-500 bg-green-100 border-green-400';
+    }
+
+    if (action.startsWith('delete') || action === 'removeRoleUser') {
+        return 'text-red-500 bg-red-100 border-red-400';
+    }
+
+    if (action.startsWith('update') || action === 'assignRoleUser') {
+        return 'text-blue-500 bg-blue-100 border-blue-400';
+    }
+
+    // Para logout u otras acciones
     return 'text-gray-500 bg-gray-100 border-gray-400';
 };
 
@@ -123,19 +123,22 @@ const columns: ColumnDef<AuditLog>[] = [
     {
         accessorKey: 'action',
         header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Acción
-                <ArrowUpDown className="ml-2 w-4 h-4" />
-            </Button>
+            <div className="flex justify-center font-semibold whitespace-nowrap">
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    Acción
+                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                </Button>
+            </div>
+
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex items-center justify-center">
                     <div
-                        className={`px-2 py-1 rounded-[30px] text-center font-medium text-[13px] w-[120px] ${getActionBadgeColor(
+                        className={`px-2 py-1 rounded-[30px] text-center font-medium text-[13px] w-[160px] ${getActionBadgeColor(
                             row.original.action,
                         )}`}
                     >
@@ -217,15 +220,15 @@ function AuditLogsContent() {
 
             const result = await getAuditLogs({
                 userId: filters.userId || undefined,
-                action: filters.action ? (filters.action as AuditAction) : undefined,
-                entity: filters.entity ? (filters.entity as AuditEntity) : undefined,
+                action: filters.action as AuditAction || undefined,
+                entity: filters.entity as AuditEntity || undefined,
                 startDate,
                 endDate,
                 page: 1,
                 pageSize: 50,
             });
 
-            setLogs(result.logs || []);
+            setLogs(result.logs as AuditLog[]);
         } catch (error) {
             console.error('Error al cargar logs de auditoría:', error);
         } finally {
@@ -293,7 +296,7 @@ function AuditLogsContent() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Todas las acciones</SelectItem>
-                            {actionTypes.map((action) => (
+                            {actionTypesForFilter.map((action) => (
                                 <SelectItem key={action} value={action}>
                                     {action.replace('_', ' ')}
                                 </SelectItem>
@@ -313,7 +316,7 @@ function AuditLogsContent() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Todas las entidades</SelectItem>
-                            {entityTypes.map((entity) => (
+                            {entityTypesForFilter.map((entity) => (
                                 <SelectItem key={entity} value={entity}>
                                     {entity}
                                 </SelectItem>

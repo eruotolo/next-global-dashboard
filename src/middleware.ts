@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { isPublicPath, isStaticPath } from '@/config/routes';
+import { isPublicPath, isStaticPath } from '@/lib/auth/publicPaths';
 import { verifyAuth } from '@/lib/auth';
-import { checkPageAccess } from '@/actions/Pages/queries';
+import { checkPageAccess } from '@/actions/Settings/Pages/queries';
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
@@ -13,27 +13,26 @@ export async function middleware(req: NextRequest) {
 
     // Verificar el token de autenticación
     const token = await verifyAuth(req);
-    if (!token) {
+    if (!token || !token.roles) {
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    // Si estamos en la ruta del dashboard y acabamos de iniciar sesión, permitir el acceso
-    if (pathname === '/admin/dashboard' && req.headers.get('referer')?.includes('/login')) {
+    // Permitir acceso al dashboard después del login
+    if (pathname === '/admin/dashboard') {
         return NextResponse.next();
     }
 
     try {
-        // Verificar permisos de página
+        // Verificar permisos de página solo para rutas que no sean el dashboard
         const result = await checkPageAccess(pathname, token.roles as string[]);
         if (!result.hasAccess) {
             return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
         }
+        return NextResponse.next();
     } catch (error) {
         console.error('Error checking page access:', error);
         return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
     }
-
-    return NextResponse.next();
 }
 
 // Configurar las rutas que deben pasar por el middleware

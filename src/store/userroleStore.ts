@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import { getAllUsers } from '@/actions/Users';
-import { getAllRoles } from '@/actions/Roles';
+import { getAllUsers } from '@/actions/Settings/Users';
+import { getAllRoles } from '@/actions/Settings/Roles';
 import type { UserInterface } from '@/tipos/Table/UserInterface';
 import type { RolePermissionInterface } from '@/tipos/Roles/RolesInterface';
 

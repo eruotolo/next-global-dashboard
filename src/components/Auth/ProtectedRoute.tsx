@@ -1,50 +1,50 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useAuthStore from '@/store/authStore';
-import { usePagePermissions } from '@/hooks/usePagePermissions';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface ProtectedRouteProps {
     children: ReactNode;
-    fallbackPath?: string;
 }
 
-export default function ProtectedRoute({
-    children,
-    fallbackPath = '/admin/unauthorized',
-}: ProtectedRouteProps) {
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     const router = useRouter();
-    const pathname = usePathname();
     const session = useAuthStore((state) => state.session);
-    const { hasAccess, isLoading, error } = usePagePermissions({ path: pathname });
-    const [isTransitioning, setIsTransitioning] = useState(true);
+    const isInitialized = useAuthStore((state) => state.isInitialized);
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const fetchSession = useAuthStore((state) => state.fetchSession);
 
     useEffect(() => {
-        // Dar tiempo para que la sesión se establezca
-        const timer = setTimeout(() => {
-            setIsTransitioning(false);
-        }, 1500);
+        let mounted = true;
 
-        return () => clearTimeout(timer);
-    }, []);
+        const initSession = async () => {
+            if (!isInitialized && mounted) {
+                try {
+                    await fetchSession();
+                } catch (error) {
+                    console.error('Error initializing session:', error);
+                }
+            }
+        };
+
+        initSession();
+
+        return () => {
+            mounted = false;
+        };
+    }, [isInitialized, fetchSession]);
 
     useEffect(() => {
-        if (isTransitioning) return;
-
-        if (!session) {
+        if (isInitialized && !session && !isLoading) {
+            console.log('No session found after initialization, redirecting to login');
             router.push('/login');
-            return;
         }
+    }, [isInitialized, session, isLoading, router]);
 
-        if (!isLoading && !hasAccess) {
-            router.push(fallbackPath);
-        }
-    }, [session, hasAccess, isLoading, router, fallbackPath, isTransitioning]);
-
-    if (isLoading || isTransitioning) {
+    if (!isInitialized || isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <LoadingSpinner size="lg" />
@@ -52,7 +52,7 @@ export default function ProtectedRoute({
         );
     }
 
-    if (!session || !hasAccess) {
+    if (!session) {
         return null;
     }
 

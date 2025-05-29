@@ -1,10 +1,11 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 
 interface CreatePageData {
     name: string;
@@ -17,29 +18,12 @@ export async function createPage(data: CreatePageData) {
         const session = await getServerSession(authOptions);
 
         const page = await prisma.page.create({
-            data: {
-                ...data,
-                state: 1,
-            },
+            data,
         });
-
-        // Asignar automáticamente al SuperAdministrador
-        const superAdmin = await prisma.role.findFirst({
-            where: { name: 'SuperAdministrador' },
-        });
-
-        if (superAdmin) {
-            await prisma.pageRole.create({
-                data: {
-                    pageId: page.id,
-                    roleId: superAdmin.id,
-                },
-            });
-        }
 
         await logAuditEvent({
-            action: 'create_role',
-            entity: 'System',
+            action: AUDIT_ACTIONS.PAGE.CREATE,
+            entity: AUDIT_ENTITIES.PAGE,
             entityId: page.id,
             description: `Página "${page.name}" creada`,
             metadata: { ...data },
@@ -67,8 +51,8 @@ export async function updatePage(id: string, data: Partial<CreatePageData>) {
         });
 
         await logAuditEvent({
-            action: 'update_role',
-            entity: 'System',
+            action: AUDIT_ACTIONS.PAGE.UPDATE,
+            entity: AUDIT_ENTITIES.PAGE,
             entityId: page.id,
             description: `Página "${page.name}" actualizada`,
             metadata: { ...data },
@@ -95,11 +79,11 @@ export async function deletePage(id: string) {
         });
 
         await logAuditEvent({
-            action: 'delete_role',
-            entity: 'System',
+            action: AUDIT_ACTIONS.PAGE.DELETE,
+            entity: AUDIT_ENTITIES.PAGE,
             entityId: id,
             description: `Página "${page.name}" eliminada`,
-            metadata: { id },
+            metadata: { pageId: id, pageName: page.name },
             userId: session?.user?.id,
             userName: session?.user?.name
                 ? `${session.user.name} ${session.user.lastName || ''}`.trim()
@@ -149,8 +133,8 @@ export async function updatePageRole(
                 ]);
 
                 await logAuditEvent({
-                    action: 'update_permissions',
-                    entity: 'System',
+                    action: AUDIT_ACTIONS.PAGE.UPDATE_PERMISSIONS,
+                    entity: AUDIT_ENTITIES.PAGE,
                     entityId: pageId,
                     description: `Rol "${role?.name}" asignado a la página "${page?.name}"`,
                     metadata: {
@@ -181,8 +165,8 @@ export async function updatePageRole(
             ]);
 
             await logAuditEvent({
-                action: 'update_permissions',
-                entity: 'System',
+                action: AUDIT_ACTIONS.PAGE.UPDATE_PERMISSIONS,
+                entity: AUDIT_ENTITIES.PAGE,
                 entityId: pageId,
                 description: `Rol "${role?.name}" removido de la página "${page?.name}"`,
                 metadata: {

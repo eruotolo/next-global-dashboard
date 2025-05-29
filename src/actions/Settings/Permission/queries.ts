@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import type { PermissionQuery } from '@/tipos/Permission/PermissionInterface';
+import prisma from '@/lib/db/db';
+import type { PermissionQuery } from '@/types/Permission/PermissionInterface';
 
 export async function getAllPermissions(): Promise<PermissionQuery[]> {
     try {

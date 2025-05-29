@@ -1,11 +1,12 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import type { PermissionRoleQuery } from '@/types/Permission/PermissionInterface';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
+import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 
 export async function getPermissionRoles(id: string): Promise<PermissionRoleQuery[]> {
     if (!id) {
@@ -120,8 +121,8 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
         // Registrar la actualización de permisos en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'update_permissions',
-            entity: 'Role',
+            action: AUDIT_ACTIONS.PERMISSIONS.UPDATE,
+            entity: AUDIT_ENTITIES.ROLE,
             entityId: id,
             description: `Permisos actualizados para el rol "${role.name}"`,
             metadata: {

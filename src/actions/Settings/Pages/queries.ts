@@ -1,7 +1,6 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import { revalidatePath } from 'next/cache';
+import prisma from '@/lib/db/db';
 
 export interface Page {
     id: string;

@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { getPages } from '@/actions/Pages/queries';
-import { updatePageRole, createPage, updatePage, deletePage } from '@/actions/Pages/mutations';
-import { getRoles } from '@/actions/Roles/queries';
-import type { Page } from '@/actions/Pages/queries';
+import { getPages } from '@/actions/Settings/Pages/queries';
+import { updatePageRole, createPage, updatePage, deletePage } from '@/actions/Settings/Pages/mutations';
+import { getRoles } from '@/actions/Settings/Roles/queries';
+import type { Page } from '@/actions/Settings/Pages/queries';
 import {
     Dialog,
     DialogContent,
@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Plus, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import type { Column } from '@tanstack/react-table';
 
 interface Role {
     id: string;
@@ -119,7 +120,7 @@ export default function PagePermissionsManager() {
         try {
             const [pagesData, rolesData] = await Promise.all([
                 getPages(),
-                getRoles()
+                getRoles(),
             ]);
 
             setPages(pagesData);
@@ -137,8 +138,12 @@ export default function PagePermissionsManager() {
             await updatePageRole(pageId, roleId, isChecked ? 'add' : 'remove');
             setPages(pages.map(page => {
                 if (page.id === pageId) {
+                    const role = roles.find(r => r.id === roleId);
+                    if (!role) {
+                        throw new Error('Rol no encontrado');
+                    }
                     const pageRoles = isChecked
-                        ? [...page.pageRoles, { roleId, role: roles.find(r => r.id === roleId)! }]
+                        ? [...page.pageRoles, { roleId, role }]
                         : page.pageRoles.filter(pr => pr.roleId !== roleId);
                     return { ...page, pageRoles };
                 }
@@ -199,7 +204,7 @@ export default function PagePermissionsManager() {
     const columns = [
         {
             accessorKey: 'name',
-            header: ({ column }: { column: any }) => (
+            header: ({ column }: { column: Column<Page> }) => (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -214,7 +219,7 @@ export default function PagePermissionsManager() {
         },
         {
             accessorKey: 'path',
-            header: ({ column }: { column: any }) => (
+            header: ({ column }: { column: Column<Page> }) => (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}

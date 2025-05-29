@@ -1,44 +1,27 @@
 import {
-    BookOpen,
-    Bot,
     Frame,
     LifeBuoy,
     PieChart,
     Settings2,
     Shield,
-    SquareTerminal,
+    LayoutDashboard,
+    ShoppingCart,
+    Store,
+    Briefcase
 } from 'lucide-react';
 
 export const navData = {
     navMain: [
         {
-            title: 'Playground',
-            url: '#',
-            icon: SquareTerminal,
-            isActive: true,
+            title: 'Dashboard',
+            url: '/admin/dashboard',
+            icon: LayoutDashboard,
             roles: [],
-            items: [
-                {
-                    title: 'Dashboard',
-                    url: '/admin/dashboard',
-                    roles: [],
-                },
-                {
-                    title: 'Starred',
-                    url: '#',
-                    roles: [],
-                },
-                {
-                    title: 'Settings',
-                    url: '#',
-                    roles: [],
-                },
-            ],
         },
         {
-            title: 'Models',
+            title: 'Ventas',
             url: '#',
-            icon: Bot,
+            icon: ShoppingCart,
             roles: [],
             items: [
                 {
@@ -59,9 +42,32 @@ export const navData = {
             ],
         },
         {
-            title: 'Documentation',
+            title: 'Compras',
             url: '#',
-            icon: BookOpen,
+            icon: Store,
+            roles: [],
+            items: [
+                {
+                    title: 'Genesis',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Explorer',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Quantum',
+                    url: '#',
+                    roles: [],
+                },
+            ],
+        },
+        {
+            title: 'Operaciones',
+            url: '#',
+            icon: Briefcase,
             roles: [],
             items: [
                 {
@@ -86,34 +92,7 @@ export const navData = {
                 },
             ],
         },
-        {
-            title: 'Settings',
-            url: '#',
-            icon: Settings2,
-            roles: [],
-            items: [
-                {
-                    title: 'General',
-                    url: '#',
-                    roles: [],
-                },
-                {
-                    title: 'Team',
-                    url: '#',
-                    roles: [],
-                },
-                {
-                    title: 'Billing',
-                    url: '#',
-                    roles: [],
-                },
-                {
-                    title: 'Limits',
-                    url: '#',
-                    roles: [],
-                },
-            ],
-        },
+
     ],
 
     projects: [
@@ -128,6 +107,63 @@ export const navData = {
             url: '#',
             icon: PieChart,
             roles: [],
+        },
+
+    ],
+
+    navAdministration: [
+        {
+            title: 'Administración',
+            url: '#',
+            icon: Settings2,
+            roles: [],
+            items: [
+                {
+                    title: 'Socios',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Países',
+                    url: '/admin/administration/country',
+                    roles: [],
+                },
+                {
+                    title: 'Aeropuertos',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Puertos',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Commodities',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Lugares',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Buques',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Tráficos',
+                    url: '#',
+                    roles: [],
+                },
+                {
+                    title: 'Incoterms',
+                    url: '#',
+                    roles: [],
+                },
+            ],
         },
     ],
 

@@ -6,6 +6,8 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import type { CustomUser } from '@/tipos/Login/CustomUser';
+import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -19,8 +21,8 @@ export const authOptions: NextAuthOptions = {
                 if (!credentials?.email || !credentials?.password) {
                     // Registrar intento fallido de inicio de sesión (datos incompletos)
                     await logAuditEvent({
-                        action: 'login_failed',
-                        entity: 'User',
+                        action: AUDIT_ACTIONS.LOGIN.FAILED,
+                        entity: AUDIT_ENTITIES.USER,
                         description: 'Intento de inicio de sesión con datos incompletos',
                         metadata: { email: credentials?.email || 'no proporcionado' },
                     });
@@ -50,8 +52,8 @@ export const authOptions: NextAuthOptions = {
                 if (!userFound) {
                     // Registrar intento fallido de inicio de sesión (usuario no encontrado)
                     await logAuditEvent({
-                        action: 'login_failed',
-                        entity: 'User',
+                        action: AUDIT_ACTIONS.LOGIN.FAILED,
+                        entity: AUDIT_ENTITIES.USER,
                         description: 'Intento de inicio de sesión con email no registrado',
                         metadata: { email: credentials.email },
                     });
@@ -66,8 +68,8 @@ export const authOptions: NextAuthOptions = {
                 if (!matchPassword) {
                     // Registrar intento fallido de inicio de sesión (contraseña incorrecta)
                     await logAuditEvent({
-                        action: 'login_failed',
-                        entity: 'User',
+                        action: AUDIT_ACTIONS.LOGIN.FAILED,
+                        entity: AUDIT_ENTITIES.USER,
                         entityId: userFound.id,
                         description: 'Intento de inicio de sesión con contraseña incorrecta',
                         metadata: { email: credentials.email, userId: userFound.id },
@@ -81,8 +83,8 @@ export const authOptions: NextAuthOptions = {
                 if (!userFound.roles || userFound.roles.length === 0) {
                     // Registrar intento fallido de inicio de sesión (sin roles)
                     await logAuditEvent({
-                        action: 'login_failed',
-                        entity: 'User',
+                        action: AUDIT_ACTIONS.LOGIN.FAILED,
+                        entity: AUDIT_ENTITIES.USER,
                         entityId: userFound.id,
                         description: 'Intento de inicio de sesión de usuario sin roles asignados',
                         metadata: { email: credentials.email, userId: userFound.id },
@@ -102,8 +104,8 @@ export const authOptions: NextAuthOptions = {
 
                 // Registrar inicio de sesión exitoso
                 await logAuditEvent({
-                    action: 'login_success',
-                    entity: 'User',
+                    action: AUDIT_ACTIONS.LOGIN.SUCCESS,
+                    entity: AUDIT_ENTITIES.USER,
                     entityId: userFound.id,
                     description: 'Inicio de sesión exitoso',
                     metadata: {
@@ -137,12 +139,11 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: 'jwt',
         maxAge: 30 * 24 * 60 * 60, // 30 días
+        updateAge: 24 * 60 * 60, // 24 horas
     },
     callbacks: {
         async session({ session, token }) {
             try {
-                const { getUserById } = AuthAdapter();
-                const freshUserData = await getUserById(token.id as string);
                 session.user = {
                     ...session.user,
                     id: token.id as string,
@@ -154,7 +155,6 @@ export const authOptions: NextAuthOptions = {
                     city: token.city as string,
                     image: token.image as string,
                     state: token.state as number | null,
-                    ...freshUserData,
                     roles: token.roles as string[],
                     permissions: token.permissions as string[],
                 };
@@ -187,8 +187,8 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 try {
                     await logAuditEvent({
-                        action: 'logout',
-                        entity: 'User',
+                        action: AUDIT_ACTIONS.LOGIN.LOGOUT,
+                        entity: AUDIT_ENTITIES.USER,
                         entityId: token.id as string,
                         description: 'Cierre de sesión',
                         userId: token.id as string,

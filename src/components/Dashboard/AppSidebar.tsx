@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import NavMain from '@/components/Dashboard/NavMain';
-import NavProjects from '@/components/Dashboard/NavProjects';
 import NavSetting from '@/components/Dashboard/NavSetting';
 import NavUser from '@/components/Dashboard/NavUser';
 import NavPrivate from '@/components/Dashboard/NavPrivate';
+import NavAdministration from '@/components/Dashboard/NavAdministration';
 
 import {
     Sidebar,
@@ -59,7 +59,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={navData.navMain} />
-                <NavProjects projects={navData.projects} />
+                <NavAdministration items={navData.navAdministration} />
                 <NavSetting items={navData.navSetting} className="mt-auto" />
                 {isSuperAdministrador && <NavPrivate items={navData.adminSetting} />}
             </SidebarContent>

@@ -1,10 +1,10 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
-import type { UserData } from '@/tipos/Users/UsersInterface';
+import type { UserData } from '@/types/Users/UsersInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -69,11 +69,11 @@ export async function createUser(formData: FormData) {
             entity: 'User',
             entityId: user.id,
             description: `Usuario "${name} ${lastName}" creado`,
-            metadata: { 
+            metadata: {
                 userId: user.id,
                 email,
                 name,
-                lastName
+                lastName,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -117,11 +117,11 @@ export async function deleteUser(id: string) {
             entity: 'User',
             entityId: id,
             description: `Usuario "${userToDelete.name} ${userToDelete.lastName || ''}" eliminado`,
-            metadata: { 
+            metadata: {
                 userId: id,
                 email: userToDelete.email,
                 name: userToDelete.name,
-                lastName: userToDelete.lastName
+                lastName: userToDelete.lastName,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -218,15 +218,33 @@ export async function updateUser(id: string, formData: FormData) {
                     city: userUpdated.city,
                 },
                 changes: {
-                    name: name !== userBeforeUpdate.name ? { from: userBeforeUpdate.name, to: name } : undefined,
-                    lastName: lastName !== userBeforeUpdate.lastName ? { from: userBeforeUpdate.lastName, to: lastName } : undefined,
-                    email: email !== userBeforeUpdate.email ? { from: userBeforeUpdate.email, to: email } : undefined,
-                    phone: phone !== userBeforeUpdate.phone ? { from: userBeforeUpdate.phone, to: phone } : undefined,
-                    address: address !== userBeforeUpdate.address ? { from: userBeforeUpdate.address, to: address } : undefined,
-                    city: city !== userBeforeUpdate.city ? { from: userBeforeUpdate.city, to: city } : undefined,
-                    password: password ? "Password changed" : undefined,
-                    image: data.image ? "Image updated" : undefined,
-                }
+                    name:
+                        name !== userBeforeUpdate.name
+                            ? { from: userBeforeUpdate.name, to: name }
+                            : undefined,
+                    lastName:
+                        lastName !== userBeforeUpdate.lastName
+                            ? { from: userBeforeUpdate.lastName, to: lastName }
+                            : undefined,
+                    email:
+                        email !== userBeforeUpdate.email
+                            ? { from: userBeforeUpdate.email, to: email }
+                            : undefined,
+                    phone:
+                        phone !== userBeforeUpdate.phone
+                            ? { from: userBeforeUpdate.phone, to: phone }
+                            : undefined,
+                    address:
+                        address !== userBeforeUpdate.address
+                            ? { from: userBeforeUpdate.address, to: address }
+                            : undefined,
+                    city:
+                        city !== userBeforeUpdate.city
+                            ? { from: userBeforeUpdate.city, to: city }
+                            : undefined,
+                    password: password ? 'Password changed' : undefined,
+                    image: data.image ? 'Image updated' : undefined,
+                },
             },
             userId: session?.user?.id,
             userName: session?.user?.name

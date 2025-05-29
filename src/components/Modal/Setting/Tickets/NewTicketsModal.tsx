@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createTicket } from '@/actions/Tickets';
+import { createTicket } from '@/actions/Settings/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';

@@ -3,8 +3,9 @@
 import Form from 'next/form';
 import { useState } from 'react';
 
-import { createRole } from '@/actions/Roles';
+import { createRole } from '@/actions/Settings/Roles';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
+import BtnSubmit from "@/components/BtnSubmit/BtnSubmit";
 import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
 
 import {
@@ -17,18 +18,29 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 export default function NewRoleModal({ refreshAction }: UpdateData) {
+    const [isOpen, setIsOpen] = useState(false);
     const [error, setError] = useState('');
     const [name, setName] = useState('');
 
-    const reset = () => {
+    const resetFormFields = () => {
         setName('');
         setError('');
     };
 
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
+        if (!open) {
+            resetFormFields();
+        }
+    };
+
     const onSubmit = async (formData: FormData) => {
+        setError('');
+
         const name = formData.get('name');
 
         if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -44,14 +56,16 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
                 return;
             }
 
-            refreshAction();
-            reset();
             toast.success('Nuevo Role Successful', {
                 description: 'El role se ha creado correctamente.',
             });
+            refreshAction();
+            resetFormFields();
+            setIsOpen(false);
         } catch (error) {
-            setError('Error al crear el usuario. Inténtalo de nuevo.');
             console.error(error);
+            const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+            setError(`Error al crear el país. Inténtalo de nuevo. (${errorMessage})`);
             toast.error('Nuevo Role Failed', {
                 description: 'Error al intentar crear el role',
             });
@@ -59,7 +73,7 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
     };
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <BtnActionNew label="Nuevo" permission={['Crear']} />
             <DialogContent className="sm:max-w-[400px]">
                 <DialogHeader>
@@ -81,12 +95,14 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
                         />
                         {error && <p className="custome-form-error">{error}</p>}
                     </div>
-                    <DialogFooter className="mt-6">
+                    {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+                    <DialogFooter className="mt-6 items-end">
                         <DialogClose asChild>
-                            <button type="submit" className="custom-button">
-                                Crear
-                            </button>
+                            <Button type="button" variant="outline">
+                                Cancelar
+                            </Button>
                         </DialogClose>
+                        <BtnSubmit />
                     </DialogFooter>
                 </Form>
             </DialogContent>

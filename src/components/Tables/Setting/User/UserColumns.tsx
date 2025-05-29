@@ -23,7 +23,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteUser } from '@/actions/Users';
+import { deleteUser } from '@/actions/Settings/Tickets/Users';
 
 const DynamicChangeUserPassModal = dynamic(
     () => import('@/components/Modal/Setting/Users/ChangeUserPasswordModal'),

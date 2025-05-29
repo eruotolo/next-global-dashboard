@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { TicketStatus, TicketPriority } from '@prisma/client';
@@ -8,6 +8,7 @@ import { TicketStatus, TicketPriority } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 
 // Generar código para tickets
 const generateTicketCode = () => {
@@ -99,8 +100,8 @@ export async function createTicket(formData: FormData) {
         // Registrar la creación del ticket en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'create_ticket',
-            entity: 'Ticket',
+            action: AUDIT_ACTIONS.TICKET.CREATE,
+            entity: AUDIT_ENTITIES.TICKET,
             entityId: newTickets.id,
             description: `Ticket "${code}" creado`,
             metadata: {
@@ -120,7 +121,7 @@ export async function createTicket(formData: FormData) {
                 : undefined,
         });
 
-        revalidatePath('/admin/setting/tickets');
+        revalidatePath('/admin/settings/tickets');
         return { newTickets, message: 'Ticket creado exitosamente' };
     } catch (error) {
         console.error('Error creating ticket:', error);
@@ -152,8 +153,8 @@ export async function deleteTicket(id: string) {
         // Registrar la eliminación del ticket en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'delete_ticket',
-            entity: 'Ticket',
+            action: AUDIT_ACTIONS.TICKET.DELETE,
+            entity: AUDIT_ENTITIES.TICKET,
             entityId: id,
             description: `Ticket "${ticketToDelete.code}" eliminado`,
             metadata: {
@@ -171,7 +172,7 @@ export async function deleteTicket(id: string) {
                 : undefined,
         });
 
-        revalidatePath('/admin/setting/tickets');
+        revalidatePath('/admin/settings/tickets');
 
         return { ticket: ticketRemoved, message: 'Ticket eliminado exitosamente' };
     } catch (error) {
@@ -250,8 +251,8 @@ export async function updateTicket(id: string, formData: FormData) {
         // Registrar la actualización en el sistema de auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'update_ticket',
-            entity: 'Ticket',
+            action: AUDIT_ACTIONS.TICKET.UPDATE,
+            entity: AUDIT_ENTITIES.TICKET,
             entityId: id,
             description: `Ticket "${currentTicket.code}" actualizado`,
             metadata: {
@@ -291,7 +292,7 @@ export async function updateTicket(id: string, formData: FormData) {
                 : undefined,
         });
 
-        revalidatePath('/admin/setting/tickets');
+        revalidatePath('/admin/settings/tickets');
 
         return {
             ticket: updatedTicket,

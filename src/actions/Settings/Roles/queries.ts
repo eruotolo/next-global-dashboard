@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import type { RoleQuery, RolePermissionInterface } from '@/tipos/Roles/RolesInterface';
+import prisma from '@/lib/db/db';
+import type { RoleQuery, RolePermissionInterface } from '@/types/Roles/RolesInterface';
 
 export async function getAllRoles(): Promise<RolePermissionInterface[]> {
     // Cambiamos el tipo

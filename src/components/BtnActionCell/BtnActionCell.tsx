@@ -26,14 +26,14 @@ const useHasPermission = (permissions?: string[]) => {
     return permissions.some((perm) => hasPermission(perm));
 };
 
-export function BtnViewCell({ onAction, label, permission = ['Ver'] }: BtnActionCellProps) {
+export function BtnViewCell({ onAction, label, className, permission = ['Ver'] }: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
     if (!permitted) return null;
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!permitted}
         >
             <Eye className="mr-1 h-4 w-4" />
@@ -42,13 +42,13 @@ export function BtnViewCell({ onAction, label, permission = ['Ver'] }: BtnAction
     );
 }
 
-export function BtnEditCell({ onAction, label, permission = ['Editar'] }: BtnActionCellProps) {
+export function BtnEditCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!permitted}
         >
             <FilePenLine className="mr-1 h-4 w-4" />
@@ -57,47 +57,7 @@ export function BtnEditCell({ onAction, label, permission = ['Editar'] }: BtnAct
     );
 }
 
-export function BtnChangePasswordCell({
-    onAction,
-    label,
-    permission = ['Editar'],
-}: BtnActionCellProps) {
-    const permitted = useHasPermission(permission);
-
-    return (
-        <DropdownMenuItem
-            onClick={onAction}
-            className={`${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={!permitted}
-        >
-            <Key className="mr-1 h-4 w-4" />
-            {label}
-        </DropdownMenuItem>
-    );
-}
-
-export function BtnConfigCell({ onAction, label, permission = ['Editar'] }: BtnActionCellProps) {
-    const permitted = useHasPermission(permission);
-
-    return (
-        <DropdownMenuItem
-            onClick={onAction}
-            className={`${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={!permitted}
-        >
-            <Cog className="mr-1 h-4 w-4" />
-            {label}
-        </DropdownMenuItem>
-    );
-}
-
-export function BtnDeleteCell({
-    onDelete,
-    itemId,
-    label,
-    className,
-    permission = ['Eliminar'], // Permiso por defecto
-}: BtnDeleteCellProps) {
+export function BtnDeleteCell({onDelete, itemId, label, className, permission = ['Eliminar'] }: BtnDeleteCellProps) {
     const permitted = useHasPermission(permission);
 
     const handleDelete = () => {
@@ -111,6 +71,36 @@ export function BtnDeleteCell({
             disabled={!permitted}
         >
             <Trash2 className="mr-1 h-4 w-4" />
+            {label}
+        </DropdownMenuItem>
+    );
+}
+
+export function BtnChangePasswordCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
+    const permitted = useHasPermission(permission);
+
+    return (
+        <DropdownMenuItem
+            onClick={onAction}
+            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!permitted}
+        >
+            <Key className="mr-1 h-4 w-4" />
+            {label}
+        </DropdownMenuItem>
+    );
+}
+
+export function BtnConfigCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
+    const permitted = useHasPermission(permission);
+
+    return (
+        <DropdownMenuItem
+            onClick={onAction}
+            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!permitted}
+        >
+            <Cog className="mr-1 h-4 w-4" />
             {label}
         </DropdownMenuItem>
     );

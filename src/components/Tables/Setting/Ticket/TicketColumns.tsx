@@ -17,7 +17,7 @@ import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { clsx } from 'clsx';
 import { toast } from 'sonner';
 
-import { deleteTicket } from '@/actions/Tickets';
+import { deleteTicket } from '../../../../actions/Settings/Tickets';
 
 const DynamicEditTicketModal = dynamic(
     () => import('@/components/Modal/Setting/Tickets/EditTicketsModal'),

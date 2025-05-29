@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
-import type { UserRoleQuery } from '@/tipos/Roles/RolesInterface';
+import prisma from '@/lib/db/db';
+import type { UserRoleQuery } from '@/types/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
@@ -119,7 +119,7 @@ export async function updateUserRoles(id: string, roles: string[]) {
         // Registrar la asignación de roles en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: roles.length > 0 ? 'assign_role_user' : 'remove_role_user',
+            action: roles.length > 0 ? 'assignRoleUser' : 'removeRoleUser',
             entity: 'User',
             entityId: id,
             description: roles.length > 0 

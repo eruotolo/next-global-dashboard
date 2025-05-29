@@ -3,7 +3,7 @@
 import Form from 'next/form';
 import { useState, useEffect } from 'react';
 import type { EditModalProps } from '@/tipos/Generic/InterfaceGeneric';
-import { getRoleById, updateRole } from '@/actions/Roles';
+import { getRoleById, updateRole } from '@/actions/Settings/Roles';
 
 import {
     Dialog,

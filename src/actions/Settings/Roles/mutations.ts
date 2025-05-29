@@ -1,8 +1,8 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
-import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
+import type { RoleInterface } from '@/types/Roles/RolesInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -25,7 +25,7 @@ export async function createRole(formData: FormData) {
         // Registrar la creación del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'create_role',
+            action: 'createRole',
             entity: 'Role',
             entityId: role.id,
             description: `Rol "${name}" creado`,
@@ -71,7 +71,7 @@ export async function deleteRole(id: string) {
         // Registrar la eliminación del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'delete_role',
+            action: 'deleteRole',
             entity: 'Role',
             entityId: id,
             description: `Rol "${roleToDelete.name}" eliminado`,
@@ -83,7 +83,6 @@ export async function deleteRole(id: string) {
         });
 
         revalidatePath('/admin/settings/users');
-
         return { role: roleRemoved, message: 'Rol eliminado exitosamente' };
     } catch (error) {
         console.error('Error deleting role:', error);
@@ -120,7 +119,7 @@ export async function updateRole(id: string, formData: FormData) {
         // Registrar la actualización del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
-            action: 'update_role',
+            action: 'updateRole',
             entity: 'Role',
             entityId: id,
             description: `Rol "${roleBeforeUpdate.name}" actualizado`,

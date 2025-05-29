@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllPermissions } from '@/actions/Permission';
-import { getPermissionRoles, updatePermissionRoles } from '@/actions/PermissionRole';
+import { getAllPermissions } from '../../../../actions/Settings/Permission';
+import { getPermissionRoles, updatePermissionRoles } from '../../../../actions/Settings/PermissionRole';
 import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
 import type { PermissionQuery, PermissionRoleQuery } from '@/types/Permission/PermissionInterface';
 

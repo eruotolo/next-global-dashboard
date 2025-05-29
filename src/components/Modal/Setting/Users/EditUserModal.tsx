@@ -9,7 +9,7 @@ import { useFormStatus } from 'react-dom';
 import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
 import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
 
-import { getUserById, updateUser } from '@/actions/Users';
+import { getUserById, updateUser } from '../../../../actions/Settings/Users';
 
 import {
     Dialog,

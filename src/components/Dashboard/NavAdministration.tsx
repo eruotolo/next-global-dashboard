@@ -19,7 +19,7 @@ import {
 import type { ItemsNavPrincipal } from '@/tipos/Sidebar/ItemsNavPrincipal';
 import useAuthStore from '@/store/authStore';
 
-export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
+export default function NavAdministration({ items }: { items: ItemsNavPrincipal[] }) {
     const session = useAuthStore((state) => state.session);
     const userRoles = session?.user?.roles || [];
 
@@ -35,7 +35,7 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
 
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+            <SidebarGroupLabel>Administración</SidebarGroupLabel>
             <SidebarMenu>
                 {filteredItems.map((item) => {
                     // Filtrar subitems según roles
@@ -64,7 +64,7 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
                                     </CollapsibleTrigger>
                                 ) : (
                                     <SidebarMenuButton asChild tooltip={item.title}>
-                                        <Link href={item.url} >
+                                        <Link href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </Link>

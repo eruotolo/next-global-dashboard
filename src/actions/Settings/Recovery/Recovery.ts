@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/dbprisma/db';
+import prisma from '@/lib/db/db';
 import bcrypt from 'bcrypt';
 
 function generateRandomPassword(length = 12) {

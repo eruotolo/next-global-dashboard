@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
 import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
-import { getUserById } from '@/actions/Users';
+import { getUserById } from '../../../../actions/Settings/Users';
 
 import {
     Dialog,

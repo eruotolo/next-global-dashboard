@@ -6,4 +6,5 @@ export const customRouteNames: { [key: string]: string } = {
     settings: 'Configuración',
     unauthorized: 'No autorizado',
     audit: 'Auditoria Interna',
+    permissions: 'Página de Permisos',
 };

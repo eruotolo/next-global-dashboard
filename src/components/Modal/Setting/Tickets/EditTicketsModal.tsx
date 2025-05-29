@@ -10,7 +10,7 @@ import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
 import type { GetTicketQuery } from '@/types/Tickets/TicketInterface';
 import { TicketStatus, TicketPriority } from '@prisma/client';
 
-import { getTicketById, updateTicket } from '@/actions/Tickets';
+import { getTicketById, updateTicket } from '@/actions/Settings/Tickets';
 
 import {
     Dialog,
