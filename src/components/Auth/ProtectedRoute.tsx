@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import useAuthStore from '@/store/authStore';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import PagePermissionGuard from './PagePermissionGuard';
 
 interface ProtectedRouteProps {
     children: ReactNode;
@@ -56,5 +57,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         return null;
     }
 
-    return <>{children}</>;
+    return <PagePermissionGuard>{children}</PagePermissionGuard>;
 }

@@ -1,10 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { isPublicPath, isStaticPath } from '@/lib/auth/publicPaths';
 import { verifyAuth } from '@/lib/auth';
-import { checkPageAccess } from '@/actions/Settings/Pages/queries';
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
+
+    console.log('Middleware - Checking path:', pathname);
+    console.log('Middleware - Is public path:', isPublicPath(pathname));
+    console.log('Middleware - Is static path:', isStaticPath(pathname));
 
     // Permitir rutas públicas y estáticas
     if (isPublicPath(pathname) || isStaticPath(pathname)) {
@@ -14,25 +17,19 @@ export async function middleware(req: NextRequest) {
     // Verificar el token de autenticación
     const token = await verifyAuth(req);
     if (!token || !token.roles) {
+        console.log('Middleware - No token or roles found');
         return NextResponse.redirect(new URL('/login', req.url));
     }
+
+    console.log('Middleware - User roles:', token.roles);
 
     // Permitir acceso al dashboard después del login
     if (pathname === '/admin/dashboard') {
         return NextResponse.next();
     }
 
-    try {
-        // Verificar permisos de página solo para rutas que no sean el dashboard
-        const result = await checkPageAccess(pathname, token.roles as string[]);
-        if (!result.hasAccess) {
-            return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
-        }
-        return NextResponse.next();
-    } catch (error) {
-        console.error('Error checking page access:', error);
-        return NextResponse.redirect(new URL('/admin/unauthorized', req.url));
-    }
+    // Permitir el acceso y dejar que el ProtectedRoute maneje la verificación de permisos
+    return NextResponse.next();
 }
 
 // Configurar las rutas que deben pasar por el middleware

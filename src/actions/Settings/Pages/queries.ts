@@ -44,6 +44,11 @@ export async function getPages() {
 
 export async function checkPageAccess(path: string, roles: string[]) {
     try {
+        // Si es la ruta del dashboard, permitir acceso
+        if (path === '/admin/dashboard') {
+            return { hasAccess: true };
+        }
+
         const page = await prisma.page.findFirst({
             where: {
                 path,
@@ -58,11 +63,19 @@ export async function checkPageAccess(path: string, roles: string[]) {
             },
         });
 
+        // Si la página no está registrada, denegar acceso por defecto
         if (!page) {
-            return { hasAccess: true };
+            return { hasAccess: false };
         }
 
         const allowedRoles = page.pageRoles.map(pr => pr.role?.name).filter(Boolean) as string[];
+        
+        // Si no hay roles asignados a la página, denegar acceso
+        if (allowedRoles.length === 0) {
+            return { hasAccess: false };
+        }
+
+        // Verificar si alguno de los roles del usuario tiene acceso
         const hasAccess = roles.some(role => allowedRoles.includes(role));
 
         return { hasAccess };

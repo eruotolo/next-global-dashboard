@@ -1,5 +1,10 @@
 // Rutas públicas que no requieren autenticación
-export const publicPaths = ['/', '/login', '/api/auth', '/recovery'];
+export const publicPaths = ['/', '/login', '/recovery'];
+
+// Rutas de API públicas (usar RegExp para patrones)
+export const publicApiPaths = [
+    /^\/api\/auth\/.*/  // Todas las rutas bajo /api/auth/
+];
 
 // Rutas estáticas (assets, imágenes, etc.)
 export const staticPaths = [
@@ -20,7 +25,13 @@ export const isStaticPath = (pathname: string): boolean => {
 
 // Función helper para verificar si una ruta es pública
 export const isPublicPath = (pathname: string): boolean => {
-    return publicPaths.some(path => pathname === path || pathname.startsWith(path));
+    // Verificar rutas públicas exactas
+    if (publicPaths.includes(pathname)) {
+        return true;
+    }
+
+    // Verificar patrones de API públicos
+    return publicApiPaths.some(pattern => pattern.test(pathname));
 };
 
 /* 

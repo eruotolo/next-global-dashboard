@@ -26,7 +26,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormInputs>();
+    } = useForm<LoginFormInputs>({
+        mode: 'onSubmit',
+        reValidateMode: 'onSubmit',
+    });
 
     const router = useRouter();
 
