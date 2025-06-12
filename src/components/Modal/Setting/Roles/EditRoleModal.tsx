@@ -2,7 +2,7 @@
 
 import Form from 'next/form';
 import { useState, useEffect } from 'react';
-import type { EditModalProps } from '@/tipos/Generic/InterfaceGeneric';
+import type { EditModalProps } from '@/types/settings/Generic/InterfaceGeneric';
 import { getRoleById, updateRole } from '@/actions/Settings/Roles';
 
 import {
@@ -36,6 +36,7 @@ export default function EditRoleModal({ id, refresh, open, onClose }: EditModalP
                 }
             }
         }
+
         loadRole();
     }, [id, open]);
 

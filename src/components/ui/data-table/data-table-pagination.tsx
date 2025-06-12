@@ -19,9 +19,9 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
     return (
         <>
-            <div className="flex flex-wrap justify-between items-center">
+            <div className="flex flex-wrap items-center justify-between">
                 <div className="flex items-center">
-                    <p className="text-sm font-medium mr-[10px]">Filas por página</p>
+                    <p className="mr-[10px] text-sm font-medium">Filas por página</p>
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
                         onValueChange={(value) => {
@@ -40,45 +40,45 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex justify-center items-center text-sm font-medium">
+                <div className="flex items-center justify-center text-sm font-medium">
                     Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
                 </div>
                 <div className="flex items-end space-x-1">
                     <Button
                         variant="outline"
-                        className="hidden p-0 w-8 h-8 lg:flex"
+                        className="hidden h-8 w-8 p-0 lg:flex"
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Ir a la primera página</span>
-                        <ChevronsLeft className="w-4 h-4" />
+                        <ChevronsLeft className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="p-0 w-8 h-8"
+                        className="h-8 w-8 p-0"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Ir a la página anterior</span>
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="p-0 w-8 h-8"
+                        className="h-8 w-8 p-0"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Ir a la página siguiente</span>
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="hidden p-0 w-8 h-8 lg:flex"
+                        className="hidden h-8 w-8 p-0 lg:flex"
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Ir a la última página</span>
-                        <ChevronsRight className="w-4 h-4" />
+                        <ChevronsRight className="h-4 w-4" />
                     </Button>
                 </div>
             </div>

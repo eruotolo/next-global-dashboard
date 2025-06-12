@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { BtnDeleteCell, BtnEditCell, BtnViewCell } from '@/components/BtnActionCell/BtnActionCell';
+import { BtnDeleteCell, BtnEditCell } from '@/components/BtnActionCell/BtnActionCell';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +17,7 @@ import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { clsx } from 'clsx';
 import { toast } from 'sonner';
 
-import { deleteTicket } from '../../../../actions/Settings/Tickets';
+import { deleteTicket } from '@/actions/Settings/Tickets';
 
 const DynamicEditTicketModal = dynamic(
     () => import('@/components/Modal/Setting/Tickets/EditTicketsModal'),
@@ -26,7 +26,8 @@ const DynamicEditTicketModal = dynamic(
     },
 );
 
-import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
+
 interface ActionCellProps {
     row: {
         original: SimpleTicketQuery;
@@ -65,19 +66,14 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="p-0 w-8 h-8">
+                    <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Abrir menú</span>
-                        <MoreHorizontal className="w-4 h-4" />
+                        <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <BtnViewCell
-                        onAction={() => setOpenEditTicket(true)}
-                        label="Ver ticket"
-                        permission={['Ver']}
-                    />
                     <BtnEditCell
                         onAction={() => setOpenEditTicket(true)}
                         label="Editar ticket"
@@ -116,7 +112,7 @@ export const TicketColumns = (
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                     Código
-                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             </div>
         ),
@@ -137,7 +133,7 @@ export const TicketColumns = (
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Título
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -153,7 +149,7 @@ export const TicketColumns = (
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Usuario que subió el ticket
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         accessorFn: (row) => `${row.userName} ${row.userLastName}`,
@@ -165,7 +161,7 @@ export const TicketColumns = (
     {
         accessorKey: 'Estado',
         header: () => (
-            <div className="flex justify-center font-semibold whitespace-nowrap min-w-[100px]">
+            <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
                 Estatus
             </div>
         ),
@@ -190,7 +186,7 @@ export const TicketColumns = (
                 <div className="flex items-center justify-center">
                     <div
                         className={clsx(
-                            'px-2 py-1 rounded-[30px] text-center font-medium text-[13px] w-[120px]',
+                            'w-[120px] rounded-[30px] px-2 py-1 text-center text-[13px] font-medium',
                             getBgClass(),
                         )}
                     >
@@ -203,7 +199,7 @@ export const TicketColumns = (
     {
         accessorKey: 'Prioridad',
         header: () => (
-            <div className="flex justify-center font-semibold whitespace-nowrap min-w-[100px]">
+            <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
                 Prioridad
             </div>
         ),
@@ -225,7 +221,7 @@ export const TicketColumns = (
                 <div className="flex items-center justify-center">
                     <div
                         className={clsx(
-                            'px-2 py-1 rounded-[30px] text-center font-medium text-[13px] w-[120px]',
+                            'w-[120px] rounded-[30px] px-2 py-1 text-center text-[13px] font-medium',
                             getBgClass(),
                         )}
                     >

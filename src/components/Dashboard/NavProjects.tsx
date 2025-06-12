@@ -19,7 +19,7 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 
-import type { ProjectsNav } from '@/tipos/Sidebar/ProjectsNav';
+import type { ProjectsNav } from '@/types/settings/Sidebar/ProjectsNav';
 import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 
 export default function NavProjects({ projects }: { projects: ProjectsNav[] }) {
@@ -27,9 +27,8 @@ export default function NavProjects({ projects }: { projects: ProjectsNav[] }) {
     const hasAnyRole = useUserPermissionStore((state) => state.hasAnyRole);
 
     // Filtrar proyectos según roles
-    const filteredProjects = projects.filter(item => {
-        const hasRequiredRole = !item.roles?.length || 
-            hasAnyRole(item.roles);
+    const filteredProjects = projects.filter((item) => {
+        const hasRequiredRole = !item.roles?.length || hasAnyRole(item.roles);
 
         return hasRequiredRole;
     });

@@ -6,7 +6,7 @@ import {
     type AuditAction,
     type AuditEntity,
     actionTypesForFilter,
-    entityTypesForFilter
+    entityTypesForFilter,
 } from '@/lib/audit/auditType';
 import type { Prisma } from '@prisma/client';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
@@ -90,7 +90,7 @@ const columns: ColumnDef<AuditLog>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Fecha y Hora
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -109,13 +109,14 @@ const columns: ColumnDef<AuditLog>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Usuario
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
             return (
                 <div className="font-mono text-[13px]">
-                    {row.original.userName || (row.original.userId ? `Usuario ${row.original.userId}` : '-')}
+                    {row.original.userName ||
+                        (row.original.userId ? `Usuario ${row.original.userId}` : '-')}
                 </div>
             );
         },
@@ -129,16 +130,15 @@ const columns: ColumnDef<AuditLog>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                     Acción
-                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             </div>
-
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex items-center justify-center">
                     <div
-                        className={`px-2 py-1 rounded-[30px] text-center font-medium text-[13px] w-[160px] ${getActionBadgeColor(
+                        className={`w-[160px] rounded-[30px] px-2 py-1 text-center text-[13px] font-medium ${getActionBadgeColor(
                             row.original.action,
                         )}`}
                     >
@@ -156,7 +156,7 @@ const columns: ColumnDef<AuditLog>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Entidad
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -171,7 +171,7 @@ const columns: ColumnDef<AuditLog>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Descripción
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -186,7 +186,7 @@ const columns: ColumnDef<AuditLog>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 IP
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -220,8 +220,8 @@ function AuditLogsContent() {
 
             const result = await getAuditLogs({
                 userId: filters.userId || undefined,
-                action: filters.action as AuditAction || undefined,
-                entity: filters.entity as AuditEntity || undefined,
+                action: (filters.action as AuditAction) || undefined,
+                entity: (filters.entity as AuditEntity) || undefined,
                 startDate,
                 endDate,
                 page: 1,
@@ -263,9 +263,9 @@ function AuditLogsContent() {
 
     return (
         <div>
-            <div className="flex justify-between w-full h-auto">
+            <div className="flex h-auto w-full justify-between">
                 <div>
-                    <h5 className="font-medium tracking-tight leading-none mb-[5px] text-[20px]">
+                    <h5 className="mb-[5px] text-[20px] leading-none font-medium tracking-tight">
                         Logs de Auditoría
                     </h5>
                     <p className="text-muted-foreground text-[13px]">
@@ -275,7 +275,7 @@ function AuditLogsContent() {
             </div>
 
             {/* Filtros */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 mt-[20px]">
+            <div className="mt-[20px] mb-6 grid grid-cols-1 gap-4 md:grid-cols-5">
                 <div>
                     <Input
                         placeholder="Filtrar por usuario"
@@ -343,7 +343,7 @@ function AuditLogsContent() {
                     />
                 </div>
             </div>
-            <div className="flex justify-end space-x-2 mb-6">
+            <div className="mb-6 flex justify-end space-x-2">
                 <Button variant="outline" onClick={resetFilters} className="h-8">
                     Limpiar filtros
                 </Button>
@@ -367,7 +367,7 @@ export default function AuditLogsPage() {
         <ProtectedRoute>
             <div>
                 <div className="grid auto-rows-min gap-4 md:grid-cols-1">
-                    <div className="col-span-1 p-6 rounded-xl md:col-span-2 bg-muted/50">
+                    <div className="bg-muted/50 col-span-1 rounded-xl p-6 md:col-span-2">
                         <AuditLogsContent />
                     </div>
                 </div>

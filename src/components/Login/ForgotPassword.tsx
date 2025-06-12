@@ -29,10 +29,10 @@ export function ForgotPassword() {
         <div className="flex flex-col gap-6">
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className="font-normal font-inter text-[25px] leading-[25px]">
+                    <CardTitle className="font-inter text-[25px] leading-[25px] font-normal">
                         Restaurar su cuenta.
                     </CardTitle>
-                    <CardDescription className="font-normal font-inter text-[14px] leading-[14px]">
+                    <CardDescription className="font-inter text-[14px] leading-[14px] font-normal">
                         Ingresa su correo electrónico para restaurar su cuenta.
                     </CardDescription>
                 </CardHeader>
@@ -63,18 +63,18 @@ export function ForgotPassword() {
 
                             {message && (
                                 <p
-                                    className={`text-[14px] text-center ${message.includes('Error') ? 'text-red-500' : 'text-green-600'}`}
+                                    className={`text-center text-[14px] ${message.includes('Error') ? 'text-red-500' : 'text-green-600'}`}
                                 >
                                     {message}
                                 </p>
                             )}
 
-                            <div className="relative text-sm text-center after:border-border after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                                <span className="relative z-10 px-2 bg-background text-muted-foreground">
+                            <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                                <span className="bg-background text-muted-foreground relative z-10 px-2">
                                     ¿Ya sos cliente?{' '}
                                     <Link
                                         href="/login"
-                                        className="underline ml-[5px] underline-offset-4"
+                                        className="ml-[5px] underline underline-offset-4"
                                     >
                                         Ingresar
                                     </Link>

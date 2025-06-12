@@ -48,11 +48,11 @@ export async function createTicket(formData: FormData) {
         const validPriorities = Object.values(TicketPriority);
 
         if (!validStatuses.includes(status as TicketStatus)) {
-            throw new Error(`Estado inválido: ${status}`);
+            throw new Error(`Invalid status: ${status}`);
         }
 
         if (!validPriorities.includes(priority as TicketPriority)) {
-            throw new Error(`Prioridad inválida: ${priority}`);
+            throw new Error(`Invalid priority: ${priority}`);
         }
 
         const newTickets = await prisma.ticket.create({
@@ -84,13 +84,13 @@ export async function createTicket(formData: FormData) {
 
         // Configuración de envio de email
         const sendSmtpEmail = new brevoModule.SendSmtpEmail();
-        sendSmtpEmail.subject = 'Nuevo ticket creado';
+        sendSmtpEmail.subject = 'New ticket created';
         sendSmtpEmail.to = [{ email: 'edgardoruotolo@crowadvance.com' }];
         sendSmtpEmail.sender = { name: 'Chubby Dashboard', email: 'crowadvancegx@gmail.com' };
         sendSmtpEmail.htmlContent = `
-            <h1>Se ha creado un nuevo ticket.</h1>
-            <p>El número del ticket es: <strong>${code}</strong>.</p>
-            <p>La prioridad del ticket es: <strong>${priority}</strong>.</p>
+            <h1>A new ticket has been created.</h1>
+            <p>The ticket number is: <strong>${code}</strong>.</p>
+            <p>The ticket priority is: <strong>${priority}</strong>.</p>
         `;
 
         // Enviar el email
@@ -103,17 +103,13 @@ export async function createTicket(formData: FormData) {
             action: AUDIT_ACTIONS.TICKET.CREATE,
             entity: AUDIT_ENTITIES.TICKET,
             entityId: newTickets.id,
-            description: `Ticket "${code}" creado`,
+            description: `Ticket "${title}" created`,
             metadata: {
                 ticketId: newTickets.id,
                 code,
                 title,
-                description,
-                status,
                 priority,
-                userId,
-                userName: `${userName} ${userLastName}`.trim(),
-                hasImage: !!imageUrl,
+                status,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -122,49 +118,41 @@ export async function createTicket(formData: FormData) {
         });
 
         revalidatePath('/admin/settings/tickets');
-        return { newTickets, message: 'Ticket creado exitosamente' };
+        return { ticket: newTickets, message: 'Ticket created successfully' };
     } catch (error) {
         console.error('Error creating ticket:', error);
-        return { error: 'Error al crear el ticket' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error creating ticket' };
     }
 }
 
 export async function deleteTicket(id: string) {
     try {
         if (!id) {
-            return { error: 'El ID del ticket es obligatorio' };
+            return { error: 'Ticket ID is required' };
         }
 
-        // Obtener información del ticket antes de eliminarlo
         const ticketToDelete = await prisma.ticket.findUnique({
             where: { id },
         });
 
         if (!ticketToDelete) {
-            return { error: 'El ticket no existe' };
+            return { error: 'Ticket does not exist' };
         }
 
         const ticketRemoved = await prisma.ticket.delete({
             where: { id },
         });
 
-        // Registrar la eliminación del ticket en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: AUDIT_ACTIONS.TICKET.DELETE,
             entity: AUDIT_ENTITIES.TICKET,
             entityId: id,
-            description: `Ticket "${ticketToDelete.code}" eliminado`,
+            description: `Ticket "${ticketToDelete.title}" deleted`,
             metadata: {
                 ticketId: id,
                 code: ticketToDelete.code,
                 title: ticketToDelete.title,
-                status: ticketToDelete.status,
-                priority: ticketToDelete.priority,
-                userId: ticketToDelete.userId,
-                userName: `${ticketToDelete.userName} ${ticketToDelete.userLastName || ''}`.trim(),
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -173,20 +161,17 @@ export async function deleteTicket(id: string) {
         });
 
         revalidatePath('/admin/settings/tickets');
-
-        return { ticket: ticketRemoved, message: 'Ticket eliminado exitosamente' };
+        return { ticket: ticketRemoved, message: 'Ticket deleted successfully' };
     } catch (error) {
         console.error('Error deleting ticket:', error);
-        return { error: 'Error al eliminar el ticket' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error deleting ticket' };
     }
 }
 
 export async function updateTicket(id: string, formData: FormData) {
     try {
         if (!id) {
-            return { error: 'El ID del ticket es obligatorio' };
+            return { error: 'Ticket ID is required' };
         }
 
         // Obtener el ticket actual para comparar cambios
@@ -195,7 +180,7 @@ export async function updateTicket(id: string, formData: FormData) {
         });
 
         if (!currentTicket) {
-            return { error: 'El ticket no existe' };
+            return { error: 'Ticket does not exist' };
         }
 
         // Obtener los datos del formulario
@@ -210,11 +195,11 @@ export async function updateTicket(id: string, formData: FormData) {
         const validPriorities = Object.values(TicketPriority);
 
         if (!validStatuses.includes(status)) {
-            throw new Error(`Estado inválido: ${status}`);
+            throw new Error(`Invalid status: ${status}`);
         }
 
         if (!validPriorities.includes(priority)) {
-            throw new Error(`Prioridad inválida: ${priority}`);
+            throw new Error(`Invalid priority: ${priority}`);
         }
 
         // Preparar los datos para actualizar
@@ -254,7 +239,7 @@ export async function updateTicket(id: string, formData: FormData) {
             action: AUDIT_ACTIONS.TICKET.UPDATE,
             entity: AUDIT_ENTITIES.TICKET,
             entityId: id,
-            description: `Ticket "${currentTicket.code}" actualizado`,
+            description: `Ticket "${currentTicket.code}" updated`,
             metadata: {
                 before: {
                     title: currentTicket.title,
@@ -296,12 +281,10 @@ export async function updateTicket(id: string, formData: FormData) {
 
         return {
             ticket: updatedTicket,
-            message: 'Ticket actualizado exitosamente',
+            message: 'Ticket updated successfully',
         };
     } catch (error) {
         console.error('Error updating ticket:', error);
-        return { error: 'Error al actualizar el ticket' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error updating ticket' };
     }
 }

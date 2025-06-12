@@ -47,7 +47,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     if (!isInitialized || isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex min-h-screen items-center justify-center">
                 <LoadingSpinner size="lg" />
             </div>
         );

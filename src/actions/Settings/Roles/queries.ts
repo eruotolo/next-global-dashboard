@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { RoleQuery, RolePermissionInterface } from '@/types/Roles/RolesInterface';
+import type { RoleQuery, RolePermissionInterface } from '@/types/settings/Roles/RolesInterface';
 
 export async function getAllRoles(): Promise<RolePermissionInterface[]> {
     // Cambiamos el tipo
@@ -39,8 +39,6 @@ export async function getAllRoles(): Promise<RolePermissionInterface[]> {
     } catch (error) {
         console.error('Error fetching roles:', error);
         throw error;
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -58,15 +56,13 @@ export async function getRoleById(id: string): Promise<RoleQuery | null> {
         });
 
         if (!getRole) {
-            throw new Error(`Rol con ID ${id} no encontrado`);
+            throw new Error(`Role with ID ${id} not found`);
         }
 
         return getRole;
     } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-        throw new Error('No se pudo obtener el usuario.'); // Mensaje controlado
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error getting role:', error);
+        throw new Error('Could not get the role.');
     }
 }
 

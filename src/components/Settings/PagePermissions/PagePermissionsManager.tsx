@@ -5,7 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { getPages } from '@/actions/Settings/Pages/queries';
-import { updatePageRole, createPage, updatePage, deletePage } from '@/actions/Settings/Pages/mutations';
+import {
+    updatePageRole,
+    createPage,
+    updatePage,
+    deletePage,
+} from '@/actions/Settings/Pages/mutations';
 import { getRoles } from '@/actions/Settings/Roles/queries';
 import type { Page } from '@/actions/Settings/Pages/queries';
 import {
@@ -30,7 +35,17 @@ import {
     DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Plus, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import type { Column } from '@tanstack/react-table';
 
 interface Role {
@@ -58,22 +73,25 @@ function ActionCell({ row, onEdit, onDelete }: ActionCellProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="p-0 w-8 h-8">
+                <Button variant="ghost" className="h-8 w-8 p-0">
                     <span className="sr-only">Abrir menú</span>
-                    <MoreHorizontal className="w-4 h-4" />
+                    <MoreHorizontal className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => onEdit(page)}>
-                    <Pencil className="w-4 h-4 mr-2" />
+                    <Pencil className="mr-2 h-4 w-4" />
                     Editar página
                 </DropdownMenuItem>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <DropdownMenuItem className="text-red-600" onSelect={(e) => e.preventDefault()}>
-                            <Trash2 className="w-4 h-4 mr-2" />
+                        <DropdownMenuItem
+                            className="text-red-600"
+                            onSelect={(e) => e.preventDefault()}
+                        >
+                            <Trash2 className="mr-2 h-4 w-4" />
                             Eliminar página
                         </DropdownMenuItem>
                     </AlertDialogTrigger>
@@ -81,7 +99,8 @@ function ActionCell({ row, onEdit, onDelete }: ActionCellProps) {
                         <AlertDialogHeader>
                             <AlertDialogTitle>¿Está seguro?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Esta acción no se puede deshacer. Se eliminará la página y todos sus permisos asociados.
+                                Esta acción no se puede deshacer. Se eliminará la página y todos sus
+                                permisos asociados.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -118,10 +137,7 @@ export default function PagePermissionsManager() {
 
     const fetchData = async () => {
         try {
-            const [pagesData, rolesData] = await Promise.all([
-                getPages(),
-                getRoles(),
-            ]);
+            const [pagesData, rolesData] = await Promise.all([getPages(), getRoles()]);
 
             setPages(pagesData);
             setRoles(rolesData);
@@ -136,19 +152,21 @@ export default function PagePermissionsManager() {
     const handlePermissionChange = async (pageId: string, roleId: string, isChecked: boolean) => {
         try {
             await updatePageRole(pageId, roleId, isChecked ? 'add' : 'remove');
-            setPages(pages.map(page => {
-                if (page.id === pageId) {
-                    const role = roles.find(r => r.id === roleId);
-                    if (!role) {
-                        throw new Error('Rol no encontrado');
+            setPages(
+                pages.map((page) => {
+                    if (page.id === pageId) {
+                        const role = roles.find((r) => r.id === roleId);
+                        if (!role) {
+                            throw new Error('Rol no encontrado');
+                        }
+                        const pageRoles = isChecked
+                            ? [...page.pageRoles, { roleId, role }]
+                            : page.pageRoles.filter((pr) => pr.roleId !== roleId);
+                        return { ...page, pageRoles };
                     }
-                    const pageRoles = isChecked
-                        ? [...page.pageRoles, { roleId, role }]
-                        : page.pageRoles.filter(pr => pr.roleId !== roleId);
-                    return { ...page, pageRoles };
-                }
-                return page;
-            }));
+                    return page;
+                }),
+            );
             toast.success('Permisos actualizados correctamente');
         } catch (error) {
             console.error('Error updating permission:', error);
@@ -210,7 +228,7 @@ export default function PagePermissionsManager() {
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                     Página
-                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }: { row: { original: Page } }) => (
@@ -225,25 +243,25 @@ export default function PagePermissionsManager() {
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                     Ruta
-                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }: { row: { original: Page } }) => (
                 <div className="font-mono text-[13px]">{row.original.path}</div>
             ),
         },
-        ...roles.map(role => ({
+        ...roles.map((role) => ({
             id: role.id,
             header: () => (
-                <div className="flex justify-center font-semibold whitespace-nowrap min-w-[100px]">
+                <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
                     {role.name}
                 </div>
             ),
             cell: ({ row }: { row: { original: Page } }) => (
                 <div className="flex justify-center">
                     <Checkbox
-                        checked={row.original.pageRoles.some(pr => pr.roleId === role.id)}
-                        onCheckedChange={(checked) => 
+                        checked={row.original.pageRoles.some((pr) => pr.roleId === role.id)}
+                        onCheckedChange={(checked) =>
                             handlePermissionChange(row.original.id, role.id, checked as boolean)
                         }
                     />
@@ -253,11 +271,7 @@ export default function PagePermissionsManager() {
         {
             id: 'actions',
             cell: ({ row }: { row: { original: Page } }) => (
-                <ActionCell
-                    row={row}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                />
+                <ActionCell row={row} onEdit={handleEdit} onDelete={handleDelete} />
             ),
         },
     ];
@@ -268,19 +282,22 @@ export default function PagePermissionsManager() {
 
     return (
         <>
-            <div className="flex justify-between w-full h-auto">
+            <div className="flex h-auto w-full justify-between">
                 <div>
-                    <h5 className="font-medium tracking-tight leading-none mb-[5px] text-[20px]">
+                    <h5 className="mb-[5px] text-[20px] leading-none font-medium tracking-tight">
                         Gestión de Permisos
                     </h5>
                     <p className="text-muted-foreground text-[13px]">
                         Administra los permisos de acceso a las páginas por rol
                     </p>
                 </div>
-                <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                    setIsDialogOpen(open);
-                    if (!open) resetForm();
-                }}>
+                <Dialog
+                    open={isDialogOpen}
+                    onOpenChange={(open) => {
+                        setIsDialogOpen(open);
+                        if (!open) resetForm();
+                    }}
+                >
                     <DialogTrigger asChild>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" />
@@ -300,7 +317,9 @@ export default function PagePermissionsManager() {
                                 <Input
                                     id="name"
                                     value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, name: e.target.value })
+                                    }
                                     required
                                 />
                             </div>
@@ -309,7 +328,9 @@ export default function PagePermissionsManager() {
                                 <Input
                                     id="path"
                                     value={formData.path}
-                                    onChange={(e) => setFormData({ ...formData, path: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, path: e.target.value })
+                                    }
                                     required
                                     pattern="^/.*"
                                     title="La ruta debe comenzar con /"
@@ -320,7 +341,9 @@ export default function PagePermissionsManager() {
                                 <Textarea
                                     id="description"
                                     value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, description: e.target.value })
+                                    }
                                 />
                             </div>
                             <DialogFooter>
@@ -342,4 +365,4 @@ export default function PagePermissionsManager() {
             </div>
         </>
     );
-} 
+}

@@ -1,7 +1,10 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { UserQueryWithRoles, UserQueryWithDetails } from '@/types/Users/UsersInterface';
+import type {
+    UserQueryWithRoles,
+    UserQueryWithDetails,
+} from '@/types/settings/Users/UsersInterface';
 
 export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
     try {
@@ -46,8 +49,6 @@ export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -71,12 +72,12 @@ export async function getUserById(id: string): Promise<UserQueryWithDetails | nu
         });
 
         if (!getUser) {
-            throw new Error(`Usuario con ID ${id} no encontrado`);
+            throw new Error(`User with ID ${id} not found`);
         }
 
         return getUser;
     } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-        throw new Error('No se pudo obtener el usuario.'); // Mensaje controlado
+        console.error('Error getting user:', error);
+        throw new Error('Could not get the user.');
     }
 }

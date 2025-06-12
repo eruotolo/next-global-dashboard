@@ -37,7 +37,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="#">
-                                <div className="flex justify-center items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground aspect-square size-8">
+                                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                                     <Image
                                         src={logo}
                                         alt="Logo"
@@ -46,8 +46,8 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                                         className="h-[23px] w-[24px]"
                                     />
                                 </div>
-                                <div className="grid flex-1 text-sm leading-tight text-left">
-                                    <span className="font-semibold truncate text-[16px]">
+                                <div className="grid flex-1 text-left text-sm leading-tight">
+                                    <span className="truncate text-[16px] font-semibold">
                                         Chubby
                                     </span>
                                     <span className="truncate text-[11px]">Dashboard</span>

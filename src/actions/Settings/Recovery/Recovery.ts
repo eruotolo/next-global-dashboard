@@ -63,7 +63,5 @@ export async function recoverPassword(email: string) {
     } catch (error) {
         console.error('Error en recoverPassword:', error);
         return { message: 'Error: No se pudo procesar la solicitud' };
-    } finally {
-        await prisma.$disconnect();
     }
 }

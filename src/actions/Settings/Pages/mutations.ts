@@ -98,11 +98,7 @@ export async function deletePage(id: string) {
     }
 }
 
-export async function updatePageRole(
-    pageId: string,
-    roleId: string,
-    action: 'add' | 'remove'
-) {
+export async function updatePageRole(pageId: string, roleId: string, action: 'add' | 'remove') {
     try {
         if (!pageId || !roleId || !['add', 'remove'].includes(action)) {
             throw new Error('Invalid parameters');
@@ -129,7 +125,7 @@ export async function updatePageRole(
                 // Obtener información de la página y el rol para el log
                 const [page, role] = await Promise.all([
                     prisma.page.findUnique({ where: { id: pageId } }),
-                    prisma.role.findUnique({ where: { id: roleId } })
+                    prisma.role.findUnique({ where: { id: roleId } }),
                 ]);
 
                 await logAuditEvent({
@@ -161,7 +157,7 @@ export async function updatePageRole(
             // Obtener información de la página y el rol para el log
             const [page, role] = await Promise.all([
                 prisma.page.findUnique({ where: { id: pageId } }),
-                prisma.role.findUnique({ where: { id: roleId } })
+                prisma.role.findUnique({ where: { id: roleId } }),
             ]);
 
             await logAuditEvent({
@@ -189,4 +185,4 @@ export async function updatePageRole(
         console.error('Error updating page role:', error);
         throw new Error('Failed to update page role');
     }
-} 
+}

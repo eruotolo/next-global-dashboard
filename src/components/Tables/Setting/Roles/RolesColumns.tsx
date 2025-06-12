@@ -21,9 +21,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteRole } from '../../../../actions/Settings/Roles';
+import { deleteRole } from '@/actions/Settings/Roles';
 import { useUserRoleStore } from '@/store/userroleStore';
-import type { RolePermissionInterface } from '@/types/Roles/RolesInterface';
+import type { RolePermissionInterface } from '@/types/settings/Roles/RolesInterface';
 
 const DynamicEditRoleModal = dynamic(
     () => import('@/components/Modal/Setting/Roles/EditRoleModal'),
@@ -39,7 +39,8 @@ const DynamicAssignPermissionModal = dynamic(
     },
 );
 
-import type { RoleInterface } from '@/tipos/Roles/RolesInterface';
+import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
+
 interface ActionCellProps {
     row: {
         original: RoleInterface;
@@ -83,9 +84,9 @@ function ActionCell({ row }: ActionCellProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="p-0 w-8 h-8">
+                    <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Abrir menú</span>
-                        <MoreHorizontal className="w-4 h-4" />
+                        <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -134,8 +135,9 @@ function ActionCell({ row }: ActionCellProps) {
     );
 }
 
-export const RolesColumns = (refreshTable: () => void): ColumnDef<RolePermissionInterface>[] => [
+export const RolesColumns = (): ColumnDef<RolePermissionInterface>[] => [
     {
+        id: 'Nombres',
         accessorKey: 'name',
         header: ({ column }) => {
             return (
@@ -143,8 +145,8 @@ export const RolesColumns = (refreshTable: () => void): ColumnDef<RolePermission
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
-                    Nombre
-                    <ArrowUpDown className="ml-2 w-4 h-4" />
+                    Nombres
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
@@ -155,8 +157,9 @@ export const RolesColumns = (refreshTable: () => void): ColumnDef<RolePermission
     },
     {
         id: 'Permisos',
+        accessorKey: 'permissions',
         header: () => (
-            <div className="flex  font-semibold whitespace-nowrap min-w-[100px]">Permisos</div>
+            <div className="flex min-w-[100px] font-semibold whitespace-nowrap">Permisos</div>
         ),
         cell: ({ row }) => {
             const permissions = row.original.permissionRole || [];
@@ -165,7 +168,7 @@ export const RolesColumns = (refreshTable: () => void): ColumnDef<RolePermission
                     .map((perm) => perm.permission?.name)
                     .filter(Boolean)
                     .join(', ') || 'Sin permisos';
-            return <div className="w-[100px] flex">{permissionNames}</div>;
+            return <div className="flex w-[100px]">{permissionNames}</div>;
         },
     },
     {

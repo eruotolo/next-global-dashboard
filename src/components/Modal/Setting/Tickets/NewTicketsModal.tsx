@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 
 import { createTicket } from '@/actions/Settings/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
-import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 import { TicketStatus, TicketPriority } from '@prisma/client';
 import useAuthStore from '@/store/authStore';
@@ -136,7 +136,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                         <p className="custome-form-error">{errors.title.message}</p>
                                     )}
                                 </div>
-                                <div className="grid grid-cols-2 mb-[15px] gap-4">
+                                <div className="mb-[15px] grid grid-cols-2 gap-4">
                                     <div className="col-span-1">
                                         <div>
                                             <Select
@@ -212,11 +212,11 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                         content={description}
                                         onChange={(content) => {
                                             setDescription(content);
-                                            // Opcional: si necesitas actualizar el valor en react-hook-form
                                             setValue('description', content, {
                                                 shouldValidate: true,
                                             });
                                         }}
+                                        imageFolder="editor-images"
                                     />
                                 </div>
                             </div>
@@ -230,9 +230,9 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                 />
                                 <label
                                     htmlFor="file-upload"
-                                    className="flex justify-center items-center py-2 px-4 w-full font-medium text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none mt-[34px] text-[13px]"
+                                    className="mt-[34px] flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                                 >
-                                    <FilePenLine className="mr-2 w-5 h-5" />
+                                    <FilePenLine className="mr-2 h-5 w-5" />
                                     Cambiar foto de perfil
                                 </label>
                                 <Input

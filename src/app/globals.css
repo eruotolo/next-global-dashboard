@@ -1,10 +1,11 @@
 @import 'tailwindcss';
 
+/* Asegúrate de que tailwindcss-animate esté instalado */
 @plugin 'tailwindcss-animate';
 
 :root {
     --font-inter: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', serif;
+    --font-mono: 'JetBrains Mono', monospace;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
@@ -43,21 +44,16 @@
 @theme {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-
-    --breakpoint-*: initial;
     --breakpoint-sm: 640px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
     --breakpoint-xl: 1280px;
     --breakpoint-2xl: 1520px;
-
     --font-inter: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', serif;
+    --font-mono: 'JetBrains Mono', monospace;
 }
 
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
     --color-popover: var(--popover);
@@ -98,66 +94,67 @@
     * {
         @apply border-border outline-ring/50;
     }
+
     body {
         @apply bg-background text-foreground;
     }
+
     .tiptap > h1 {
         @apply text-2xl font-bold;
     }
+
     .tiptap > h2 {
         @apply text-xl font-bold;
     }
+
     .tiptap > h3 {
         @apply text-lg font-bold;
     }
 }
 
 @layer components {
-    .titulos{
-        @apply font-inter text-[1.25em] mb-[5px] tracking-tight font-medium
+    .titulos {
+        @apply font-inter mb-[5px] text-[1.25em] font-medium tracking-tight;
     }
-    .textos{
-        @apply font-inter text-[13px] text-muted-foreground
+
+    .textos {
+        @apply font-inter text-muted-foreground text-[13px];
     }
-    .botones{
-        @apply inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 ml-auto h-8 cursor-pointer
+
+    .botones {
+        @apply focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-input bg-background hover:bg-accent hover:text-accent-foreground ml-auto inline-flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-medium whitespace-nowrap shadow-xs transition-colors transition-shadow outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 has-[>svg]:px-2.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4;
     }
+
     .custom-button {
-        @apply font-inter h-[36px] w-[120px] mt-[20px] rounded-[10px] border-0 bg-gray-600 text-[13px] font-normal text-white hover:bg-gray-300 hover:text-white 2xl:w-[120px] disabled:opacity-50 cursor-pointer
+        @apply font-inter bg-primary text-primary-foreground hover:bg-primary/90 mt-[20px] h-[36px] w-[140px] cursor-pointer rounded-[10px] border-0 text-[13px] font-normal disabled:opacity-50 2xl:w-[140px];
     }
-    .custome-form-error{
-        @apply font-inter text-[13px] text-red-300 font-normal tracking-tight
+
+    .custom-form-error {
+        @apply font-inter text-destructive text-[13px] font-normal tracking-tight;
     }
-    .custom-label{
-        @apply font-inter mb-2 block text-[16px] font-medium text-gray-700
+
+    .custom-label {
+        @apply font-inter text-foreground mb-2 block text-[16px] font-medium;
     }
 }
 
-.rich-text-content h1 {
-    font-size: 2rem;
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Altura fija para evitar problemas */
+}
+
+.ProseMirror a {
+    color: #2563eb; /* azul */
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--destructive);
     font-weight: bold;
-    margin-bottom: 1rem;
-}
-.rich-text-content h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-}
-.rich-text-content h3 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-.rich-text-content p {
-    margin-bottom: 1rem;
-}
-.rich-text-content em {
-    font-style: italic;
-}
-.rich-text-content s {
-    text-decoration: line-through;
-}
-.rich-text-content mark {
-    background-color: #ffeb3b; /* Amarillo para el resaltado */
-    padding: 0.1rem 0.2rem;
 }

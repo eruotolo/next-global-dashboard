@@ -68,19 +68,19 @@ export async function checkPageAccess(path: string, roles: string[]) {
             return { hasAccess: false };
         }
 
-        const allowedRoles = page.pageRoles.map(pr => pr.role?.name).filter(Boolean) as string[];
-        
+        const allowedRoles = page.pageRoles.map((pr) => pr.role?.name).filter(Boolean) as string[];
+
         // Si no hay roles asignados a la página, denegar acceso
         if (allowedRoles.length === 0) {
             return { hasAccess: false };
         }
 
         // Verificar si alguno de los roles del usuario tiene acceso
-        const hasAccess = roles.some(role => allowedRoles.includes(role));
+        const hasAccess = roles.some((role) => allowedRoles.includes(role));
 
         return { hasAccess };
     } catch (error) {
         console.error('Error checking page access:', error);
         throw new Error('Failed to check page access');
     }
-} 
+}

@@ -1,13 +1,10 @@
-// lib/auth/authOptions.ts
-import AuthAdapter from '@/lib/auth/authAdapter';
 import prisma from '@/dbprisma/db';
 import bcrypt from 'bcrypt';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
-import type { CustomUser } from '@/tipos/Login/CustomUser';
+import type { CustomUser } from '@/types/settings/Login/CustomUser';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
-
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -17,7 +14,7 @@ export const authOptions: NextAuthOptions = {
                 email: { label: 'Email', type: 'text', placeholder: 'ejemplo@ejemplo.com' },
                 password: { label: 'Password', type: 'password', placeholder: '*************' },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials, _req) {
                 if (!credentials?.email || !credentials?.password) {
                     // Registrar intento fallido de inicio de sesión (datos incompletos)
                     await logAuditEvent({

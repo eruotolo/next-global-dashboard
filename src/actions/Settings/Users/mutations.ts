@@ -4,7 +4,7 @@ import prisma from '@/lib/db/db';
 import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
-import type { UserData } from '@/types/Users/UsersInterface';
+import type { UserData } from '@/types/settings/Users/UsersInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -32,7 +32,7 @@ export async function createUser(formData: FormData) {
             !city ||
             !password
         ) {
-            return { error: 'Faltan campos obligatorios' };
+            return { error: 'Required fields are missing' };
         }
 
         let imageUrl: string | undefined;
@@ -69,12 +69,12 @@ export async function createUser(formData: FormData) {
             action: AUDIT_ACTIONS.USER.CREATE,
             entity: AUDIT_ENTITIES.USER,
             entityId: user.id,
-            description: `Usuario "${name} ${lastName}" creado`,
-            metadata: { 
+            description: `User "${name} ${lastName}" created`,
+            metadata: {
                 userId: user.id,
                 email,
                 name,
-                lastName
+                lastName,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -83,19 +83,17 @@ export async function createUser(formData: FormData) {
         });
 
         revalidatePath('/admin/settings/users');
-        return { user, message: 'Usuario creado exitosamente' };
+        return { user, message: 'User created successfully' };
     } catch (error) {
         console.error('Error creating user:', error);
-        return { error: 'Error al crear el usuario' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error creating user' };
     }
 }
 
 export async function deleteUser(id: string) {
     try {
         if (!id) {
-            return { error: 'El ID del usuario es obligatorio' };
+            return { error: 'User ID is required' };
         }
 
         // Obtener información del usuario antes de eliminarlo
@@ -104,7 +102,7 @@ export async function deleteUser(id: string) {
         });
 
         if (!userToDelete) {
-            return { error: 'El usuario no existe' };
+            return { error: 'User does not exist' };
         }
 
         const userRemoved = await prisma.user.delete({
@@ -117,12 +115,12 @@ export async function deleteUser(id: string) {
             action: AUDIT_ACTIONS.USER.DELETE,
             entity: AUDIT_ENTITIES.USER,
             entityId: id,
-            description: `Usuario "${userToDelete.name} ${userToDelete.lastName || ''}" eliminado`,
-            metadata: { 
+            description: `User "${userToDelete.name} ${userToDelete.lastName}" deleted`,
+            metadata: {
                 userId: id,
                 email: userToDelete.email,
                 name: userToDelete.name,
-                lastName: userToDelete.lastName
+                lastName: userToDelete.lastName,
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -132,19 +130,17 @@ export async function deleteUser(id: string) {
 
         revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla
 
-        return { user: userRemoved, message: 'Usuario eliminado exitosamente' };
+        return { user: userRemoved, message: 'User deleted successfully' };
     } catch (error) {
-        console.error('Error deleting user:', error);
-        return { error: 'Error al eliminar el usuario' };
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error deleting user', error);
+        return { error: 'Error deleting user' };
     }
 }
 
 export async function updateUser(id: string, formData: FormData) {
     try {
         if (!id) {
-            return { error: 'El ID del usuario es obligatorio' };
+            return { error: 'User ID is required' };
         }
 
         // Obtener información del usuario antes de actualizarlo
@@ -153,7 +149,7 @@ export async function updateUser(id: string, formData: FormData) {
         });
 
         if (!userBeforeUpdate) {
-            return { error: 'El usuario no existe' };
+            return { error: 'User does not exist' };
         }
 
         const name = formData.get('name') as string;
@@ -199,7 +195,7 @@ export async function updateUser(id: string, formData: FormData) {
             action: AUDIT_ACTIONS.USER.UPDATE,
             entity: AUDIT_ENTITIES.USER,
             entityId: id,
-            description: `Usuario "${userBeforeUpdate.name} ${userBeforeUpdate.lastName || ''}" actualizado`,
+            description: `User "${userBeforeUpdate.name} ${userBeforeUpdate.lastName || ''}" updated`,
             metadata: {
                 userId: id,
                 before: {
@@ -219,15 +215,39 @@ export async function updateUser(id: string, formData: FormData) {
                     city: userUpdated.city,
                 },
                 changes: {
-                    name: name !== userBeforeUpdate.name ? { from: userBeforeUpdate.name, to: name } : undefined,
-                    lastName: lastName !== userBeforeUpdate.lastName ? { from: userBeforeUpdate.lastName, to: lastName } : undefined,
-                    email: email !== userBeforeUpdate.email ? { from: userBeforeUpdate.email, to: email } : undefined,
-                    phone: phone !== userBeforeUpdate.phone ? { from: userBeforeUpdate.phone, to: phone } : undefined,
-                    address: address !== userBeforeUpdate.address ? { from: userBeforeUpdate.address, to: address } : undefined,
-                    city: city !== userBeforeUpdate.city ? { from: userBeforeUpdate.city, to: city } : undefined,
-                    password: password ? "Password changed" : undefined,
-                    image: data.image ? "Image updated" : undefined,
-                }
+                    name:
+                        name !== userBeforeUpdate.name
+                            ? { from: userBeforeUpdate.name, to: name }
+                            : undefined,
+                    lastName:
+                        lastName !== userBeforeUpdate.lastName
+                            ? {
+                                  from: userBeforeUpdate.lastName,
+                                  to: lastName,
+                              }
+                            : undefined,
+                    email:
+                        email !== userBeforeUpdate.email
+                            ? { from: userBeforeUpdate.email, to: email }
+                            : undefined,
+                    phone:
+                        phone !== userBeforeUpdate.phone
+                            ? { from: userBeforeUpdate.phone, to: phone }
+                            : undefined,
+                    address:
+                        address !== userBeforeUpdate.address
+                            ? {
+                                  from: userBeforeUpdate.address,
+                                  to: address,
+                              }
+                            : undefined,
+                    city:
+                        city !== userBeforeUpdate.city
+                            ? { from: userBeforeUpdate.city, to: city }
+                            : undefined,
+                    password: password ? 'Password changed' : undefined,
+                    image: data.image ? 'Image updated' : undefined,
+                },
             },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -235,16 +255,14 @@ export async function updateUser(id: string, formData: FormData) {
                 : undefined,
         });
 
-        revalidatePath('/admin/settings/users'); // Refresca la caché para la tabla
+        revalidatePath('/admin/settings/users');
 
         return {
             user: userUpdated,
-            message: 'Usuario actualizado exitosamente',
+            message: 'User updated successfully',
         };
     } catch (error) {
         console.error('Error updating user:', error);
-        return { error: 'Error al actualizar el usuario' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error updating user' };
     }
 }

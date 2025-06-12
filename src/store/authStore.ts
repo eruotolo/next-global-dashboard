@@ -65,9 +65,9 @@ const useAuthStore = create<AuthStore>((set) => ({
                     }
                     const data: Session = await response.json();
                     console.log('Session fetched successfully');
-                    
+
                     set({ session: data, isInitialized: true });
-                    
+
                     if (data?.user?.permissions) {
                         useUserPermissionStore.getState().setPermissions(data.user.permissions);
                     }

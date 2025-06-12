@@ -5,9 +5,9 @@ import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 export default function DashboardPage() {
     return (
         <ProtectedRoute>
-            <div className="rounded-xl bg-muted/50 aspect-video">
+            <div className="bg-muted/50 aspect-video rounded-xl">
                 <div className="p-4">
-                    <p className="p-4 font-inter">Dashboard</p>
+                    <p className="font-inter p-4">Dashboard</p>
                 </div>
             </div>
         </ProtectedRoute>

@@ -57,9 +57,9 @@ function CommandInput({
     return (
         <div
             data-slot="command-input-wrapper"
-            className="flex gap-2 items-center px-3 h-9 border-b"
+            className="flex h-9 items-center gap-2 border-b px-3"
         >
-            <SearchIcon className="opacity-50 size-4 shrink-0" />
+            <SearchIcon className="size-4 shrink-0 opacity-50" />
             <CommandPrimitive.Input
                 data-slot="command-input"
                 className={cn(
@@ -86,7 +86,7 @@ function CommandEmpty({ ...props }: React.ComponentProps<typeof CommandPrimitive
     return (
         <CommandPrimitive.Empty
             data-slot="command-empty"
-            className="py-6 text-sm text-center"
+            className="py-6 text-center text-sm"
             {...props}
         />
     );

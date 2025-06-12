@@ -1,59 +1,84 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
     try {
         // 1. Crear el rol SuperAdministrador
-        const SUPER_ADMIN = '1';
         const superRole = await prisma.role.upsert({
-            where: { id: SUPER_ADMIN },
+            where: { name: 'SuperAdministrador' },
             update: {},
             create: {
-                id: SUPER_ADMIN,
                 name: 'SuperAdministrador',
             },
         });
         console.log('✅ Rol SuperAdministrador creado');
 
-        // 2. Crear el usuario SuperAdmin si no existe
-        const superAdminEmail = process.env.SUPER_EMAIL ?? 'edgardoruotolo@gmail.com';
-        const existingUser = await prisma.user.findUnique({
+        // 2. Crear permisos básicos
+        const basicPermissions = ['Crear', 'Ver', 'Eliminar', 'Editar'];
+        await Promise.all(
+            basicPermissions.map(async (permissionName) => {
+                const permission = await prisma.permission.upsert({
+                    where: { name: permissionName },
+                    update: {},
+                    create: {
+                        name: permissionName,
+                    },
+                });
+
+                await prisma.permissionRole.upsert({
+                    where: {
+                        roleId_permissionId: {
+                            roleId: superRole.id,
+                            permissionId: permission.id,
+                        },
+                    },
+                    update: {},
+                    create: {
+                        roleId: superRole.id,
+                        permissionId: permission.id,
+                    },
+                });
+
+                console.log(`✅ Permiso ${permissionName} creado y asignado a SuperAdministrador`);
+            }),
+        );
+
+        // 3. Crear el usuario SuperAdmin
+        const superAdminEmail = 'edgardoruotolo@gmail.com';
+        const hashedPassword = await hash('Guns026772', 10);
+
+        const superAdmin = await prisma.user.upsert({
             where: { email: superAdminEmail },
+            update: {},
+            create: {
+                email: superAdminEmail,
+                name: 'Edgardo',
+                lastName: 'Ruotolo Cardozo',
+                phone: '+56967553841',
+                address: 'Antonio Guarategua Lebe S/N',
+                city: 'Castro',
+                password: hashedPassword,
+                image: '/shadcn.jpg',
+                state: 1,
+            },
         });
+        console.log('✅ Usuario SuperAdmin creado');
 
-        if (!existingUser) {
-            const userPass = process.env.SUPER_PASSWORD ?? 'Guns026772';
-            const userPassHash = await hash(userPass, 10);
+        // 4. Asignar el rol SuperAdministrador al usuario
+        await prisma.userRole.create({
+            data: {
+                userId: superAdmin.id,
+                roleId: superRole.id,
+            },
+        });
+        console.log('✅ Rol SuperAdministrador asignado al usuario');
 
-            const superAdmin = await prisma.user.create({
-                data: {
-                    email: superAdminEmail,
-                    name: 'Edgardo',
-                    lastName: 'Ruotolo Cardozo',
-                    phone: '+56967553841',
-                    address: 'Antonio Guarategua Lebe S/N',
-                    city: 'Castro',
-                    password: userPassHash,
-                    image: '/shadcn.jpg',
-                    state: 1,
-                },
-            });
-
-            // Crear relación usuario-rol
-            await prisma.userRole.create({
-                data: {
-                    userId: superAdmin.id,
-                    roleId: SUPER_ADMIN,
-                },
-            });
-            console.log('✅ Usuario SuperAdministrador creado');
-        } else {
-            console.log('ℹ️ Usuario SuperAdministrador ya existe');
-        }
-
-        // 3. Definir y crear las páginas iniciales
+        // 5. Crear páginas básicas del sistema
         const pages = [
             {
                 name: 'Dashboard',
@@ -82,7 +107,6 @@ async function main() {
             },
         ];
 
-        // Crear las páginas y asignar permisos al SuperAdministrador
         for (const pageData of pages) {
             const page = await prisma.page.upsert({
                 where: { path: pageData.path },
@@ -93,7 +117,6 @@ async function main() {
                 },
             });
 
-            // Asignar permiso al SuperAdministrador
             await prisma.pageRole.upsert({
                 where: {
                     pageId_roleId: {
@@ -111,6 +134,12 @@ async function main() {
             console.log(`✅ Página ${page.name} creada y asignada a SuperAdministrador`);
         }
 
+        // 6. Ejecutar archivos SQL
+        /*const sqlFiles = ['country.sql', 'city.sql', 'airports.sql', 'shippingport.sql'];
+        for (const file of sqlFiles) {
+            await executeSqlFile(file);
+        }*/
+
         console.log('🚀 Inicialización del sistema completada con éxito');
     } catch (error) {
         console.error('❌ Error durante la inicialización:', error);
@@ -125,4 +154,4 @@ main()
     })
     .finally(async () => {
         await prisma.$disconnect();
-    }); 
+    });

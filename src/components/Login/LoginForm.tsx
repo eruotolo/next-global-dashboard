@@ -5,7 +5,7 @@ import type React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -15,12 +15,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import type { LoginFormInputs } from '@/tipos/Login/LoginFormInputs';
+import type { LoginFormInputs } from '@/types/settings/Login/LoginFormInputs';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
     const [isPasswordHidden, setPasswordHidden] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [, setError] = useState<string | null>(null);
 
     const {
         register,
@@ -31,7 +31,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         reValidateMode: 'onSubmit',
     });
 
-    const router = useRouter();
+    // const router = useRouter();
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         setIsLoading(true);
@@ -41,7 +41,9 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             const res = await signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                redirect: false,
+                //redirect: false,
+                redirect: true,
+                callbackUrl: '/admin/dashboard',
             });
 
             if (res?.error) {
@@ -54,14 +56,18 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                               : 'Ha ocurrido un error durante el inicio de sesión',
                 });
             } else {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
+                await new Promise((resolve) => setTimeout(resolve, 800));
+
                 toast.success('Inicio de sesión exitoso', {
                     description: 'Has iniciado sesión correctamente.',
                 });
-                router.push('/admin/dashboard');
+                //router.push('/admin/dashboard');
+
+                // await new Promise(resolve => setTimeout(resolve, 1500));
+                // window.location.replace('/admin/dashboard');
             }
         } catch (error) {
+            console.error('Error inesperado en LoginForm:', error);
             toast.error('Error inesperado', {
                 description: 'Ha ocurrido un error inesperado. Por favor, intenta de nuevo.',
             });
@@ -75,10 +81,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className="font-normal font-inter text-[25px] leading-[25px]">
+                    <CardTitle className="font-inter text-[25px] leading-[25px] font-normal">
                         Bienvenido de nuevo
                     </CardTitle>
-                    <CardDescription className="font-normal font-inter text-[14px] leading-[14px]">
+                    <CardDescription className="font-inter text-[14px] leading-[14px] font-normal">
                         Inicia sesión para continuar
                     </CardDescription>
                 </CardHeader>
@@ -100,7 +106,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     })}
                                 />
                                 {errors.email && (
-                                    <p className="text-sm text-destructive">
+                                    <p className="text-destructive text-sm">
                                         {errors.email.message}
                                     </p>
                                 )}
@@ -110,7 +116,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     <Label htmlFor="password">Password</Label>
                                     <Link
                                         href="/recovery"
-                                        className="ml-auto text-sm hover:underline underline-offset-4"
+                                        className="ml-auto text-sm underline-offset-4 hover:underline"
                                     >
                                         ¿Olvidaste tu contraseña?
                                     </Link>
@@ -125,18 +131,18 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                                     />
                                     <button
                                         type="button"
-                                        className="flex absolute inset-y-0 right-3 items-center"
+                                        className="absolute inset-y-0 right-3 flex items-center"
                                         onClick={() => setPasswordHidden(!isPasswordHidden)}
                                     >
                                         {isPasswordHidden ? (
-                                            <Eye className="w-4 h-4 text-gray-400 cursor-pointer" />
+                                            <Eye className="h-4 w-4 cursor-pointer text-gray-400" />
                                         ) : (
-                                            <EyeOff className="w-4 h-4 text-gray-400 cursor-pointer" />
+                                            <EyeOff className="h-4 w-4 cursor-pointer text-gray-400" />
                                         )}
                                     </button>
                                 </div>
                                 {errors.password && (
-                                    <p className="text-sm text-destructive">
+                                    <p className="text-destructive text-sm">
                                         {errors.password.message}
                                     </p>
                                 )}

@@ -7,7 +7,7 @@ import {
     LayoutDashboard,
     ShoppingCart,
     Store,
-    Briefcase
+    Briefcase,
 } from 'lucide-react';
 
 export const navData = {
@@ -92,7 +92,6 @@ export const navData = {
                 },
             ],
         },
-
     ],
 
     projects: [
@@ -108,7 +107,6 @@ export const navData = {
             icon: PieChart,
             roles: [],
         },
-
     ],
 
     navAdministration: [
@@ -130,12 +128,12 @@ export const navData = {
                 },
                 {
                     title: 'Aeropuertos',
-                    url: '#',
+                    url: '/admin/administration/airports',
                     roles: [],
                 },
                 {
                     title: 'Puertos',
-                    url: '#',
+                    url: '/admin/administration/shippingport',
                     roles: [],
                 },
                 {

@@ -7,10 +7,10 @@ export default function UnauthorizedPage() {
     const router = useRouter();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[85vh] bg-background">
-            <div className="text-center space-y-6">
-                <h1 className="text-4xl font-bold text-primary">Acceso No Autorizado</h1>
-                <p className="text-lg text-muted-foreground">
+        <div className="bg-background flex min-h-[85vh] flex-col items-center justify-center">
+            <div className="space-y-6 text-center">
+                <h1 className="text-primary text-4xl font-bold">Acceso No Autorizado</h1>
+                <p className="text-muted-foreground text-lg">
                     No tienes los permisos necesarios para acceder a esta página.
                 </p>
                 <div className="space-x-4">

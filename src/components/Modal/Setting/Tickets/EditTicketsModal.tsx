@@ -5,9 +5,10 @@ import { useState, useEffect, useTransition } from 'react';
 import Image from 'next/image';
 import { useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
 
-import type { EditModalPropsAlt } from '@/types/Generic/InterfaceGeneric';
-import type { GetTicketQuery } from '@/types/Tickets/TicketInterface';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import type { GetTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 import { TicketStatus, TicketPriority } from '@prisma/client';
 
 import { getTicketById, updateTicket } from '@/actions/Settings/Tickets';
@@ -30,15 +31,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import RichTextDisplay from '@/components/RichTextDisplay/RichTextDisplay';
+import TicketComments from '@/components/Modal/Setting/Tickets/TicketComments';
 
 function SubmitButton() {
     const { pending } = useFormStatus();
     return (
-        <button type="submit" disabled={pending} className="custom-button">
+        <Button type="submit" disabled={pending} className="custom-button">
             {pending ? 'Actualizando...' : 'Actualizar'}
-        </button>
+        </Button>
     );
 }
 
@@ -59,8 +62,7 @@ const PRIORITY_LABELS = {
 export default function EditTicketsModal({ id, refreshAction, open, onClose }: EditModalPropsAlt) {
     const {
         register,
-        reset,
-        formState: { errors, isValid },
+        formState: { errors },
         setValue,
     } = useForm<GetTicketQuery>({
         mode: 'onChange',
@@ -73,7 +75,7 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/soporte.png');
     const [ticketData, setTicketData] = useState<GetTicketQuery | null>(null);
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
 
     const [status, setStatus] = useState<TicketStatus>(TicketStatus.OPEN);
     const [priority, setPriority] = useState<TicketPriority>(TicketPriority.LOW);
@@ -108,6 +110,7 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
                 }
             }
         }
+
         loadTicket();
     }, [id, setValue]);
 
@@ -129,110 +132,138 @@ export default function EditTicketsModal({ id, refreshAction, open, onClose }: E
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="overflow-hidden sm:max-w-[800px]">
+            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[800px]">
                 <DialogHeader>
-                    <DialogTitle>Editar Ticket</DialogTitle>
-                    <DialogDescription>Editar ticket</DialogDescription>
+                    <DialogTitle>Ticket #{ticketData?.code}</DialogTitle>
+                    <DialogDescription>Gestión del ticket</DialogDescription>
                 </DialogHeader>
-                <Form action={handleSubmit}>
-                    <div className="grid grid-cols-4 gap-4">
-                        <div className="col-span-2 mb-[15px]">
-                            <div className="mb-[15px]">
-                                <Label className="custom-label">Titulo del ticket</Label>
-                                <Input id="title" {...register('title')} type="text" disabled />
-                            </div>
-                            <div className="grid grid-cols-2 mb-[15px] gap-4">
-                                <div className="col-span-1">
-                                    <Label className="custom-label">Estado</Label>
-                                    <Select
-                                        value={status}
-                                        onValueChange={(value: TicketStatus) => {
-                                            setStatus(value);
-                                            setValue('status', value);
-                                        }}
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Seleccionar estado" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {Object.values(TicketStatus).map((statusOption) => (
-                                                <SelectItem key={statusOption} value={statusOption}>
-                                                    {STATUS_LABELS[statusOption]}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
 
-                                    <input
-                                        type="hidden"
-                                        {...register('status', {
-                                            required: 'El estado es obligatorio',
-                                        })}
-                                    />
-                                    {errors.status && (
-                                        <p className="custome-form-error">
-                                            {errors.status.message}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="col-span-1">
-                                    <Label className="custom-label">Prioridad</Label>
-                                    <Select
-                                        value={priority}
-                                        onValueChange={(value: TicketPriority) => {
-                                            setPriority(value);
-                                            setValue('priority', value);
-                                        }}
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Seleccionar prioridad" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {Object.values(TicketPriority).map((priorityOption) => (
-                                                <SelectItem
-                                                    key={priorityOption}
-                                                    value={priorityOption}
-                                                >
-                                                    {PRIORITY_LABELS[priorityOption]}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                <Tabs defaultValue="edit">
+                    <TabsList>
+                        <TabsTrigger value="edit">Editar Tickets</TabsTrigger>
+                        <TabsTrigger value="comments">Comentarios</TabsTrigger>
+                    </TabsList>
 
-                                    <input
-                                        type="hidden"
-                                        {...register('priority', {
-                                            required: 'La prioridad es obligatoria',
-                                        })}
+                    <TabsContent value="edit">
+                        <Form action={handleSubmit} className="pt-4">
+                            <div className="grid grid-cols-4 gap-4">
+                                <div className="col-span-2 mb-[15px]">
+                                    <div className="mb-[15px]">
+                                        <Label className="custom-label">Titulo del ticket</Label>
+                                        <Input
+                                            id="title"
+                                            {...register('title')}
+                                            type="text"
+                                            disabled
+                                        />
+                                    </div>
+                                    <div className="mb-[15px] grid grid-cols-2 gap-4">
+                                        <div className="col-span-1">
+                                            <Label className="custom-label">Estado</Label>
+                                            <Select
+                                                value={status}
+                                                onValueChange={(value: TicketStatus) => {
+                                                    setStatus(value);
+                                                    setValue('status', value);
+                                                }}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Seleccionar estado" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {Object.values(TicketStatus).map(
+                                                        (statusOption) => (
+                                                            <SelectItem
+                                                                key={statusOption}
+                                                                value={statusOption}
+                                                            >
+                                                                {STATUS_LABELS[statusOption]}
+                                                            </SelectItem>
+                                                        ),
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+
+                                            <input
+                                                type="hidden"
+                                                {...register('status', {
+                                                    required: 'El estado es obligatorio',
+                                                })}
+                                            />
+                                            {errors.status && (
+                                                <p className="custome-form-error">
+                                                    {errors.status.message}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="col-span-1">
+                                            <Label className="custom-label">Prioridad</Label>
+                                            <Select
+                                                value={priority}
+                                                onValueChange={(value: TicketPriority) => {
+                                                    setPriority(value);
+                                                    setValue('priority', value);
+                                                }}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Seleccionar prioridad" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {Object.values(TicketPriority).map(
+                                                        (priorityOption) => (
+                                                            <SelectItem
+                                                                key={priorityOption}
+                                                                value={priorityOption}
+                                                            >
+                                                                {PRIORITY_LABELS[priorityOption]}
+                                                            </SelectItem>
+                                                        ),
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+
+                                            <input
+                                                type="hidden"
+                                                {...register('priority', {
+                                                    required: 'La prioridad es obligatoria',
+                                                })}
+                                            />
+                                            {errors.priority && (
+                                                <p className="custome-form-error">
+                                                    {errors.priority.message}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="mb-[15px]">
+                                        <Label className="custom-label">Descripción</Label>
+                                        <RichTextDisplay content={ticketData?.description ?? ''} />
+                                        <input type="hidden" {...register('description')} />
+                                    </div>
+                                </div>
+                                <div className="col-span-2 mb-[15px]">
+                                    <Image
+                                        src={imagePreview}
+                                        width={415}
+                                        height={420}
+                                        alt="Vista previa de la imagen"
+                                        className="h-[300px] w-[415px] rounded-[10px] object-cover"
                                     />
-                                    {errors.priority && (
-                                        <p className="custome-form-error">
-                                            {errors.priority.message}
-                                        </p>
-                                    )}
                                 </div>
                             </div>
-                            <div className="mb-[15px]">
-                                <Label className="custom-label">Descripción</Label>
-                                <RichTextDisplay content={ticketData?.description ?? ''} />
-                                <input type="hidden" {...register('description')} />
-                            </div>
+                            {error && <p className="custome-form-error">{error}</p>}
+                            <DialogFooter className="mt-4">
+                                <SubmitButton />
+                            </DialogFooter>
+                        </Form>
+                    </TabsContent>
+
+                    <TabsContent value="comments">
+                        <div className="pt-4">
+                            <TicketComments ticketId={id as string} />
                         </div>
-                        <div className="col-span-2 mb-[15px]">
-                            <Image
-                                src={imagePreview}
-                                width={415}
-                                height={420}
-                                alt="Vista previa de la imagen"
-                                className="h-[300px] w-[415px] object-cover rounded-[10px]"
-                            />
-                        </div>
-                    </div>
-                    {error && <p className="custome-form-error">{error}</p>}
-                    <DialogFooter className="mt-4">
-                        <SubmitButton />
-                    </DialogFooter>
-                </Form>
+                    </TabsContent>
+                </Tabs>
             </DialogContent>
         </Dialog>
     );

@@ -16,9 +16,9 @@ export default function UserTable() {
 
     return (
         <>
-            <div className="flex justify-between w-full h-auto">
+            <div className="flex h-auto w-full justify-between">
                 <div>
-                    <h5 className="font-medium tracking-tight leading-none mb-[5px] text-[20px]">
+                    <h5 className="mb-[5px] text-[20px] leading-none font-medium tracking-tight">
                         Usuarios
                     </h5>
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>

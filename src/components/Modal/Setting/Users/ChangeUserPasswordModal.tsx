@@ -4,9 +4,9 @@ import Form from 'next/form';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { updateUser } from '../../../../actions/Settings/Users';
-import type { UserFormPassData } from '@/tipos/Users/UsersInterface';
-import type { ChangePassModalProps } from '@/tipos/Users/UsersInterface';
+import { updateUser } from '@/actions/Settings/Users';
+import type { UserFormPassData } from '@/types/settings/Users/UsersInterface';
+import type { ChangePassModalProps } from '@/types/settings/Users/UsersInterface';
 import { useFormStatus } from 'react-dom';
 
 import {
@@ -110,7 +110,7 @@ export default function ChangePasswordModal({
                     </DialogDescription>
                 </DialogHeader>
                 <Form action={onSubmit}>
-                    <div className="grid mb-[15px]">
+                    <div className="mb-[15px] grid">
                         <div className="mb-[15px]">
                             <Label className="custom-label">Ingrese La Nueva Contraseña</Label>
                             <Input

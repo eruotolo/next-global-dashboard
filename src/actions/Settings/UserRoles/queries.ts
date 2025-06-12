@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { UserRoleQuery } from '@/types/Roles/RolesInterface';
+import type { UserRoleQuery } from '@/types/settings/Roles/RolesInterface';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
@@ -9,7 +9,7 @@ import { authOptions } from '@/lib/auth/authOptions';
 
 export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
     if (!id) {
-        throw new Error('El ID del usuario es inválido');
+        throw new Error('User ID is invalid');
     }
 
     try {
@@ -28,39 +28,34 @@ export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
             },
         });
 
-        // No necesitamos mapear, simplemente devolvemos los datos tal como vienen
         return userRoles;
     } catch (error) {
-        console.error('Error al obtener los roles del usuario:', error);
+        console.error('Error getting user roles:', error);
         throw new Error(
-            `Fallo al obtener los roles del usuario: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+            `Failed to get user roles: ${error instanceof Error ? error.message : 'Unknown error'}`,
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
 export async function updateUserRoles(id: string, roles: string[]) {
     if (!id || typeof id !== 'string') {
-        throw new Error('El ID del usuario es inválido');
+        throw new Error('User ID is invalid');
     }
 
     if (!Array.isArray(roles) || roles.some((roleId) => typeof roleId !== 'string')) {
-        throw new Error('Los roles deben ser un array de IDs válidos');
+        throw new Error('Roles must be an array of valid IDs');
     }
 
     try {
-        // Obtener información del usuario
         const user = await prisma.user.findUnique({
             where: { id },
             select: { id: true, name: true, lastName: true, email: true },
         });
 
         if (!user) {
-            throw new Error('El usuario no existe');
+            throw new Error('User does not exist');
         }
 
-        // Obtener roles actuales antes de la actualización
         const currentUserRoles = await prisma.userRole.findMany({
             where: { userId: id },
             include: {
@@ -70,23 +65,25 @@ export async function updateUserRoles(id: string, roles: string[]) {
             },
         });
 
-        const currentRoleIds = currentUserRoles.map((ur) => ur.role?.id).filter(Boolean) as string[];
-        const currentRoleNames = currentUserRoles.map((ur) => ur.role?.name).filter(Boolean) as string[];
+        const currentRoleIds = currentUserRoles
+            .map((ur) => ur.role?.id)
+            .filter(Boolean) as string[];
+        const currentRoleNames = currentUserRoles
+            .map((ur) => ur.role?.name)
+            .filter(Boolean) as string[];
 
         const result = await prisma.$transaction(async (tx) => {
-            // Eliminar roles existentes
             await tx.userRole.deleteMany({
                 where: { userId: id },
             });
 
             if (roles.length === 0) {
                 return {
-                    message: 'Todos los roles fueron eliminados',
+                    message: 'All roles have been removed',
                     success: true,
                 };
             }
 
-            // Verificar que los roles existen
             const existingRoles = await tx.role.findMany({
                 where: { id: { in: roles } },
                 select: { id: true, name: true },
@@ -96,7 +93,7 @@ export async function updateUserRoles(id: string, roles: string[]) {
             const invalidRoles = roles.filter((roleId) => !validRoleIds.includes(roleId));
 
             if (invalidRoles.length > 0) {
-                throw new Error(`Los siguientes roles no existen: ${invalidRoles.join(', ')}`);
+                throw new Error(`The following roles do not exist: ${invalidRoles.join(', ')}`);
             }
 
             // Asignar nuevos roles
@@ -110,21 +107,21 @@ export async function updateUserRoles(id: string, roles: string[]) {
             });
 
             return {
-                message: 'Roles actualizados correctamente',
+                message: 'Roles updated successfully',
                 success: true,
                 validRoleNames,
             };
         });
 
-        // Registrar la asignación de roles en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: roles.length > 0 ? 'assignRoleUser' : 'removeRoleUser',
             entity: 'User',
             entityId: id,
-            description: roles.length > 0 
-                ? `Roles asignados al usuario "${user.name} ${user.lastName || ''}"`
-                : `Todos los roles removidos del usuario "${user.name} ${user.lastName || ''}"`,
+            description:
+                roles.length > 0
+                    ? `Roles assigned to user "${user.name} ${user.lastName || ''}"`
+                    : `All roles removed from user "${user.name} ${user.lastName || ''}"`,
             metadata: {
                 userId: id,
                 userName: `${user.name} ${user.lastName || ''}`.trim(),
@@ -149,11 +146,9 @@ export async function updateUserRoles(id: string, roles: string[]) {
         revalidatePath('/admin/settings/users');
         return result;
     } catch (error) {
-        console.error('Error al actualizar los roles del usuario:', error);
+        console.error('Error updating user roles:', error);
         throw new Error(
-            `Fallo al actualizar los roles: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+            `Failed to update roles: ${error instanceof Error ? error.message : 'Unknown error'}`,
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }

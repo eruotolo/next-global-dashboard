@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { getAllTickets } from '../../../../actions/Settings/Tickets';
-import type { SimpleTicketQuery } from '@/tipos/Tickets/TicketInterface';
+import { getAllTickets } from '@/actions/Settings/Tickets';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
 
@@ -47,9 +47,9 @@ export default function TicketTable() {
 
     return (
         <>
-            <div className="flex justify-between w-full h-auto">
+            <div className="flex h-auto w-full justify-between">
                 <div>
-                    <h5 className="font-medium tracking-tight leading-none mb-[5px] text-[20px]">
+                    <h5 className="mb-[5px] text-[20px] leading-none font-medium tracking-tight">
                         Tickets
                     </h5>
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>

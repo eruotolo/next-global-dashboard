@@ -19,5 +19,5 @@ export const useUserPermissionStore = create<UserPermissionStore>((set, get) => 
 
     hasPermission: (permiso: string) => get().permissions.includes(permiso),
     hasRole: (role: string) => get().roles.includes(role),
-    hasAnyRole: (roles: string[]) => roles.some(role => get().roles.includes(role)),
+    hasAnyRole: (roles: string[]) => roles.some((role) => get().roles.includes(role)),
 }));

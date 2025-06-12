@@ -18,7 +18,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos en milisegundos
 
 const usePermissionsStore = create<PermissionsStore>((set, get) => ({
     permissionsCache: {},
-    
+
     setPermission: (path: string, hasAccess: boolean) => {
         set((state) => ({
             permissionsCache: {
@@ -30,18 +30,18 @@ const usePermissionsStore = create<PermissionsStore>((set, get) => ({
             },
         }));
     },
-    
+
     getPermission: (path: string) => {
         const cache = get().permissionsCache[path];
         if (!cache) return null;
-        
+
         const isValid = Date.now() - cache.timestamp < CACHE_DURATION;
         return isValid ? { hasAccess: cache.hasAccess, isValid } : null;
     },
-    
+
     clearCache: () => {
         set({ permissionsCache: {} });
     },
 }));
 
-export default usePermissionsStore; 
+export default usePermissionsStore;

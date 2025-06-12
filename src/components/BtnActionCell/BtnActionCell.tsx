@@ -26,14 +26,19 @@ const useHasPermission = (permissions?: string[]) => {
     return permissions.some((perm) => hasPermission(perm));
 };
 
-export function BtnViewCell({ onAction, label, className, permission = ['Ver'] }: BtnActionCellProps) {
+export function BtnViewCell({
+    onAction,
+    label,
+    className,
+    permission = ['Ver'],
+}: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
     if (!permitted) return null;
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <Eye className="mr-1 h-4 w-4" />
@@ -42,13 +47,18 @@ export function BtnViewCell({ onAction, label, className, permission = ['Ver'] }
     );
 }
 
-export function BtnEditCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
+export function BtnEditCell({
+    onAction,
+    label,
+    className,
+    permission = ['Editar'],
+}: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <FilePenLine className="mr-1 h-4 w-4" />
@@ -57,7 +67,13 @@ export function BtnEditCell({ onAction, label, className, permission = ['Editar'
     );
 }
 
-export function BtnDeleteCell({onDelete, itemId, label, className, permission = ['Eliminar'] }: BtnDeleteCellProps) {
+export function BtnDeleteCell({
+    onDelete,
+    itemId,
+    label,
+    className,
+    permission = ['Eliminar'],
+}: BtnDeleteCellProps) {
     const permitted = useHasPermission(permission);
 
     const handleDelete = () => {
@@ -67,7 +83,7 @@ export function BtnDeleteCell({onDelete, itemId, label, className, permission = 
     return (
         <DropdownMenuItem
             onClick={handleDelete}
-            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <Trash2 className="mr-1 h-4 w-4" />
@@ -76,13 +92,18 @@ export function BtnDeleteCell({onDelete, itemId, label, className, permission = 
     );
 }
 
-export function BtnChangePasswordCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
+export function BtnChangePasswordCell({
+    onAction,
+    label,
+    className,
+    permission = ['Editar'],
+}: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <Key className="mr-1 h-4 w-4" />
@@ -91,13 +112,18 @@ export function BtnChangePasswordCell({ onAction, label, className, permission =
     );
 }
 
-export function BtnConfigCell({ onAction, label, className, permission = ['Editar'] }: BtnActionCellProps) {
+export function BtnConfigCell({
+    onAction,
+    label,
+    className,
+    permission = ['Editar'],
+}: BtnActionCellProps) {
     const permitted = useHasPermission(permission);
 
     return (
         <DropdownMenuItem
             onClick={onAction}
-            className={`${className} ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <Cog className="mr-1 h-4 w-4" />

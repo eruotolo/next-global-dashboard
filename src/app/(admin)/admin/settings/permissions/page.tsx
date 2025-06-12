@@ -8,11 +8,11 @@ export default function PermissionsPage() {
         <ProtectedRoute>
             <div>
                 <div className="grid auto-rows-min gap-4 md:grid-cols-1">
-                    <div className="col-span-1 p-6 rounded-xl md:col-span-2 bg-muted/50">
+                    <div className="bg-muted/50 col-span-1 rounded-xl p-6 md:col-span-2">
                         <PagePermissionsManager />
                     </div>
                 </div>
             </div>
         </ProtectedRoute>
     );
-} 
+}

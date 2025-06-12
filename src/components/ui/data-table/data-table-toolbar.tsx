@@ -104,7 +104,7 @@ export function DataTableToolbar<TData>({
     };
 
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder={filterPlaceholder}
@@ -119,10 +119,10 @@ export function DataTableToolbar<TData>({
                             setGlobalFilter('');
                             table.resetColumnFilters();
                         }}
-                        className="px-2 h-8 lg:px-3"
+                        className="h-8 px-2 lg:px-3"
                     >
                         Limpiar
-                        <X className="ml-2 w-4 h-4" />
+                        <X className="ml-2 h-4 w-4" />
                     </Button>
                 )}
             </div>
@@ -131,17 +131,17 @@ export function DataTableToolbar<TData>({
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm">
-                                <Download className="mr-2 w-4 h-4" />
+                                <Download className="mr-2 h-4 w-4" />
                                 Exportar
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={handleExportToExcel}>
-                                <Download className="mr-2 w-4 h-4" />
+                                <Download className="mr-2 h-4 w-4" />
                                 Exportar a Excel
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={handleExportToPDF}>
-                                <FileText className="mr-2 w-4 h-4" />
+                                <FileText className="mr-2 h-4 w-4" />
                                 Exportar a PDF
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -150,9 +150,9 @@ export function DataTableToolbar<TData>({
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm">
-                            <ColumnsIcon className="mr-2 w-4 h-4" />
+                            <ColumnsIcon className="mr-2 h-4 w-4" />
                             Columnas
-                            <ChevronDownIcon className="ml-2 w-4 h-4" />
+                            <ChevronDownIcon className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">

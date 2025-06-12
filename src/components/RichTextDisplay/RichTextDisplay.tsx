@@ -11,7 +11,7 @@ export default function RichTextDisplay({ content }: RichTextDisplayProps) {
     const safeContent = typeof content === 'string' ? content : '';
 
     return (
-        <div className="rich-text-content prose prose-slate max-w-none h-auto border rounded-md p-2 overflow-auto">
+        <div className="rich-text-content prose prose-slate h-auto max-w-none overflow-auto rounded-md border p-2">
             {parse(safeContent)}
         </div>
     );

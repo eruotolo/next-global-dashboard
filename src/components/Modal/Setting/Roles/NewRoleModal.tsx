@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 import { createRole } from '@/actions/Settings/Roles';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import BtnSubmit from "@/components/BtnSubmit/BtnSubmit";
-import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
+import BtnSubmit from '@/components/BtnSubmit/BtnSubmit';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 import {
     Dialog,
@@ -95,7 +95,7 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
                         />
                         {error && <p className="custome-form-error">{error}</p>}
                     </div>
-                    {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+                    {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
                     <DialogFooter className="mt-6 items-end">
                         <DialogClose asChild>
                             <Button type="button" variant="outline">

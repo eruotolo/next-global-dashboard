@@ -5,7 +5,7 @@ import prisma from '@/dbprisma/db';
 import type { Prisma } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
-import type {AuditAction, AuditEntity} from "@/lib/audit/auditType";
+import type { AuditAction, AuditEntity } from '@/lib/audit/auditType';
 
 // Parámetros para el registro de auditoría
 export interface AuditLogParams {

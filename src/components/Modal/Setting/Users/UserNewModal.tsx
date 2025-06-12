@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 
 import { createUser } from '@/actions/Settings/Users';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import type { UserFormData } from '@/tipos/Users/UsersInterface';
-import type { UpdateData } from '@/tipos/Generic/InterfaceGeneric';
+import type { UserFormData } from '@/types/settings/Users/UsersInterface';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 import {
     Dialog,
@@ -94,8 +94,8 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
                 <Form action={onSubmit}>
                     <div className="grid grid-cols-3">
                         <div className="col-span-2">
-                            <div className="flex mb-[15px]">
-                                <div className="flex flex-col w-full mr-[10px]">
+                            <div className="mb-[15px] flex">
+                                <div className="mr-[10px] flex w-full flex-col">
                                     <Input
                                         id="name"
                                         type="text"
@@ -110,7 +110,7 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
                                         <p className="custome-form-error">{errors.name.message}</p>
                                     )}
                                 </div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex w-full flex-col">
                                     <Input
                                         id="lastName"
                                         type="text"
@@ -145,7 +145,7 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
                                     <p className="custome-form-error">{errors.email.message}</p>
                                 )}
                             </div>
-                            <div className="grid grid-cols-3 gap-4 mb-[15px]">
+                            <div className="mb-[15px] grid grid-cols-3 gap-4">
                                 <div className="col-span-2 w-full">
                                     <Input
                                         id="phone"
@@ -232,9 +232,9 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
                             />
                             <label
                                 htmlFor="file-upload"
-                                className="flex justify-center items-center py-2 px-4 w-full font-medium text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none mt-[34px] text-[13px]"
+                                className="mt-[34px] flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                             >
-                                <FilePenLine className="mr-2 w-5 h-5" />
+                                <FilePenLine className="mr-2 h-5 w-5" />
                                 Cambiar foto de perfil
                             </label>
                             <Input

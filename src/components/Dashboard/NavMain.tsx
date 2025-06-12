@@ -8,7 +8,6 @@ import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
-    SidebarMenuAction,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
@@ -16,7 +15,7 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import type { ItemsNavPrincipal } from '@/tipos/Sidebar/ItemsNavPrincipal';
+import type { ItemsNavPrincipal } from '@/types/settings/Sidebar/ItemsNavPrincipal';
 import useAuthStore from '@/store/authStore';
 
 export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
@@ -24,11 +23,11 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
     const userRoles = session?.user?.roles || [];
 
     // Filtrar items según roles
-    const filteredItems = items.filter(item => {
+    const filteredItems = items.filter((item) => {
         // Si no hay roles definidos, mostrar el item
         if (!item.roles || item.roles.length === 0) return true;
         // Si hay roles, verificar si el usuario tiene al menos uno de ellos
-        return item.roles.some(role => userRoles.includes(role));
+        return item.roles.some((role) => userRoles.includes(role));
     });
 
     if (filteredItems.length === 0) return null;
@@ -39,9 +38,9 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
             <SidebarMenu>
                 {filteredItems.map((item) => {
                     // Filtrar subitems según roles
-                    const filteredSubItems = item.items?.filter(subItem => {
+                    const filteredSubItems = item.items?.filter((subItem) => {
                         if (!subItem.roles || subItem.roles.length === 0) return true;
-                        return subItem.roles.some(role => userRoles.includes(role));
+                        return subItem.roles.some((role) => userRoles.includes(role));
                     });
 
                     // Si no hay subitems visibles y el item principal no tiene URL, no mostrar
@@ -55,7 +54,7 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
                                 {filteredSubItems?.length ? (
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuButton asChild tooltip={item.title}>
-                                            <div className="cursor-pointer">
+                                            <div className="cursor-pointer font-medium">
                                                 <item.icon />
                                                 <span>{item.title}</span>
                                                 <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-90" />
@@ -64,7 +63,7 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
                                     </CollapsibleTrigger>
                                 ) : (
                                     <SidebarMenuButton asChild tooltip={item.title}>
-                                        <Link href={item.url} >
+                                        <Link href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </Link>
@@ -76,7 +75,10 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
                                             {filteredSubItems.map((subItem) => (
                                                 <SidebarMenuSubItem key={subItem.title}>
                                                     <SidebarMenuSubButton asChild>
-                                                        <Link href={subItem.url}>
+                                                        <Link
+                                                            href={subItem.url}
+                                                            className="text-[13px]"
+                                                        >
                                                             <span>{subItem.title}</span>
                                                         </Link>
                                                     </SidebarMenuSubButton>

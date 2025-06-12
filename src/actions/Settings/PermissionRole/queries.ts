@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { PermissionRoleQuery } from '@/types/Permission/PermissionInterface';
+import type { PermissionRoleQuery } from '@/types/settings/Permission/PermissionInterface';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
@@ -10,7 +10,7 @@ import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 
 export async function getPermissionRoles(id: string): Promise<PermissionRoleQuery[]> {
     if (!id) {
-        throw new Error('El ID del Rol es invalido');
+        throw new Error('Role ID is invalid');
     }
 
     try {
@@ -30,32 +30,28 @@ export async function getPermissionRoles(id: string): Promise<PermissionRoleQuer
 
         return permissionRole;
     } catch (error) {
-        console.error('Error al obtener los permisos:', error);
+        console.error('Error getting permissions:', error);
         throw new Error(
-            `Fallo al obtener los permisos del rol: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+            `Failed to get role permissions: ${error instanceof Error ? error.message : 'Unknown error'}`,
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
 export async function updatePermissionRoles(id: string, permissions: string[]) {
     if (!id || typeof id !== 'string') {
-        throw new Error('El ID del Rol es invalido');
+        throw new Error('Role ID is invalid');
     }
 
     try {
-        // Obtener información del rol
         const role = await prisma.role.findUnique({
             where: { id },
             select: { id: true, name: true },
         });
 
         if (!role) {
-            throw new Error('El rol no existe');
+            throw new Error('Role does not exist');
         }
 
-        // Obtener permisos actuales antes de la actualización
         const currentPermissions = await prisma.permissionRole.findMany({
             where: { roleId: id },
             include: {
@@ -75,16 +71,15 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
                 where: { roleId: id },
             });
 
-            console.log('Permisos antiguos eliminados para el rol:', id);
+            console.log('Old permissions removed for role:', id);
 
             if (permissions.length === 0) {
                 return {
-                    message: 'Todos los permisos fueron eliminados',
+                    message: 'All permissions have been removed',
                     success: true,
                 };
             }
 
-            // verificar que los permisos existan
             const existingPermissions = await tx.permission.findMany({
                 where: { id: { in: permissions } },
                 select: { id: true, name: true },
@@ -98,11 +93,11 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
 
             if (invalidPermissions.length > 0) {
                 throw new Error(
-                    `Los siguientes permisos no existen: ${invalidPermissions.join(', ')}`,
+                    `The following permissions do not exist: ${invalidPermissions.join(', ')}`,
                 );
             }
 
-            // Asignar nuevos permisos
+            // Create new permission assignments
             const newPermissionRoles = permissions.map((permissionId) => ({
                 roleId: id,
                 permissionId,
@@ -113,18 +108,18 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
             });
 
             return {
-                message: 'Permisos actualizados correctamente',
+                message: 'Permissions updated successfully',
                 success: true,
+                validPermissionNames,
             };
         });
 
-        // Registrar la actualización de permisos en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: AUDIT_ACTIONS.PERMISSIONS.UPDATE,
             entity: AUDIT_ENTITIES.ROLE,
             entityId: id,
-            description: `Permisos actualizados para el rol "${role.name}"`,
+            description: `Permissions assigned to role "${role.name}"`,
             metadata: {
                 roleId: id,
                 roleName: role.name,
@@ -160,11 +155,9 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
         revalidatePath('/admin/settings/users');
         return result;
     } catch (error) {
-        console.error('Error al actualizar los permisos:', error);
+        console.error('Error updating role permissions:', error);
         throw new Error(
-            `Fallo al actualizar los permisos: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+            `Failed to update permissions: ${error instanceof Error ? error.message : 'Unknown error'}`,
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }

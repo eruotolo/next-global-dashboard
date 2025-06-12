@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllRoles } from '../../../../actions/Settings/Roles';
-import { getUserRoles, updateUserRoles } from '../../../../actions/Settings/UserRoles';
-import type { RoleQuery, UserRoleQuery } from '@/tipos/Roles/RolesInterface';
-import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
+import { getAllRoles } from '@/actions/Settings/Roles';
+import { getUserRoles, updateUserRoles } from '@/actions/Settings/UserRoles';
+import type { RoleQuery, UserRoleQuery } from '@/types/settings/Roles/RolesInterface';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
 
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
@@ -120,9 +120,9 @@ export default function AssignRoleUserModal({
                     </DialogDescription>
                 </DialogHeader>
                 <Form action={handleSubmit}>
-                    <div className="grid grid-cols-1 mb-[15px]">
+                    <div className="mb-[15px] grid grid-cols-1">
                         {roleData.map((role) => (
-                            <div key={role.id} className="flex items-center py-1 px-4">
+                            <div key={role.id} className="flex items-center px-4 py-1">
                                 <input
                                     type="checkbox"
                                     id={`role-${role.id}`}

@@ -25,7 +25,7 @@ export default function BtnActionNew({ label, permission = ['Crear'] }: BtnActio
     return (
         <DialogTrigger asChild>
             <Button
-                className={`cursor-pointer ${!permitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`cursor-pointer ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
                 disabled={!permitted}
             >
                 <Plus className="mr-2 h-4 w-4" />

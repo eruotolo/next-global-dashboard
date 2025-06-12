@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
-import type { RoleInterface } from '@/types/Roles/RolesInterface';
+import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -12,7 +12,7 @@ export async function createRole(formData: FormData) {
         const name = formData.get('name') as string;
 
         if (!name) {
-            return { error: 'El nombre del rol es obligatorio y no puede estar vacío' };
+            return { error: 'Role name is required and cannot be empty' };
         }
 
         const role = await prisma.role.create({
@@ -22,13 +22,12 @@ export async function createRole(formData: FormData) {
             },
         });
 
-        // Registrar la creación del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: 'createRole',
             entity: 'Role',
             entityId: role.id,
-            description: `Rol "${name}" creado`,
+            description: `Role "${name}" created`,
             metadata: { roleName: name, roleId: role.id },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -41,40 +40,36 @@ export async function createRole(formData: FormData) {
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error creating role:', error.message);
-            return { error: 'No se pudo crear el rol. Verifique los datos e intente nuevamente.' };
+            return { error: 'Could not create role. Please verify the data and try again.' };
         }
-        return { error: 'Error desconocido al crear el rol' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Unknown error creating role' };
     }
 }
 
 export async function deleteRole(id: string) {
     try {
         if (!id) {
-            return { error: 'El ID del rol es obligatorio' };
+            return { error: 'Role ID is required' };
         }
 
-        // Obtener información del rol antes de eliminarlo
         const roleToDelete = await prisma.role.findUnique({
             where: { id },
         });
 
         if (!roleToDelete) {
-            return { error: 'El rol no existe' };
+            return { error: 'Role does not exist' };
         }
 
         const roleRemoved = await prisma.role.delete({
             where: { id },
         });
 
-        // Registrar la eliminación del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: 'deleteRole',
             entity: 'Role',
             entityId: id,
-            description: `Rol "${roleToDelete.name}" eliminado`,
+            description: `Role "${roleToDelete.name}" deleted`,
             metadata: { roleName: roleToDelete.name, roleId: id },
             userId: session?.user?.id,
             userName: session?.user?.name
@@ -83,12 +78,10 @@ export async function deleteRole(id: string) {
         });
 
         revalidatePath('/admin/settings/users');
-        return { role: roleRemoved, message: 'Rol eliminado exitosamente' };
+        return { role: roleRemoved, message: 'Role deleted successfully' };
     } catch (error) {
         console.error('Error deleting role:', error);
-        return { error: 'Error al eliminar el rol' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error deleting role' };
     }
 }
 
@@ -98,34 +91,38 @@ export async function updateRole(id: string, formData: FormData) {
         const stateValue = formData.get('state');
         const state = stateValue ? Number(stateValue) : undefined;
 
-        // Obtener información del rol antes de actualizarlo
         const roleBeforeUpdate = await prisma.role.findUnique({
             where: { id },
         });
 
         if (!roleBeforeUpdate) {
-            return { error: 'El rol no existe' };
+            return { error: 'Role does not exist' };
         }
 
-        const data: Partial<RoleInterface> = {};
-        if (name) data.name = name;
-        if (typeof state === 'number') data.state = state;
+        const updateData: Partial<RoleInterface> = {};
+        if (name) updateData.name = name;
+        if (state !== undefined) updateData.state = state;
 
         const roleUpdated = await prisma.role.update({
             where: { id },
-            data,
+            data: updateData,
         });
 
-        // Registrar la actualización del rol en la auditoría
         const session = await getServerSession(authOptions);
         await logAuditEvent({
             action: 'updateRole',
             entity: 'Role',
             entityId: id,
-            description: `Rol "${roleBeforeUpdate.name}" actualizado`,
+            description: `Role "${roleBeforeUpdate.name}" updated`,
             metadata: {
-                before: { name: roleBeforeUpdate.name, state: roleBeforeUpdate.state },
-                after: { name: roleUpdated.name, state: roleUpdated.state },
+                before: {
+                    name: roleBeforeUpdate.name,
+                    state: roleBeforeUpdate.state,
+                },
+                after: {
+                    name: roleUpdated.name,
+                    state: roleUpdated.state,
+                },
                 changes: {
                     name:
                         name !== roleBeforeUpdate.name
@@ -144,12 +141,9 @@ export async function updateRole(id: string, formData: FormData) {
         });
 
         revalidatePath('/admin/settings/users');
-
-        return { role: roleUpdated, message: 'Rol actualizado exitosamente' };
+        return { role: roleUpdated, message: 'Role updated successfully' };
     } catch (error) {
         console.error('Error updating role:', error);
-        return { error: 'Error al actualizar el rol' };
-    } finally {
-        await prisma.$disconnect();
+        return { error: 'Error updating role' };
     }
 }

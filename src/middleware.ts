@@ -5,9 +5,9 @@ import { verifyAuth } from '@/lib/auth';
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
-    console.log('Middleware - Checking path:', pathname);
-    console.log('Middleware - Is public path:', isPublicPath(pathname));
-    console.log('Middleware - Is static path:', isStaticPath(pathname));
+    // console.log('Middleware - Checking path:', pathname);
+    // console.log('Middleware - Is public path:', isPublicPath(pathname));
+    // console.log('Middleware - Is static path:', isStaticPath(pathname));
 
     // Permitir rutas públicas y estáticas
     if (isPublicPath(pathname) || isStaticPath(pathname)) {
@@ -17,11 +17,11 @@ export async function middleware(req: NextRequest) {
     // Verificar el token de autenticación
     const token = await verifyAuth(req);
     if (!token || !token.roles) {
-        console.log('Middleware - No token or roles found');
+        // console.log('Middleware - No token or roles found');
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    console.log('Middleware - User roles:', token.roles);
+    // console.log('Middleware - User roles:', token.roles);
 
     // Permitir acceso al dashboard después del login
     if (pathname === '/admin/dashboard') {

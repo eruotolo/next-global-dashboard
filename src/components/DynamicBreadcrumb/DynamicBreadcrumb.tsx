@@ -70,7 +70,7 @@ export function DynamicBreadcrumb() {
                         <BreadcrumbPage>Inicio</BreadcrumbPage>
                     </BreadcrumbItem>
                 ) : (
-                    filteredSegments.flatMap(({ segment, name }, index) => {
+                    filteredSegments.flatMap(({ name }, index) => {
                         const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
                         const isLast = index === filteredSegments.length - 1;
 

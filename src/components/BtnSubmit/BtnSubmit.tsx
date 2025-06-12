@@ -1,12 +1,15 @@
 import { useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 
-export default function BtnSubmit(){
+interface BtnSubmitProps {
+    label?: string;
+}
+
+export default function BtnSubmit({ label = 'Crear' }: BtnSubmitProps) {
     const { pending } = useFormStatus();
-    return(
+    return (
         <Button type="submit" className="custom-button" disabled={pending}>
-            {pending ? 'Creando...' : 'Crear'}
+            {pending ? 'Procesando...' : label}
         </Button>
     );
-
 }

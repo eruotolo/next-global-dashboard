@@ -3,7 +3,7 @@ export const publicPaths = ['/', '/login', '/recovery'];
 
 // Rutas de API públicas (usar RegExp para patrones)
 export const publicApiPaths = [
-    /^\/api\/auth\/.*/  // Todas las rutas bajo /api/auth/
+    /^\/api\/auth\/.*/, // Todas las rutas bajo /api/auth/
 ];
 
 // Rutas estáticas (assets, imágenes, etc.)
@@ -16,10 +16,8 @@ export const staticPaths = [
 
 // Función helper para verificar si una ruta es estática
 export const isStaticPath = (pathname: string): boolean => {
-    return staticPaths.some(path => 
-        path instanceof RegExp 
-            ? path.test(pathname)
-            : pathname.startsWith(path)
+    return staticPaths.some((path) =>
+        path instanceof RegExp ? path.test(pathname) : pathname.startsWith(path),
     );
 };
 
@@ -31,7 +29,7 @@ export const isPublicPath = (pathname: string): boolean => {
     }
 
     // Verificar patrones de API públicos
-    return publicApiPaths.some(pattern => pattern.test(pathname));
+    return publicApiPaths.some((pattern) => pattern.test(pathname));
 };
 
 /* 
@@ -54,4 +52,4 @@ export const isPublicPath = (pathname: string): boolean => {
       // Verificar otras rutas públicas que empiezan con paths definidos
       return publicPaths.some(path => pathname.startsWith(path));
   }
-*/ 
+*/

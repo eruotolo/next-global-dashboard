@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { PermissionQuery } from '@/types/Permission/PermissionInterface';
+import type { PermissionQuery } from '@/types/settings/Permission/PermissionInterface';
 
 export async function getAllPermissions(): Promise<PermissionQuery[]> {
     try {
@@ -16,8 +16,6 @@ export async function getAllPermissions(): Promise<PermissionQuery[]> {
     } catch (error) {
         console.error('Error fetching permission:', error);
         throw error;
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -34,14 +32,12 @@ export async function getPermissionById(id: string): Promise<PermissionQuery | n
         });
 
         if (!getPermission) {
-            throw new Error(`Permiso con ID ${id} no encontrado`);
+            throw new Error(`Permission with ID ${id} not found`);
         }
 
         return getPermission;
     } catch (error) {
-        console.error('Error al obtener el permiso:', error);
-        throw new Error('No se pudo obtener el permiso.');
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error getting permission:', error);
+        throw new Error('Could not get the permission.');
     }
 }

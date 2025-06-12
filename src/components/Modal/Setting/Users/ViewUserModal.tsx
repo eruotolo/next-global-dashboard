@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
-import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
-import { getUserById } from '../../../../actions/Settings/Users';
+import type { UserQueryWithDetails } from '@/types/settings/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import { getUserById } from '@/actions/Settings/Users';
 
 import {
     Dialog,
@@ -39,6 +39,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                 }
             }
         }
+
         loadUser();
     }, [id]);
 
@@ -55,8 +56,8 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                 <form>
                     <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-2">
-                            <div className="flex mb-[15px] gap-2">
-                                <div className="flex flex-col w-full">
+                            <div className="mb-[15px] flex gap-2">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Nombre</Label>
                                     <Input
                                         id="name"
@@ -66,7 +67,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                                         disabled
                                     />
                                 </div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Apellido</Label>
                                     <Input
                                         id="lastName"
@@ -89,8 +90,8 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                                 />
                             </div>
 
-                            <div className="flex mb-[15px] gap-2">
-                                <div className="flex flex-col w-full">
+                            <div className="mb-[15px] flex gap-2">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Teléfono</Label>
                                     <Input
                                         id="phone"
@@ -100,7 +101,7 @@ export default function ViewUserModal({ id, open, onClose }: EditModalPropsAlt) 
                                         disabled
                                     />
                                 </div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Fecha de Nacimiento</Label>
                                     <Input
                                         id="birthdate"

@@ -14,19 +14,21 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import type { ItemsNavSetting } from '@/tipos/Sidebar/ItemsNavSetting';
+import type { ItemsNavSetting } from '@/types/settings/Sidebar/ItemsNavSetting';
 import useAuthStore from '@/store/authStore';
 
 export default function NavSetting({
-                                       items,
-                                       ...props
-                                   }: { items: ItemsNavSetting[] } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+    items,
+    ...props
+}: {
+    items: ItemsNavSetting[];
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
     const session = useAuthStore((state) => state.session);
     const userRoles = session?.user?.roles || [];
 
-    const filteredItems = items.filter(item => {
+    const filteredItems = items.filter((item) => {
         if (!item.roles || item.roles.length === 0) return true;
-        return item.roles.some(role => userRoles.includes(role));
+        return item.roles.some((role) => userRoles.includes(role));
     });
 
     if (filteredItems.length === 0) return null;
@@ -36,12 +38,15 @@ export default function NavSetting({
             <SidebarGroupContent>
                 <SidebarMenu>
                     {filteredItems.map((item) => {
-                        const filteredSubItems = item.items?.filter(subItem => {
+                        const filteredSubItems = item.items?.filter((subItem) => {
                             if (!subItem.roles || subItem.roles.length === 0) return true;
-                            return subItem.roles.some(role => userRoles.includes(role));
+                            return subItem.roles.some((role) => userRoles.includes(role));
                         });
 
-                        if ((!filteredSubItems || filteredSubItems.length === 0) && item.url === '#') {
+                        if (
+                            (!filteredSubItems || filteredSubItems.length === 0) &&
+                            item.url === '#'
+                        ) {
                             return null;
                         }
 
@@ -50,7 +55,11 @@ export default function NavSetting({
                                 <SidebarMenuItem>
                                     {filteredSubItems?.length ? (
                                         <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton size="sm" tooltip={item.title} className="cursor-pointer">
+                                            <SidebarMenuButton
+                                                size="sm"
+                                                tooltip={item.title}
+                                                className="cursor-pointer"
+                                            >
                                                 <item.icon />
                                                 <span>{item.title}</span>
                                                 <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-90" />

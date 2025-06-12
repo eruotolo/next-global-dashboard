@@ -1,9 +1,12 @@
 'use client';
 
-import { getAllPermissions } from '../../../../actions/Settings/Permission';
-import { getPermissionRoles, updatePermissionRoles } from '../../../../actions/Settings/PermissionRole';
-import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
-import type { PermissionQuery, PermissionRoleQuery } from '@/types/Permission/PermissionInterface';
+import { getAllPermissions } from '@/actions/Settings/Permission';
+import { getPermissionRoles, updatePermissionRoles } from '@/actions/Settings/PermissionRole';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import type {
+    PermissionQuery,
+    PermissionRoleQuery,
+} from '@/types/settings/Permission/PermissionInterface';
 
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
@@ -120,11 +123,11 @@ export default function AssignPermissionRoleModal({
                     </DialogDescription>
                 </DialogHeader>
                 <Form action={handleSubmit}>
-                    <div className="grid grid-cols-1 mb-[15px]">
+                    <div className="mb-[15px] grid grid-cols-1">
                         {permissionData.map((permission) => (
                             <div
                                 key={permission.id}
-                                className="flex items-center py-1 px-4 space-x-2"
+                                className="flex items-center space-x-2 px-4 py-1"
                             >
                                 <Checkbox
                                     id={`permission-${permission.id}`}
@@ -136,7 +139,7 @@ export default function AssignPermissionRoleModal({
 
                                 <Label
                                     htmlFor={`permission-${permission.id}`}
-                                    className="text-gris text-[15px] curosor-pointer"
+                                    className="text-gris curosor-pointer text-[15px]"
                                 >
                                     {permission.name}
                                 </Label>

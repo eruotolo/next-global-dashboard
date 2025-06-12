@@ -7,18 +7,59 @@ import {
     Heading2,
     Heading3,
     Highlighter,
+    ImageIcon,
     Italic,
     List,
     ListOrdered,
     Strikethrough,
+    Link as LinkIcon,
 } from 'lucide-react';
 import { Toggle } from '../toggle';
 import type { Editor } from '@tiptap/react';
 
-export default function MenuBar({ editor }: { editor: Editor | null }) {
+export default function MenuBar({
+    editor,
+    imageFolder = 'editor-images',
+}: {
+    editor: Editor | null;
+    imageFolder?: string;
+}) {
     if (!editor) {
         return null;
     }
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files?.[0]) return;
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('folder', imageFolder);
+        try {
+            const res = await fetch('/api/upload-image', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (data?.url) {
+                editor.chain().focus().setImage({ src: data.url }).run();
+            } else {
+                console.error('Error al subir la imagen:', data?.error || 'Error desconocido');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
+
+    const handleSetLink = () => {
+        const previousUrl = editor.getAttributes('link').href;
+        const url = window.prompt('Ingrese la URL del enlace:', previousUrl || 'https://');
+        if (url === null) return;
+        if (url === '') {
+            editor.chain().focus().extendMarkRange('link').unsetLink().run();
+            return;
+        }
+        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+    };
 
     const Options = [
         {
@@ -93,10 +134,31 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
             onClick: () => editor.chain().focus().toggleHighlight().run(),
             preesed: editor.isActive('highlight'),
         },
+        {
+            id: 'image',
+            icon: <ImageIcon className="size-4" />,
+            onClick: () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (event) => {
+                    const e = event as unknown as React.ChangeEvent<HTMLInputElement>;
+                    handleImageUpload(e);
+                };
+                input.click();
+            },
+            preesed: false,
+        },
+        {
+            id: 'link',
+            icon: <LinkIcon className="size-4" />,
+            onClick: handleSetLink,
+            preesed: editor.isActive('link'),
+        },
     ];
 
     return (
-        <div className="border rounded-md p-1 mb-1 bg-slate-50 space-x-2 z-50">
+        <div className="z-50 mb-1 space-x-2 rounded-md border bg-slate-50 p-1">
             {Options.map((option) => (
                 <Toggle key={option.id} pressed={option.preesed} onPressedChange={option.onClick}>
                     {option.icon}

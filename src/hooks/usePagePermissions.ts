@@ -33,7 +33,7 @@ export const usePagePermissions = ({ path }: UsePagePermissionsProps): PagePermi
             }
 
             const roles = session.user.roles;
-            
+
             // Verificar si ya tenemos el resultado en caché
             if (
                 lastCheckedRef.current &&
@@ -46,7 +46,7 @@ export const usePagePermissions = ({ path }: UsePagePermissionsProps): PagePermi
             try {
                 const normalizedPath = path.startsWith('/') ? path : `/${path}`;
                 const result = await checkPageAccess(normalizedPath, roles);
-                
+
                 if (isMounted) {
                     setHasAccess(result.hasAccess);
                     lastCheckedRef.current = { path, roles };
@@ -72,4 +72,4 @@ export const usePagePermissions = ({ path }: UsePagePermissionsProps): PagePermi
     }, [path, session?.user?.roles, isInitialized]);
 
     return { hasAccess, isLoading, error };
-}; 
+};

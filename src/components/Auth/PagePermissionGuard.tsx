@@ -48,7 +48,7 @@ export default function PagePermissionGuard({ children }: PagePermissionGuardPro
 
     if (isChecking) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex min-h-screen items-center justify-center">
                 <LoadingSpinner size="lg" />
             </div>
         );
@@ -59,4 +59,4 @@ export default function PagePermissionGuard({ children }: PagePermissionGuardPro
     }
 
     return <>{children}</>;
-} 
+}

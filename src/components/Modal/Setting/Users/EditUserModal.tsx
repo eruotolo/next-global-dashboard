@@ -6,10 +6,10 @@ import Image from 'next/image';
 import { FilePenLine } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
-import type { UserQueryWithDetails } from '@/tipos/Users/UsersInterface';
-import type { EditModalPropsAlt } from '@/tipos/Generic/InterfaceGeneric';
+import type { UserQueryWithDetails } from '@/types/settings/Users/UsersInterface';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
 
-import { getUserById, updateUser } from '../../../../actions/Settings/Users';
+import { getUserById, updateUser } from '@/actions/Settings/Users';
 
 import {
     Dialog,
@@ -36,7 +36,7 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
 
     useEffect(() => {
         async function loadUser() {
@@ -54,6 +54,7 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                 }
             }
         }
+
         loadUser();
     }, [id]);
 
@@ -94,8 +95,8 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                 <Form action={handleSubmit}>
                     <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-2">
-                            <div className="flex mb-[15px] gap-2">
-                                <div className="flex flex-col w-full">
+                            <div className="mb-[15px] flex gap-2">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Nombre</Label>
                                     <Input
                                         id="name"
@@ -106,7 +107,7 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                                         required
                                     />
                                 </div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Apellido</Label>
                                     <Input
                                         id="lastName"
@@ -133,8 +134,8 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                                 />
                             </div>
 
-                            <div className="flex mb-[15px] gap-2">
-                                <div className="flex flex-col w-full">
+                            <div className="mb-[15px] flex gap-2">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Correo Electrónico</Label>
                                     <Input
                                         id="phone"
@@ -147,7 +148,7 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                                         pattern="[0-9]{7,15}"
                                     />
                                 </div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex w-full flex-col">
                                     <Label className="custom-label">Fecha de Nacimiento</Label>
                                     <Input
                                         id="birthdate"
@@ -204,9 +205,9 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                             />
                             <label
                                 htmlFor="file-upload"
-                                className="flex justify-center items-center py-2 px-4 w-full font-medium text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none mt-[34px] text-[13px]"
+                                className="mt-[34px] flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                             >
-                                <FilePenLine className="mr-2 w-5 h-5" />
+                                <FilePenLine className="mr-2 h-5 w-5" />
                                 Cambiar foto de perfil
                             </label>
                             <Input

@@ -18,12 +18,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { UserInterface } from '@/tipos/Users/UsersInterface';
+import type { UserInterface } from '@/types/settings/Users/UsersInterface';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { deleteUser } from '@/actions/Settings/Tickets/Users';
+import { deleteUser } from '@/actions/Settings/Users';
 
 const DynamicChangeUserPassModal = dynamic(
     () => import('@/components/Modal/Setting/Users/ChangeUserPasswordModal'),
@@ -98,9 +98,9 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="p-0 w-8 h-8">
+                    <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Abrir menú</span>
-                        <MoreHorizontal className="w-4 h-4" />
+                        <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -181,14 +181,15 @@ export const UserColumns = (
     refreshTable: () => Promise<void>,
 ): ColumnDef<UserInterface, unknown>[] => [
     {
-        id: 'fullName',
+        id: 'Nombre Completo',
+        accessorKey: 'fullname',
         header: ({ column }) => (
             <Button
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Nombre Completo
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         accessorFn: (row) => `${row.name} ${row.lastName}`,
@@ -205,7 +206,7 @@ export const UserColumns = (
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Email
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
@@ -240,7 +241,7 @@ export const UserColumns = (
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
                 Roles
-                <ArrowUpDown className="ml-2 w-4 h-4" />
+                <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         accessorFn: (row) => {
@@ -250,7 +251,7 @@ export const UserColumns = (
             const roles = row.original.roles;
             const roleNames =
                 roles?.map((userRole) => userRole.role?.name).join(', ') || 'Sin roles';
-            return <div className="w-[150px] flex">{roleNames}</div>;
+            return <div className="flex w-[150px]">{roleNames}</div>;
         },
     },
     {

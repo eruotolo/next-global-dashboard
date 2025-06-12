@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db/db';
-import type { SimpleTicketQuery, GetTicketQuery } from '@/types/Tickets/TicketInterface';
+import type { SimpleTicketQuery, GetTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 export async function getAllTickets(): Promise<SimpleTicketQuery[]> {
     try {
@@ -25,8 +25,6 @@ export async function getAllTickets(): Promise<SimpleTicketQuery[]> {
     } catch (error) {
         console.error('Error fetching roles:', error);
         throw error;
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -50,12 +48,12 @@ export async function getTicketById(id: string): Promise<GetTicketQuery | null> 
         });
 
         if (!getTicket) {
-            throw new Error(`Ticket con ID ${id} no encontrado`);
+            throw new Error(`Ticket with ID ${id} not found`);
         }
 
         return getTicket;
     } catch (error) {
-        console.error('Error al obtener el ticket:', error);
-        throw new Error('No se pudo obtener el ticket.');
+        console.error('Error getting ticket:', error);
+        throw new Error('Could not get the ticket.');
     }
 }
