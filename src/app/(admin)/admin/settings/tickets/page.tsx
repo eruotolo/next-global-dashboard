@@ -1,5 +1,5 @@
-import TicketTable from '@/components/Tables/Setting/Ticket/TicketTable';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+import TicketTable from '@/components/Tables/Setting/Ticket/TicketTable';
 
 export default function TicketsPage() {
     return (

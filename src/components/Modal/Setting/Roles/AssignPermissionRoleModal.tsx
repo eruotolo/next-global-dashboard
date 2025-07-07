@@ -1,18 +1,13 @@
 'use client';
 
-import { getAllPermissions } from '@/actions/Settings/Permission';
-import { getPermissionRoles, updatePermissionRoles } from '@/actions/Settings/PermissionRole';
-import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
-import type {
-    PermissionQuery,
-    PermissionRoleQuery,
-} from '@/types/settings/Permission/PermissionInterface';
-
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-
+import { toast } from 'sonner';
+import { getAllPermissions } from '@/actions/Settings/Permission';
+import { getPermissionRoles, updatePermissionRoles } from '@/actions/Settings/PermissionRole';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -21,9 +16,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import type {
+    PermissionQuery,
+    PermissionRoleQuery,
+} from '@/types/settings/Permission/PermissionInterface';
 
 // Componente para el botón de envío con estado
 function SubmitButton({ disabled }: { disabled: boolean }) {
@@ -38,7 +36,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
 export default function AssignPermissionRoleModal({
     id,
     open,
-    onClose,
+    onCloseAction,
     refreshAction,
 }: EditModalPropsAlt) {
     const [permissionData, setPermissionData] = useState<PermissionQuery[]>([]);
@@ -95,7 +93,7 @@ export default function AssignPermissionRoleModal({
             console.log('Result:', result);
             if (result.success) {
                 refreshAction?.();
-                onClose(false);
+                onCloseAction(false);
                 toast.success('Asignado Successful', {
                     description: 'Nuevo Permiso Asignado Correctamente.',
                 });
@@ -113,7 +111,7 @@ export default function AssignPermissionRoleModal({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onCloseAction}>
             <DialogContent className="sm:max-w-[400px]">
                 <DialogHeader>
                     <DialogTitle>Asignar Permisos y Roles</DialogTitle>

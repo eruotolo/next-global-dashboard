@@ -1,10 +1,11 @@
 'use client';
 
 import Form from 'next/form';
-import { useState, useEffect } from 'react';
-import type { EditModalProps } from '@/types/settings/Generic/InterfaceGeneric';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { getRoleById, updateRole } from '@/actions/Settings/Roles';
 
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -14,11 +15,10 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
+import type { EditModalProps } from '@/types/settings/Generic/InterfaceGeneric';
 
-export default function EditRoleModal({ id, refresh, open, onClose }: EditModalProps) {
+export default function EditRoleModal({ id, refreshAction, open, onCloseAction }: EditModalProps) {
     const [error, setError] = useState('');
     const [name, setName] = useState('');
 
@@ -54,8 +54,8 @@ export default function EditRoleModal({ id, refresh, open, onClose }: EditModalP
                 setError(response.error);
                 return;
             }
-            refresh();
-            onClose(false);
+            refreshAction();
+            onCloseAction(false);
             toast.success('Rol Actualizado', {
                 description: 'El rol se ha actualizado correctamente.',
             });
@@ -69,35 +69,33 @@ export default function EditRoleModal({ id, refresh, open, onClose }: EditModalP
     };
 
     return (
-        <>
-            <Dialog open={open} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-[400px]">
-                    <DialogHeader>
-                        <DialogTitle>Editar Rol</DialogTitle>
-                        <DialogDescription>Modifica el nombre del rol existente.</DialogDescription>
-                    </DialogHeader>
-                    <Form action={onSubmit}>
-                        <div className="mb-[15px] grid grid-cols-1">
-                            <Label className="custom-label">Nombre del Rol</Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="Nombre del rol"
-                                className="w-full"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            {error && <p className="custome-form-error">{error}</p>}
-                        </div>
-                        <DialogFooter className="mt-6 items-end">
-                            <Button type="submit" className="custom-button">
-                                Actualizar
-                            </Button>
-                        </DialogFooter>
-                    </Form>
-                </DialogContent>
-            </Dialog>
-        </>
+        <Dialog open={open} onOpenChange={onCloseAction}>
+            <DialogContent className="overflow-hidden sm:max-w-[400px]">
+                <DialogHeader>
+                    <DialogTitle>Editar Rol</DialogTitle>
+                    <DialogDescription>Modifica el nombre del rol existente.</DialogDescription>
+                </DialogHeader>
+                <Form action={onSubmit}>
+                    <div className="mb-[15px] grid grid-cols-1">
+                        <Label className="custom-label">Nombre del Rol</Label>
+                        <Input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Nombre del rol"
+                            className="w-full"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        {error && <p className="custome-form-error">{error}</p>}
+                    </div>
+                    <DialogFooter className="mt-6 items-end">
+                        <Button type="submit" className="custom-button">
+                            Actualizar
+                        </Button>
+                    </DialogFooter>
+                </Form>
+            </DialogContent>
+        </Dialog>
     );
 }

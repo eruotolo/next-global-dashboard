@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { isPublicPath, isStaticPath } from '@/lib/auth/publicPaths';
+import { type NextRequest, NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
+import { isPublicPath, isStaticPath } from '@/lib/auth/publicPaths';
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;

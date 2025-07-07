@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useUserRoleStore } from '@/store/userroleStore';
-import { DataTable } from '@/components/ui/data-table/data-table';
-import { UserColumns } from '@/components/Tables/Setting/User/UserColumns';
 import UserNewModal from '@/components/Modal/Setting/Users/UserNewModal';
+import { UserColumns } from '@/components/Tables/Setting/User/UserColumns';
+import { DataTable } from '@/components/ui/data-table/data-table';
+import { useUserRoleStore } from '@/store/userroleStore';
 
 export default function UserTable() {
     const { userData, isLoadingUsers, fetchUsers } = useUserRoleStore();

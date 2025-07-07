@@ -1,16 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { ChevronsUpDown, Key, LogOut, UserPen } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-
-import useAuthStore from '@/store/authStore';
+import { useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronsUpDown, LogOut, Key, UserPen } from 'lucide-react';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,13 +16,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
+import useAuthStore from '@/store/authStore';
 
 const DynamicEditUserModal = dynamic(
     () => import('@/components/Modal/Setting/Users/EditUserModal'),
@@ -165,7 +161,7 @@ export default function NavUser() {
                 <DynamicEditUserModal
                     id={session.user.id}
                     open={openEditUser}
-                    onClose={handleEditUserCloseModal}
+                    onCloseAction={handleEditUserCloseModal}
                 />
             )}
 
@@ -173,7 +169,7 @@ export default function NavUser() {
                 <DynamicChangeUserPassModal
                     id={session.user.id}
                     open={openChangePass}
-                    onClose={handleChangePassCloseModal}
+                    onCloseAction={handleChangePassCloseModal}
                     signOut={handleSignOut}
                     successMessage="El password se ha cambiado correctamente, se va a cerrar la session. Por favor, ingrese nuevamente sus credenciales."
                     shouldSignOut={true}

@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import { MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import type { LeafletEvent, LeafletMouseEvent } from 'leaflet';
 import L from 'leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
-import type { LeafletEvent, LeafletMouseEvent } from 'leaflet';
 
 // Crear un icono personalizado usando Lucide React
 const createCustomIcon = () => {
@@ -33,7 +33,7 @@ const createCustomIcon = () => {
 interface MapComponentProps {
     latitude?: number;
     longitude?: number;
-    onLocationChange: (lat: number, lng: number) => void;
+    onLocationChangeAction: (lat: number, lng: number) => void;
     className?: string;
 }
 
@@ -63,7 +63,7 @@ function MapEvents({ onLocationSelect }: { onLocationSelect: (lat: number, lng: 
 export default function MapComponent({
     latitude = 0,
     longitude = 0,
-    onLocationChange,
+    onLocationChangeAction,
 }: MapComponentProps) {
     const [position, setPosition] = useState<[number, number]>([latitude || 0, longitude || 0]);
     const [customIcon] = useState(() => createCustomIcon());
@@ -76,7 +76,7 @@ export default function MapComponent({
 
     const handleLocationSelect = (lat: number, lng: number) => {
         setPosition([lat, lng]);
-        onLocationChange(lat, lng);
+        onLocationChangeAction(lat, lng);
     };
 
     return (

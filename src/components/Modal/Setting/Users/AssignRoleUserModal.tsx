@@ -1,14 +1,11 @@
 'use client';
 
-import { getAllRoles } from '@/actions/Settings/Roles';
-import { getUserRoles, updateUserRoles } from '@/actions/Settings/UserRoles';
-import type { RoleQuery, UserRoleQuery } from '@/types/settings/Roles/RolesInterface';
-import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
-
 import Form from 'next/form';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-
+import { toast } from 'sonner';
+import { getAllRoles } from '@/actions/Settings/Roles';
+import { getUserRoles, updateUserRoles } from '@/actions/Settings/UserRoles';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -18,7 +15,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { toast } from 'sonner';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import type { RoleQuery, UserRoleQuery } from '@/types/settings/Roles/RolesInterface';
 
 // Componente para el botón de envío con estado
 function SubmitButton({ disabled }: { disabled: boolean }) {
@@ -33,7 +31,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
 export default function AssignRoleUserModal({
     id,
     open,
-    onClose,
+    onCloseAction,
     refreshAction,
 }: EditModalPropsAlt) {
     const [roleData, setRoleData] = useState<RoleQuery[]>([]);
@@ -65,6 +63,7 @@ export default function AssignRoleUserModal({
                             relation.roleId !== null,
                     )
                     .map((relation) => relation.roleId);
+                console.log('Assigned role IDs:', assignedRoleIds); // Debug log
                 setSelectedRoles(assignedRoleIds);
             } catch (error) {
                 console.error('Error fetching user roles:', error);
@@ -78,21 +77,31 @@ export default function AssignRoleUserModal({
 
     // Manejar cambio de selección de roles
     const handleRoleChange = (roleId: string) => {
-        setSelectedRoles((prevSelectedRoles) =>
-            prevSelectedRoles.includes(roleId)
+        console.log('Role change triggered for:', roleId); // Debug log
+        setSelectedRoles((prevSelectedRoles) => {
+            const newSelectedRoles = prevSelectedRoles.includes(roleId)
                 ? prevSelectedRoles.filter((id) => id !== roleId)
-                : [...prevSelectedRoles, roleId],
-        );
+                : [...prevSelectedRoles, roleId];
+            console.log('Updated selected roles:', newSelectedRoles); // Debug log
+            return newSelectedRoles;
+        });
     };
 
     // Acción del formulario con Server Action
     const handleSubmit = async (formData: FormData) => {
         try {
             const roles = formData.getAll('roles') as string[];
+            console.log('Roles from FormData:', roles); // Debug log
+
+            // Validar que roles sea un array válido
+            if (!Array.isArray(roles)) {
+                throw new Error('Formato de roles inválido');
+            }
+
             const result = await updateUserRoles(id, roles);
             if (result.success) {
                 refreshAction?.();
-                onClose(false);
+                onCloseAction(false);
                 toast.success('Asignado Successful', {
                     description: 'Nuevo Rol Asignado Correctamente.',
                 });
@@ -110,7 +119,7 @@ export default function AssignRoleUserModal({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onCloseAction}>
             <DialogContent className="sm:max-w-[400px]">
                 <DialogHeader>
                     <DialogTitle>Asignar Permisos y Roles</DialogTitle>

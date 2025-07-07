@@ -1,14 +1,13 @@
 'use client';
 
+import { FilePenLine } from 'lucide-react';
 import Form from 'next/form';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
+import { toast } from 'sonner';
 import { createUser } from '@/actions/Settings/Users';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import type { UserFormData } from '@/types/settings/Users/UsersInterface';
-import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 import {
     Dialog,
@@ -20,8 +19,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { FilePenLine } from 'lucide-react';
-import { toast } from 'sonner';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
+import type { UserFormData } from '@/types/settings/Users/UsersInterface';
 
 export default function UserNewModal({ refreshAction }: UpdateData) {
     const {
@@ -61,7 +60,7 @@ export default function UserNewModal({ refreshAction }: UpdateData) {
             }
 
             // Éxito: cerrar modal, refrescar tabla y resetear formulario
-            await refreshAction();
+            refreshAction();
             reset();
             toast.success('Nuevo Usuario Successful', {
                 description: 'El usuario se ha creado correctamente.',

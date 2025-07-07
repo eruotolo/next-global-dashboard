@@ -1,9 +1,8 @@
 import { create } from 'zustand';
-
-import { getAllUsers } from '@/actions/Settings/Users';
 import { getAllRoles } from '@/actions/Settings/Roles';
-import type { UserInterface } from '@/types/settings/Table/UserInterface';
+import { getAllUsers } from '@/actions/Settings/Users';
 import type { RolePermissionInterface } from '@/types/settings/Roles/RolesInterface';
+import type { UserInterface } from '@/types/settings/Table/UserInterface';
 
 interface UserRoleState {
     userData: UserInterface[];

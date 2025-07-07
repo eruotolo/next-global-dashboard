@@ -3,18 +3,18 @@
 import {
     type ColumnDef,
     type ColumnFiltersState,
-    type Row,
-    type SortingState,
-    type VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    type Row,
+    type SortingState,
     useReactTable,
+    type VisibilityState,
 } from '@tanstack/react-table';
 import * as React from 'react';
-
+import Loading from '@/components/Loading/Loading';
 import {
     Table,
     TableBody,
@@ -23,8 +23,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-
-import Loading from '@/components/Loading/Loading';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
@@ -66,7 +64,6 @@ export function DataTable<TData, TValue>({
         // Obtenemos todos los valores visibles de la fila (sin any)
         const rowValues = Object.values(row.original as Record<string, unknown>).map((value) => {
             if (isRoleArray(value)) {
-                // Caso especial para roles: extraemos los nombres de los roles
                 return value
                     .map((item) => item.role.name)
                     .join(' ')
@@ -108,7 +105,7 @@ export function DataTable<TData, TValue>({
                 filterPlaceholder={filterPlaceholder}
                 data={data}
                 globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
+                setGlobalFilterAction={setGlobalFilter}
                 columnVisibility={columnVisibility}
                 setColumnVisibility={setColumnVisibility}
             />

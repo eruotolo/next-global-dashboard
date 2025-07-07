@@ -1,11 +1,11 @@
 'use server';
 
-import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
-import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
-import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { authOptions } from '@/lib/auth/authOptions';
+import prisma from '@/lib/db/db';
+import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
 
 export async function createRole(formData: FormData) {
     try {
@@ -81,7 +81,7 @@ export async function deleteRole(id: string) {
         return { role: roleRemoved, message: 'Role deleted successfully' };
     } catch (error) {
         console.error('Error deleting role:', error);
-        return { error: 'Error deleting role' };
+        throw error;
     }
 }
 
@@ -144,6 +144,6 @@ export async function updateRole(id: string, formData: FormData) {
         return { role: roleUpdated, message: 'Role updated successfully' };
     } catch (error) {
         console.error('Error updating role:', error);
-        return { error: 'Error updating role' };
+        throw error;
     }
 }

@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import useAuthStore from '@/store/authStore';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import useAuthStore from '@/store/authStore';
 import PagePermissionGuard from './PagePermissionGuard';
 
 interface ProtectedRouteProps {

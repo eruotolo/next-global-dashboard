@@ -1,5 +1,13 @@
 // Rutas públicas que no requieren autenticación
-export const publicPaths = ['/', '/login', '/recovery'];
+export const publicPaths = [
+    '/',
+    '/login',
+    '/recovery',
+    '/manifiesto',
+    '/somos',
+    '/impresos',
+    '/blogs',
+];
 
 // Rutas de API públicas (usar RegExp para patrones)
 export const publicApiPaths = [
@@ -25,6 +33,11 @@ export const isStaticPath = (pathname: string): boolean => {
 export const isPublicPath = (pathname: string): boolean => {
     // Verificar rutas públicas exactas
     if (publicPaths.includes(pathname)) {
+        return true;
+    }
+
+    // Verificar rutas dinámicas de blogs (ej: /blogs/slug-del-blog)
+    if (pathname.startsWith('/blogs/')) {
         return true;
     }
 

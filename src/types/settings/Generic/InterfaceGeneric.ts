@@ -4,15 +4,15 @@ export interface UpdateData {
 
 export interface EditModalProps {
     id: string;
-    refresh: () => void;
+    refreshAction: () => void;
     open: boolean;
-    onClose: (open: boolean) => void;
+    onCloseAction: (open: boolean) => void;
 }
 
 export interface EditModalPropsAlt {
     id: string;
     refreshAction?: () => void;
     open: boolean;
-    onClose: (open: boolean) => void;
+    onCloseAction: (open: boolean) => void;
     signOut?: () => Promise<void>;
 }

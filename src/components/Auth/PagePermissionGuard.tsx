@@ -1,10 +1,10 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import { checkPageAccess } from '@/actions/Settings/Pages/queries';
-import useAuthStore from '@/store/authStore';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import useAuthStore from '@/store/authStore';
 
 interface PagePermissionGuardProps {
     children: React.ReactNode;

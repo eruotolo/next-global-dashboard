@@ -31,30 +31,42 @@ export const AUDIT_ACTIONS = {
         UPDATE: 'updateTicket',
         DELETE: 'deleteTicket',
     },
-    COUNTRY: {
-        CREATE: 'createCountry',
-        UPDATE: 'updateCountry',
-        DELETE: 'deleteCountry',
+    BLOG: {
+        CREATE: 'createBlog',
+        UPDATE: 'updateBlog',
+        DELETE: 'deleteBlog',
+        ASSIGN_CATEGORIES: 'assignCategoriesBlog',
+        REMOVE_CATEGORIES: 'removeCategoriesBlog',
     },
-    CITY: {
-        CREATE: 'createCity',
-        UPDATE: 'updateCity',
-        DELETE: 'deleteCity',
+    CATEGORY: {
+        CREATE: 'createCategory',
+        UPDATE: 'updateCategory',
+        DELETE: 'deleteCategory',
     },
-    AIRPORTS: {
-        CREATE: 'createAirport',
-        UPDATE: 'updateAirport',
-        DELETE: 'deleteAirport',
+    TEAMS: {
+        CREATE: 'createTeam',
+        UPDATE: 'updateTeam',
+        DELETE: 'deleteTeam',
     },
-    SHIPPINGPORT: {
-        CREATE: 'createShippingPort',
-        UPDATE: 'updateShippingPort',
-        DELETE: 'deleteShippingPort',
+    EVENTS: {
+        CREATE: 'createEvent',
+        UPDATE: 'updateEvent',
+        DELETE: 'deleteEvent',
     },
-    COMMODITIESSECTIONS: {
-        CREATE: 'createCommoditySection',
-        UPDATE: 'updateCommoditySection',
-        DELETE: 'deleteCommoditySection',
+    MATERIALS: {
+        CREATE: 'createMaterial',
+        UPDATE: 'updateMaterial',
+        DELETE: 'deleteMaterial',
+    },
+    SPONSORS: {
+        CREATE: 'createSponsor',
+        UPDATE: 'updateSponsor',
+        DELETE: 'deleteSponsor',
+    },
+    EVENT_CATEGORIES: {
+        CREATE: 'createEventCategory',
+        UPDATE: 'updateEventCategory',
+        DELETE: 'deleteEventCategory',
     },
 } as const;
 
@@ -66,11 +78,13 @@ export const AUDIT_ENTITIES = {
     PAGE: 'Page',
     TICKET: 'Ticket',
     SYSTEM: 'System',
-    COUNTRY: 'Country',
-    CITY: 'City',
-    AIRPORTS: 'Airports',
-    SHIPPINGPORT: 'ShippingPort',
-    COMMODITIESSECTIONS: 'CommoditySection',
+    BLOG: 'Blog',
+    CATEGORY: 'Category',
+    TEAMS: 'Teams',
+    EVENTS: 'Events',
+    MATERIALS: 'Materials',
+    SPONSORS: 'Sponsors',
+    EVENT_CATEGORIES: 'EventsCategories',
 } as const;
 
 // Tipos derivados de los objetos

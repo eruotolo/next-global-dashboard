@@ -1,9 +1,13 @@
 'use client';
 
+import type { ColumnDef } from '@tanstack/react-table';
+import { clsx } from 'clsx';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { deleteTicket } from '@/actions/Settings/Tickets';
 import { BtnDeleteCell, BtnEditCell } from '@/components/BtnActionCell/BtnActionCell';
-
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -12,12 +16,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
-import { clsx } from 'clsx';
-import { toast } from 'sonner';
-
-import { deleteTicket } from '@/actions/Settings/Tickets';
 
 const DynamicEditTicketModal = dynamic(
     () => import('@/components/Modal/Setting/Tickets/EditTicketsModal'),
@@ -93,7 +91,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                     id={ticketId}
                     refreshAction={refreshTable}
                     open={openEditTicket}
-                    onClose={handleEditTicketCloseModal}
+                    onCloseAction={handleEditTicketCloseModal}
                 />
             )}
         </>

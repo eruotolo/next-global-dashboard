@@ -1,11 +1,11 @@
 'use server';
 
-import prisma from '@/lib/db/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+import { authOptions } from '@/lib/auth/authOptions';
+import prisma from '@/lib/db/db';
 
 interface CreatePageData {
     name: string;
@@ -37,7 +37,7 @@ export async function createPage(data: CreatePageData) {
         return { success: true, page };
     } catch (error) {
         console.error('Error creating page:', error);
-        throw new Error('Failed to create page');
+        throw error;
     }
 }
 
@@ -66,7 +66,7 @@ export async function updatePage(id: string, data: Partial<CreatePageData>) {
         return { success: true, page };
     } catch (error) {
         console.error('Error updating page:', error);
-        throw new Error('Failed to update page');
+        throw error;
     }
 }
 
@@ -94,7 +94,7 @@ export async function deletePage(id: string) {
         return { success: true };
     } catch (error) {
         console.error('Error deleting page:', error);
-        throw new Error('Failed to delete page');
+        throw error;
     }
 }
 
@@ -183,6 +183,6 @@ export async function updatePageRole(pageId: string, roleId: string, action: 'ad
         return { success: true };
     } catch (error) {
         console.error('Error updating page role:', error);
-        throw new Error('Failed to update page role');
+        throw error;
     }
 }

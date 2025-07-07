@@ -1,24 +1,24 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import type { Table, VisibilityState } from '@tanstack/react-table';
-import { Download, FileText, X, ColumnsIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, ColumnsIcon, Download, FileText, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 
 interface DynamicTableToolbarProps<TData> {
     table: Table<TData>;
     filterPlaceholder?: string;
     data: TData[];
     globalFilter: string;
-    setGlobalFilter: (value: string) => void;
+    setGlobalFilterAction: (value: string) => void;
     enableExport?: boolean;
     columnVisibility: VisibilityState; // Nueva prop
     setColumnVisibility: (value: VisibilityState) => void; // Nueva prop
@@ -28,7 +28,7 @@ export function DataTableToolbar<TData>({
     table,
     filterPlaceholder = 'Filtrar...',
     globalFilter,
-    setGlobalFilter,
+    setGlobalFilterAction,
     enableExport = true,
 }: DynamicTableToolbarProps<TData>) {
     const isFiltered = table.getState().globalFilter || table.getState().columnFilters.length > 0;
@@ -109,14 +109,14 @@ export function DataTableToolbar<TData>({
                 <Input
                     placeholder={filterPlaceholder}
                     value={globalFilter}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    onChange={(event) => setGlobalFilterAction(event.target.value)}
                     className="h-[40px] w-[150px] bg-white md:w-[75%]"
                 />
                 {isFiltered && (
                     <Button
                         variant="ghost"
                         onClick={() => {
-                            setGlobalFilter('');
+                            setGlobalFilterAction('');
                             table.resetColumnFilters();
                         }}
                         className="h-8 px-2 lg:px-3"

@@ -1,14 +1,13 @@
 'use server';
 
-import prisma from '@/lib/db/db';
+import { TicketPriority, TicketStatus } from '@prisma/client';
 import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
-import { TicketStatus, TicketPriority } from '@prisma/client';
-
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+import { authOptions } from '@/lib/auth/authOptions';
+import prisma from '@/lib/db/db';
 
 // Generar código para tickets
 const generateTicketCode = () => {

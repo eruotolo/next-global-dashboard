@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-import useAuthStore from '@/store/authStore';
+import { useEffect, useRef, useState } from 'react';
 import { checkPageAccess } from '@/actions/Settings/Pages/queries';
+import useAuthStore from '@/store/authStore';
 
 interface UsePagePermissionsProps {
     path: string;

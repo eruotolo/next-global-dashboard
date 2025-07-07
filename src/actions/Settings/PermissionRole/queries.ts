@@ -1,12 +1,12 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+import { authOptions } from '@/lib/auth/authOptions';
 import prisma from '@/lib/db/db';
 import type { PermissionRoleQuery } from '@/types/settings/Permission/PermissionInterface';
-import { revalidatePath } from 'next/cache';
-import { logAuditEvent } from '@/lib/audit/auditLogger';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
-import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 
 export async function getPermissionRoles(id: string): Promise<PermissionRoleQuery[]> {
     if (!id) {
@@ -14,7 +14,7 @@ export async function getPermissionRoles(id: string): Promise<PermissionRoleQuer
     }
 
     try {
-        const permissionRole = await prisma.permissionRole.findMany({
+        return await prisma.permissionRole.findMany({
             where: {
                 roleId: id,
             },
@@ -27,18 +27,14 @@ export async function getPermissionRoles(id: string): Promise<PermissionRoleQuer
                 },
             },
         });
-
-        return permissionRole;
     } catch (error) {
         console.error('Error getting permissions:', error);
-        throw new Error(
-            `Failed to get role permissions: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
+        throw error;
     }
 }
 
 export async function updatePermissionRoles(id: string, permissions: string[]) {
-    if (!id || typeof id !== 'string') {
+    if (!id) {
         throw new Error('Role ID is invalid');
     }
 

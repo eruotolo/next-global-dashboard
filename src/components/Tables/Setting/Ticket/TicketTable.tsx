@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getAllTickets } from '@/actions/Settings/Tickets';
-import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
-import { DataTable } from '@/components/ui/data-table/data-table';
-import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
-
 import NewTicketsModal from '@/components/Modal/Setting/Tickets/NewTicketsModal';
+import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
+import { DataTable } from '@/components/ui/data-table/data-table';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 export default function TicketTable() {
     const [ticketData, setTicketData] = useState<SimpleTicketQuery[]>([]);

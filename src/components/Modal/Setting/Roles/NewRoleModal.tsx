@@ -2,12 +2,11 @@
 
 import Form from 'next/form';
 import { useState } from 'react';
-
+import { toast } from 'sonner';
 import { createRole } from '@/actions/Settings/Roles';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import BtnSubmit from '@/components/BtnSubmit/BtnSubmit';
-import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
-
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -18,8 +17,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 export default function NewRoleModal({ refreshAction }: UpdateData) {
     const [isOpen, setIsOpen] = useState(false);

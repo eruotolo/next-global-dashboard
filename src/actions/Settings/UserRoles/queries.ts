@@ -1,11 +1,11 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
+import { authOptions } from '@/lib/auth/authOptions';
 import prisma from '@/lib/db/db';
 import type { UserRoleQuery } from '@/types/settings/Roles/RolesInterface';
-import { revalidatePath } from 'next/cache';
-import { logAuditEvent } from '@/lib/audit/auditLogger';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
 
 export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
     if (!id) {
@@ -13,7 +13,7 @@ export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
     }
 
     try {
-        const userRoles = await prisma.userRole.findMany({
+        return await prisma.userRole.findMany({
             where: {
                 userId: id,
             },
@@ -27,18 +27,14 @@ export async function getUserRoles(id: string): Promise<UserRoleQuery[]> {
                 },
             },
         });
-
-        return userRoles;
     } catch (error) {
         console.error('Error getting user roles:', error);
-        throw new Error(
-            `Failed to get user roles: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
+        throw error;
     }
 }
 
 export async function updateUserRoles(id: string, roles: string[]) {
-    if (!id || typeof id !== 'string') {
+    if (!id) {
         throw new Error('User ID is invalid');
     }
 

@@ -1,16 +1,13 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-    "organizeImports": {
-        "enabled": true
-    },
+    "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
     "linter": {
         "enabled": true,
         "rules": {
             "recommended": true,
             "correctness": {
-                "noUnusedImports": "warn",
+                "noUnusedImports": "off",
                 "noUnusedVariables": "warn",
-                "noDuplicateValues": "off",
                 "useExhaustiveDependencies": "warn"
             },
             "suspicious": {
@@ -21,39 +18,37 @@
                     }
                 },
                 "noExplicitAny": "warn",
-                "noImplicitAnyLet": "warn"
+                "noImplicitAnyLet": "warn",
+                "noDuplicateCase": "off"
             },
             "style": {
                 "useConst": "error",
                 "useEnumInitializers": "off",
                 "noUselessElse": "error",
-                "useTemplate": "error"
+                "useTemplate": "error",
+                "useSelfClosingElements": "off",
+                "noParameterAssign": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error"
             },
             "a11y": {
-                "useKeyWithClickEvents": "warn",
-                "noSvgWithoutTitle": "warn"
+                "useKeyWithClickEvents": "off",
+                "noSvgWithoutTitle": "off"
             },
             "complexity": {
                 "noBannedTypes": "warn",
-                "noStaticOnlyClass": "warn"
-            }
-        },
-        "ignore": [
-            ".next/**",
-            "node_modules/**",
-            "public/**",
-            "dist/**",
-            ".vercel/**",
-            "prisma/generated/**"
-        ]
+                "noStaticOnlyClass": "warn",
+                "noExcessiveCognitiveComplexity": "off"
+            },
+            "nursery": {}
+        }
     },
     "formatter": {
         "enabled": false
-    },
-    "javascript": {
-        "formatter": {
-            "enabled": false
-        }
     },
     "json": {
         "parser": {
@@ -66,14 +61,14 @@
         }
     },
     "files": {
-        "ignore": [
-            ".next/**",
-            "node_modules/**",
-            "public/**",
-            "dist/**",
-            ".vercel/**",
-            ".next/**",
-            ".idea/**"
+        "includes": [
+            "**",
+            "!**/.next/**",
+            "!**/node_modules/**",
+            "!**/public/**",
+            "!**/dist/**",
+            "!**/.vercel/**",
+            "!**/prisma/generated/**"
         ]
     }
 }

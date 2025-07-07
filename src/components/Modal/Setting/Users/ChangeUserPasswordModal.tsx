@@ -2,13 +2,10 @@
 
 import Form from 'next/form';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
-import { updateUser } from '@/actions/Settings/Users';
-import type { UserFormPassData } from '@/types/settings/Users/UsersInterface';
-import type { ChangePassModalProps } from '@/types/settings/Users/UsersInterface';
 import { useFormStatus } from 'react-dom';
-
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { updateUser } from '@/actions/Settings/Users';
 import {
     Dialog,
     DialogContent,
@@ -19,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import type { ChangePassModalProps, UserFormPassData } from '@/types/settings/Users/UsersInterface';
 
 function SubmitButton({
     isValid,
@@ -48,7 +45,7 @@ export default function ChangePasswordModal({
     id,
     refresh,
     open,
-    onClose,
+    onCloseAction,
     signOut,
     successMessage,
     shouldSignOut = false,
@@ -81,7 +78,7 @@ export default function ChangePasswordModal({
             refresh?.();
             reset();
             setError('');
-            onClose(false);
+            onCloseAction(false);
             toast.success('Change Password Successful', {
                 description: successMessage,
             });
@@ -100,7 +97,7 @@ export default function ChangePasswordModal({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onCloseAction}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Cambiar Contraseña</DialogTitle>

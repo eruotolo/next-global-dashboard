@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
     try {
@@ -10,6 +10,12 @@ export async function POST(req: NextRequest) {
                 { error: 'No se proporcionó ninguna imagen.' },
                 { status: 400 },
             );
+        }
+
+        // Validar tamaño de archivo (4MB máximo)
+        const maxSizeInBytes = 4194304; // 4MB
+        if (imageFile.size > maxSizeInBytes) {
+            return NextResponse.json({ error: 'La imagen no puede superar 4MB.' }, { status: 400 });
         }
         // Permitir solo ciertos tipos de imágenes
         const allowedTypes = [

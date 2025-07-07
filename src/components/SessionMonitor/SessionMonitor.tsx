@@ -1,7 +1,7 @@
 'use client';
 
-import useSessionStore from '@/store/sessionStore';
 import { useEffect } from 'react';
+import useSessionStore from '@/store/sessionStore';
 
 export default function SessionMonitor() {
     const { startMonitoring, stopMonitoring } = useSessionStore();

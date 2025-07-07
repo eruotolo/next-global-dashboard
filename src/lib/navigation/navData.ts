@@ -19,7 +19,7 @@ export const navData = {
             roles: [],
         },
         {
-            title: 'Ventas',
+            title: 'Generico Uno',
             url: '#',
             icon: ShoppingCart,
             roles: [],
@@ -42,7 +42,7 @@ export const navData = {
             ],
         },
         {
-            title: 'Compras',
+            title: 'Generico Dos',
             url: '#',
             icon: Store,
             roles: [],
@@ -65,7 +65,7 @@ export const navData = {
             ],
         },
         {
-            title: 'Operaciones',
+            title: 'Generico Tres',
             url: '#',
             icon: Briefcase,
             roles: [],

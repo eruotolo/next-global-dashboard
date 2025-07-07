@@ -1,11 +1,11 @@
 'use server';
 
-import { headers } from 'next/headers';
-import prisma from '@/dbprisma/db';
 import type { Prisma } from '@prisma/client';
+import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
+import prisma from '@/dbprisma/db';
 import type { AuditAction, AuditEntity } from '@/lib/audit/auditType';
+import { authOptions } from '@/lib/auth/authOptions';
 
 // Parámetros para el registro de auditoría
 export interface AuditLogParams {

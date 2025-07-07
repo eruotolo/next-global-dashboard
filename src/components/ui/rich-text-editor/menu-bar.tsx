@@ -1,3 +1,4 @@
+import type { Editor } from '@tiptap/react';
 import {
     AlignCenter,
     AlignLeft,
@@ -9,13 +10,13 @@ import {
     Highlighter,
     ImageIcon,
     Italic,
+    Link as LinkIcon,
     List,
     ListOrdered,
     Strikethrough,
-    Link as LinkIcon,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Toggle } from '../toggle';
-import type { Editor } from '@tiptap/react';
 
 export default function MenuBar({
     editor,
@@ -31,21 +32,43 @@ export default function MenuBar({
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.[0]) return;
         const file = e.target.files[0];
+
+        // Validación del lado del cliente (4MB máximo)
+        const maxSizeInBytes = 4194304; // 4MB
+        if (file.size > maxSizeInBytes) {
+            toast.error('Error de validación', {
+                description: 'La imagen no puede superar 4MB.',
+            });
+            return;
+        }
+
         const formData = new FormData();
         formData.append('image', file);
         formData.append('folder', imageFolder);
+
         try {
             const res = await fetch('/api/upload-image', {
                 method: 'POST',
                 body: formData,
             });
             const data = await res.json();
-            if (data?.url) {
+
+            if (res.ok && data?.url) {
                 editor.chain().focus().setImage({ src: data.url }).run();
+                toast.success('Imagen subida', {
+                    description: 'La imagen se ha subido correctamente.',
+                });
             } else {
-                console.error('Error al subir la imagen:', data?.error || 'Error desconocido');
+                const errorMessage = data?.error || 'Error desconocido al subir la imagen';
+                toast.error('Error al subir imagen', {
+                    description: errorMessage,
+                });
+                console.error('Error al subir la imagen:', errorMessage);
             }
         } catch (error) {
+            toast.error('Error de conexión', {
+                description: 'No se pudo conectar con el servidor.',
+            });
             console.error('Error uploading image:', error);
         }
     };

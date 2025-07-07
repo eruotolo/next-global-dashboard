@@ -59,7 +59,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={navData.navMain} />
-                <NavAdministration items={navData.navAdministration} />
+                {/* <NavAdministration items={navData.navAdministration} />*/}
                 <NavSetting items={navData.navSetting} className="mt-auto" />
                 {isSuperAdministrador && <NavPrivate items={navData.adminSetting} />}
             </SidebarContent>

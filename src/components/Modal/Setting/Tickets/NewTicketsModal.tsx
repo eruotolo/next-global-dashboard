@@ -1,19 +1,14 @@
 'use client';
 
+import { TicketPriority, TicketStatus } from '@prisma/client';
+import { FilePenLine } from 'lucide-react';
 import Form from 'next/form';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
+import { toast } from 'sonner';
 import { createTicket } from '@/actions/Settings/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
-import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
-
-import { TicketStatus, TicketPriority } from '@prisma/client';
-import useAuthStore from '@/store/authStore';
-import RichTextEditor from '@/components/ui/rich-text-editor';
-
 import {
     Dialog,
     DialogClose,
@@ -24,6 +19,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 //import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
@@ -32,9 +28,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-import { FilePenLine } from 'lucide-react';
-import { toast } from 'sonner';
+import useAuthStore from '@/store/authStore';
+import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 export default function NewTicketsModal({ refreshAction }: UpdateData) {
     const {
@@ -210,7 +206,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                 <div className="mb-[15px]">
                                     <RichTextEditor
                                         content={description}
-                                        onChange={(content) => {
+                                        onChangeAction={(content) => {
                                             setDescription(content);
                                             setValue('description', content, {
                                                 shouldValidate: true,

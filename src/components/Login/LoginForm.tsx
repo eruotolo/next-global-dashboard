@@ -1,11 +1,10 @@
 'use client';
 
-import type React from 'react';
-
 import { Eye, EyeOff } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import type React from 'react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -31,7 +30,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         reValidateMode: 'onSubmit',
     });
 
-    // const router = useRouter();
+    const router = useRouter();
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         setIsLoading(true);
@@ -41,8 +40,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             const res = await signIn('credentials', {
                 email: data.email,
                 password: data.password,
-                //redirect: false,
-                redirect: true,
+                redirect: false,
                 callbackUrl: '/admin/dashboard',
             });
 
@@ -55,16 +53,13 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                               ? 'Contraseña incorrecta'
                               : 'Ha ocurrido un error durante el inicio de sesión',
                 });
-            } else {
-                await new Promise((resolve) => setTimeout(resolve, 800));
-
+            } else if (res?.ok) {
                 toast.success('Inicio de sesión exitoso', {
                     description: 'Has iniciado sesión correctamente.',
                 });
-                //router.push('/admin/dashboard');
 
-                // await new Promise(resolve => setTimeout(resolve, 1500));
-                // window.location.replace('/admin/dashboard');
+                // Forzar recarga de la página para asegurar la actualización de estado de autenticación
+                window.location.href = '/admin/dashboard';
             }
         } catch (error) {
             console.error('Error inesperado en LoginForm:', error);

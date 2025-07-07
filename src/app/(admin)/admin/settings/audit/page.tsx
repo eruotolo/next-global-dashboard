@@ -1,16 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { getAuditLogs } from '@/lib/audit/auditLogger';
-import {
-    type AuditAction,
-    type AuditEntity,
-    actionTypesForFilter,
-    entityTypesForFilter,
-} from '@/lib/audit/auditType';
 import type { Prisma } from '@prisma/client';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table/data-table';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -19,9 +15,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { ArrowUpDown } from 'lucide-react';
-import { DataTable } from '@/components/ui/data-table/data-table';
-import type { ColumnDef } from '@tanstack/react-table';
+import { getAuditLogs } from '@/lib/audit/auditLogger';
+import {
+    type AuditAction,
+    type AuditEntity,
+    actionTypesForFilter,
+    entityTypesForFilter,
+} from '@/lib/audit/auditType';
 
 interface AuditLog {
     id: string;

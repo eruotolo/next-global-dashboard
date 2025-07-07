@@ -102,7 +102,7 @@ export interface UserQueryWithDetails {
 export interface ChangePassModalProps {
     id: string;
     open: boolean;
-    onClose: (open: boolean) => void;
+    onCloseAction: (open: boolean) => void;
     refresh?: () => void; // opcional
     signOut?: () => Promise<void>; // opcional
     successMessage: string;

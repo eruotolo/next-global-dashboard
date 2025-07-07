@@ -2,13 +2,13 @@
 
 import prisma from '@/lib/db/db';
 import type {
-    UserQueryWithRoles,
     UserQueryWithDetails,
+    UserQueryWithRoles,
 } from '@/types/settings/Users/UsersInterface';
 
 export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
     try {
-        const getAll = await prisma.user.findMany({
+        return await prisma.user.findMany({
             where: {
                 roles: {
                     none: {
@@ -44,8 +44,6 @@ export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
                 name: 'asc',
             },
         });
-
-        return getAll;
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
@@ -54,7 +52,7 @@ export async function getAllUsers(): Promise<UserQueryWithRoles[]> {
 
 export async function getUserById(id: string): Promise<UserQueryWithDetails | null> {
     try {
-        const getUser = await prisma.user.findUnique({
+        return await prisma.user.findUnique({
             where: {
                 id,
             },
@@ -70,12 +68,6 @@ export async function getUserById(id: string): Promise<UserQueryWithDetails | nu
                 image: true,
             },
         });
-
-        if (!getUser) {
-            throw new Error(`User with ID ${id} not found`);
-        }
-
-        return getUser;
     } catch (error) {
         console.error('Error getting user:', error);
         throw new Error('Could not get the user.');

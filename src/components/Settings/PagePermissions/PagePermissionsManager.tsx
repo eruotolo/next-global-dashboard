@@ -1,40 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import type { Column } from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { getPages } from '@/actions/Settings/Pages/queries';
 import {
-    updatePageRole,
     createPage,
-    updatePage,
     deletePage,
+    updatePage,
+    updatePageRole,
 } from '@/actions/Settings/Pages/mutations';
-import { getRoles } from '@/actions/Settings/Roles/queries';
 import type { Page } from '@/actions/Settings/Pages/queries';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { DataTable } from '@/components/ui/data-table/data-table';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-    DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { Plus, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from 'lucide-react';
+import { getPages } from '@/actions/Settings/Pages/queries';
+import { getRoles } from '@/actions/Settings/Roles/queries';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -46,7 +24,29 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import type { Column } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DataTable } from '@/components/ui/data-table/data-table';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Role {
     id: string;
@@ -186,7 +186,7 @@ export default function PagePermissionsManager() {
             }
             setIsDialogOpen(false);
             resetForm();
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error('Error saving page:', error);
             toast.error('Error al guardar la página');
@@ -207,7 +207,7 @@ export default function PagePermissionsManager() {
         try {
             await deletePage(id);
             toast.success('Página eliminada correctamente');
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error('Error deleting page:', error);
             toast.error('Error al eliminar la página');

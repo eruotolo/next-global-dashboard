@@ -1,16 +1,12 @@
 'use client';
 
-import Form from 'next/form';
-import { useState, useEffect, useTransition } from 'react';
-import Image from 'next/image';
 import { FilePenLine } from 'lucide-react';
+import Form from 'next/form';
+import Image from 'next/image';
+import { useEffect, useState, useTransition } from 'react';
 import { useFormStatus } from 'react-dom';
-
-import type { UserQueryWithDetails } from '@/types/settings/Users/UsersInterface';
-import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
-
+import { toast } from 'sonner';
 import { getUserById, updateUser } from '@/actions/Settings/Users';
-
 import {
     Dialog,
     DialogContent,
@@ -20,8 +16,9 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
+import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
+import type { UserQueryWithDetails } from '@/types/settings/Users/UsersInterface';
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -32,7 +29,12 @@ function SubmitButton() {
     );
 }
 
-export default function EditUserModal({ id, refreshAction, open, onClose }: EditModalPropsAlt) {
+export default function EditUserModal({
+    id,
+    refreshAction,
+    open,
+    onCloseAction,
+}: EditModalPropsAlt) {
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('/shadcn.jpg');
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
@@ -49,8 +51,8 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                             setImagePreview(user.image);
                         }
                     }
-                } catch (e) {
-                    console.log(e);
+                } catch (error) {
+                    console.log(error);
                 }
             }
         }
@@ -61,6 +63,26 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Validación para archivos SVG
+            if (file.name.toLowerCase().endsWith('.svg') || file.type === 'image/svg+xml') {
+                setError(
+                    'No se permiten archivos SVG. Por favor, carga una imagen en formato JPG, PNG o similar.',
+                );
+                e.target.value = '';
+                setImagePreview(userData?.image || '/shadcn.jpg');
+                return;
+            }
+
+            // Validación de tamaño (4MB)
+            const maxSizeInBytes = 4194304;
+            if (file.size > maxSizeInBytes) {
+                setError('La imagen no puede superar 4MB.');
+                e.target.value = '';
+                setImagePreview(userData?.image || '/shadcn.jpg');
+                return;
+            }
+
+            setError('');
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
@@ -77,7 +99,7 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
                 setError(result.error);
             } else {
                 refreshAction?.();
-                onClose(false);
+                onCloseAction(false);
                 toast.success('Editado Successful', {
                     description: 'El usuario se ha editado correctamente.',
                 });
@@ -86,13 +108,17 @@ export default function EditUserModal({ id, refreshAction, open, onClose }: Edit
     };
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onCloseAction}>
             <DialogContent className="overflow-hidden sm:max-w-[800px]">
                 <DialogHeader>
                     <DialogTitle>Editar Usuario</DialogTitle>
                     <DialogDescription>Editar usuario</DialogDescription>
                 </DialogHeader>
                 <Form action={handleSubmit}>
+                    {/* Campo hidden para preservar imagen actual */}
+                    {userData?.image && (
+                        <input type="hidden" name="currentImage" value={userData.image} />
+                    )}
                     <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-2">
                             <div className="mb-[15px] flex gap-2">

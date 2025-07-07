@@ -1,10 +1,10 @@
-import prisma from '@/dbprisma/db';
 import bcrypt from 'bcrypt';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import prisma from '@/dbprisma/db';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
-import type { CustomUser } from '@/types/settings/Login/CustomUser';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+import type { CustomUser } from '@/types/settings/Login/CustomUser';
 
 export const authOptions: NextAuthOptions = {
     providers: [

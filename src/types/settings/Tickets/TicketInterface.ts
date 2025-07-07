@@ -1,4 +1,4 @@
-import type { TicketStatus, TicketPriority } from '@prisma/client';
+import type { TicketPriority, TicketStatus } from '@prisma/client';
 
 export interface SimpleTicketQuery {
     id: string;

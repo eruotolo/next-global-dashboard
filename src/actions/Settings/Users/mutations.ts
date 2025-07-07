@@ -1,14 +1,14 @@
 'use server';
 
-import prisma from '@/lib/db/db';
 import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
-import type { UserData } from '@/types/settings/Users/UsersInterface';
-import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/authOptions';
+import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
+import { authOptions } from '@/lib/auth/authOptions';
+import prisma from '@/lib/db/db';
+import type { UserData } from '@/types/settings/Users/UsersInterface';
 
 export async function createUser(formData: FormData) {
     try {
@@ -86,7 +86,7 @@ export async function createUser(formData: FormData) {
         return { user, message: 'User created successfully' };
     } catch (error) {
         console.error('Error creating user:', error);
-        return { error: 'Error creating user' };
+        throw error;
     }
 }
 
@@ -133,7 +133,7 @@ export async function deleteUser(id: string) {
         return { user: userRemoved, message: 'User deleted successfully' };
     } catch (error) {
         console.error('Error deleting user', error);
-        return { error: 'Error deleting user' };
+        throw error;
     }
 }
 
@@ -263,6 +263,6 @@ export async function updateUser(id: string, formData: FormData) {
         };
     } catch (error) {
         console.error('Error updating user:', error);
-        return { error: 'Error updating user' };
+        throw error;
     }
 }

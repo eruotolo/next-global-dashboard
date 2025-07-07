@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { ForgotPassword } from '@/components/Login/ForgotPassword';
+
 const logo: string = '/logo-sm-wh.svg';
 
 export default function RecoveryPage() {

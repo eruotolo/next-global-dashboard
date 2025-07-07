@@ -1,23 +1,23 @@
 'use client';
 
-import { EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import MenuBar from './menu-bar';
-import TextAlign from '@tiptap/extension-text-align';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import { useState } from 'react';
+import TextAlign from '@tiptap/extension-text-align';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { useEffect, useState } from 'react';
+import MenuBar from './menu-bar';
 
 interface RichTextEditorProps {
     content: string;
-    onChange: (content: string) => void;
+    onChangeAction: (content: string) => void;
     imageFolder?: string;
 }
 
 export default function RichTextEditor({
     content,
-    onChange,
+    onChangeAction,
     imageFolder = 'editor-images',
 }: RichTextEditorProps) {
     const [wordCount, setWordCount] = useState(0);
@@ -55,12 +55,19 @@ export default function RichTextEditor({
             },
         },
         onUpdate: ({ editor }) => {
-            onChange(editor.getHTML());
+            onChangeAction(editor.getHTML());
             const text = editor.getText();
             setWordCount(text.trim().split(/\s+/).filter(Boolean).length);
             setCharCount(text.length);
         },
     });
+
+    // Actualizar el contenido del editor cuando cambie la prop content
+    useEffect(() => {
+        if (editor && content !== editor.getHTML()) {
+            editor.commands.setContent(content);
+        }
+    }, [content, editor]);
 
     return (
         <div>
