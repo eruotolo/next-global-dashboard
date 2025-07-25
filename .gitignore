@@ -22,7 +22,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # Variables de entorno
-.env
+.env.local
 .env.*
 
 # Archivos del sistema

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { LoginFormNew } from '@/components/Login/LoginFormNew';
+import { LoginForm } from '@/components/Login/LoginForm';
 
 const logo: string = '/logo-sm-wh.svg';
 
@@ -24,7 +24,7 @@ export default function LoginPage() {
                         <span className="truncate text-[11px]">Dashboard</span>
                     </div>
                 </Link>
-                <LoginFormNew />
+                <LoginForm />
             </div>
         </div>
     );

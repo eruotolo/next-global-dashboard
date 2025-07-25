@@ -1,6 +1,8 @@
 {
     "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
-    "assist": { "actions": { "source": { "organizeImports": "on" } } },
+    "organizeImports": {
+        "enabled": true
+    },
     "linter": {
         "enabled": true,
         "rules": {
@@ -61,14 +63,13 @@
         }
     },
     "files": {
-        "includes": [
-            "**",
-            "!**/.next/**",
-            "!**/node_modules/**",
-            "!**/public/**",
-            "!**/dist/**",
-            "!**/.vercel/**",
-            "!**/prisma/generated/**"
+        "ignore": [
+            ".next/**",
+            "node_modules/**",
+            "public/**",
+            "dist/**",
+            ".vercel/**",
+            "prisma/generated/**"
         ]
     }
 }

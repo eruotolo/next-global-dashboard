@@ -13,9 +13,8 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-
-import type { ItemsNavSetting } from '@/types/settings/Sidebar/ItemsNavSetting';
 import useAuthStore from '@/store/authStore';
+import type { ItemsNavSetting } from '@/types/settings/Sidebar/ItemsNavSetting';
 
 export default function NavPrivate({
     items,

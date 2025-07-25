@@ -1,46 +1,44 @@
 {
-  "printWidth": 100,
-  "tabWidth": 4,
-  "useTabs": false,
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true,
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "quoteProps": "as-needed",
-  "htmlWhitespaceSensitivity": "css",
-  "embeddedLanguageFormatting": "auto",
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ],
-  "overrides": [
-    {
-      "files": "*.{js,jsx,ts,tsx}",
-      "options": {
-        "parser": "babel-ts"
-      }
-    },
-    {
-      "files": "*.css",
-      "options": {
-        "parser": "css"
-      }
-    },
-    {
-      "files": "*.json",
-      "options": {
-        "parser": "json",
-        "printWidth": 100,
-        "semi": false,
-        "trailingComma": "none"
-      }
-    },
-    {
-      "files": "*.yml",
-      "options": {
-        "parser": "yaml"
-      }
-    }
-  ]
+    "printWidth": 100,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "quoteProps": "as-needed",
+    "htmlWhitespaceSensitivity": "css",
+    "embeddedLanguageFormatting": "auto",
+    "plugins": ["prettier-plugin-tailwindcss"],
+    "overrides": [
+        {
+            "files": "*.{js,jsx,ts,tsx}",
+            "options": {
+                "parser": "babel-ts"
+            }
+        },
+        {
+            "files": "*.css",
+            "options": {
+                "parser": "css"
+            }
+        },
+        {
+            "files": "*.json",
+            "options": {
+                "parser": "json",
+                "printWidth": 100,
+                "semi": false,
+                "trailingComma": "none"
+            }
+        },
+        {
+            "files": "*.yml",
+            "options": {
+                "parser": "yaml"
+            }
+        }
+    ]
 }

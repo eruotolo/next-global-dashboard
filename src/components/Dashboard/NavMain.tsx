@@ -14,9 +14,8 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-
-import type { ItemsNavPrincipal } from '@/types/settings/Sidebar/ItemsNavPrincipal';
 import useAuthStore from '@/store/authStore';
+import type { ItemsNavPrincipal } from '@/types/settings/Sidebar/ItemsNavPrincipal';
 
 export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
     const session = useAuthStore((state) => state.session);
@@ -34,7 +33,7 @@ export default function NavMain({ items }: { items: ItemsNavPrincipal[] }) {
 
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+            <SidebarGroupLabel>Tablero Principal</SidebarGroupLabel>
             <SidebarMenu>
                 {filteredItems.map((item) => {
                     // Filtrar subitems según roles
