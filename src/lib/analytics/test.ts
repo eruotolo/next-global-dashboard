@@ -41,7 +41,7 @@ export const checkAnalyticsConfig = () => {
 
         // Verificar ANALYTICS_REFRESH_INTERVAL
         const refreshInterval = process.env.ANALYTICS_REFRESH_INTERVAL;
-        if (refreshInterval && !isNaN(parseInt(refreshInterval))) {
+        if (refreshInterval && !isNaN(Number.parseInt(refreshInterval))) {
             results.refreshInterval = true;
         }
 

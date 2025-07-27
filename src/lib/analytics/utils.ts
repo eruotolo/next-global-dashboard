@@ -67,9 +67,9 @@ export const transformToTrendData = (response: GoogleAnalyticsResponse): Analyti
 
     return response.rows.map((row) => ({
         date: row.dimensionValues?.[0]?.value || '',
-        sessions: parseInt(row.metricValues?.[0]?.value || '0'),
-        pageViews: parseInt(row.metricValues?.[1]?.value || '0'),
-        activeUsers: parseInt(row.metricValues?.[2]?.value || '0'),
+        sessions: Number.parseInt(row.metricValues?.[0]?.value || '0'),
+        pageViews: Number.parseInt(row.metricValues?.[1]?.value || '0'),
+        activeUsers: Number.parseInt(row.metricValues?.[2]?.value || '0'),
     }));
 };
 
@@ -80,9 +80,9 @@ export const transformToTopPagesData = (response: GoogleAnalyticsResponse): TopP
     return response.rows.map((row) => ({
         pagePath: row.dimensionValues?.[0]?.value || '',
         pageTitle: row.dimensionValues?.[1]?.value || 'Sin título',
-        pageViews: parseInt(row.metricValues?.[0]?.value || '0'),
-        uniquePageviews: parseInt(row.metricValues?.[0]?.value || '0'), // Usar pageViews como único valor
-        userEngagementDuration: parseFloat(row.metricValues?.[1]?.value || '0'),
+        pageViews: Number.parseInt(row.metricValues?.[0]?.value || '0'),
+        uniquePageviews: Number.parseInt(row.metricValues?.[0]?.value || '0'), // Usar pageViews como único valor
+        userEngagementDuration: Number.parseFloat(row.metricValues?.[1]?.value || '0'),
     }));
 };
 
@@ -91,11 +91,11 @@ export const transformToDeviceData = (response: GoogleAnalyticsResponse): Device
     if (!response.rows) return [];
 
     const total = response.rows.reduce((sum, row) => {
-        return sum + parseInt(row.metricValues?.[0]?.value || '0');
+        return sum + Number.parseInt(row.metricValues?.[0]?.value || '0');
     }, 0);
 
     return response.rows.map((row) => {
-        const sessions = parseInt(row.metricValues?.[0]?.value || '0');
+        const sessions = Number.parseInt(row.metricValues?.[0]?.value || '0');
         return {
             deviceCategory: row.dimensionValues?.[0]?.value || '',
             sessions,
@@ -111,11 +111,11 @@ export const transformToTrafficSourceData = (
     if (!response.rows) return [];
 
     const total = response.rows.reduce((sum, row) => {
-        return sum + parseInt(row.metricValues?.[0]?.value || '0');
+        return sum + Number.parseInt(row.metricValues?.[0]?.value || '0');
     }, 0);
 
     return response.rows.map((row) => {
-        const sessions = parseInt(row.metricValues?.[0]?.value || '0');
+        const sessions = Number.parseInt(row.metricValues?.[0]?.value || '0');
         return {
             source: row.dimensionValues?.[0]?.value || '',
             medium: row.dimensionValues?.[1]?.value || '',
@@ -130,11 +130,11 @@ export const transformToMetrics = (response: GoogleAnalyticsResponse): Analytics
     const totals = response.totals?.[0]?.metricValues || [];
 
     return {
-        sessions: parseInt(totals[0]?.value || '0'),
-        pageViews: parseInt(totals[1]?.value || '0'),
-        engagementRate: parseFloat(totals[2]?.value || '0'),
-        userEngagementDuration: parseFloat(totals[3]?.value || '0'),
-        activeUsers: parseInt(totals[4]?.value || '0'),
+        sessions: Number.parseInt(totals[0]?.value || '0'),
+        pageViews: Number.parseInt(totals[1]?.value || '0'),
+        engagementRate: Number.parseFloat(totals[2]?.value || '0'),
+        userEngagementDuration: Number.parseFloat(totals[3]?.value || '0'),
+        activeUsers: Number.parseInt(totals[4]?.value || '0'),
     };
 };
 

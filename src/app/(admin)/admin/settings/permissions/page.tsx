@@ -1,7 +1,7 @@
 'use client';
 
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
-import PagePermissionsManager from '@/components/Settings/PagePermissions/PagePermissionsManager';
+import PagePermissionsManager from '@/components/Tables/Setting/PagePermissions/PagePermissionsManager';
 
 export default function PermissionsPage() {
     return (

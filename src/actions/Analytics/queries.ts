@@ -103,7 +103,7 @@ export async function getAnalyticsTrends(
 export async function getTopPages(
     startDate: string,
     endDate: string,
-    limit: number = 10,
+    limit = 10,
 ): Promise<TopPagesData[]> {
     try {
         const client = getAnalyticsClient();
@@ -172,7 +172,7 @@ export async function getDeviceData(startDate: string, endDate: string): Promise
 export async function getTrafficSources(
     startDate: string,
     endDate: string,
-    limit: number = 10,
+    limit = 10,
 ): Promise<TrafficSourceData[]> {
     try {
         const client = getAnalyticsClient();

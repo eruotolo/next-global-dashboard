@@ -63,7 +63,7 @@ export default function NewRoleModal({ refreshAction }: UpdateData) {
         } catch (error) {
             console.error(error);
             const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-            setError(`Error al crear el país. Inténtalo de nuevo. (${errorMessage})`);
+            setError(`Error al crear el rol. Inténtalo de nuevo. (${errorMessage})`);
             toast.error('Nuevo Role Failed', {
                 description: 'Error al intentar crear el role',
             });

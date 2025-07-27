@@ -10,7 +10,7 @@ import type { AnalyticsConfig } from '@/types/Analytics/AnalyticsInterface';
 const getAnalyticsConfig = (): AnalyticsConfig => {
     const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
     const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-    const refreshInterval = parseInt(process.env.ANALYTICS_REFRESH_INTERVAL || '300000');
+    const refreshInterval = Number.parseInt(process.env.ANALYTICS_REFRESH_INTERVAL || '300000');
 
     if (!propertyId) {
         throw new Error(

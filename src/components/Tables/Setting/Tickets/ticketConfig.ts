@@ -1,5 +1,5 @@
 import { getAllTickets } from '@/actions/Settings/Tickets';
-import { ColumnFactory, ActionCellFactory } from '@/components/Table';
+import { ColumnFactory } from '@/components/Table';
 import type { EntityTableConfig } from '@/components/Table/types';
 import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 import { transformTicketData } from './ticketTransformers';
@@ -70,4 +70,4 @@ export const ticketTableConfig: EntityTableConfig<SimpleTicketQuery> = {
     filterPlaceholder: 'Buscar en todos los campos...',
 };
 
-export const ticketActionsConfig = ActionCellFactory.createTicketsActionConfig();
+// Las acciones se configuran directamente en el EntityTableConfig usando actionConfig
