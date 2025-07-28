@@ -2,16 +2,16 @@
  * Utilidades para Google Analytics
  * Funciones helper para formateo y transformación de datos
  */
-
 import { format, parseISO, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
+
 import type {
-    GoogleAnalyticsResponse,
-    AnalyticsTrendData,
-    TopPagesData,
-    DeviceData,
-    TrafficSourceData,
     AnalyticsMetrics,
+    AnalyticsTrendData,
+    DeviceData,
+    GoogleAnalyticsResponse,
+    TopPagesData,
+    TrafficSourceData,
 } from '@/types/Analytics/AnalyticsInterface';
 
 // Formatear fechas para Google Analytics API (YYYY-MM-DD)

@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+
+import NewUserModalNew from '@/components/Modal/Setting/Users/NewUserModalNew';
 import UserNewModal from '@/components/Modal/Setting/Users/UserNewModal';
 import { UserColumns } from '@/components/Tables/Setting/User/UserColumns';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -24,7 +26,7 @@ export default function UserTable() {
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>
                 </div>
                 <div>
-                    <UserNewModal refreshAction={fetchUsers} />
+                    <NewUserModalNew refreshAction={fetchUsers} />
                 </div>
             </div>
             <div className="mt-[20px]">

@@ -1,15 +1,18 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+
+import { AlertCircle, File, ImageIcon, Upload, X } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { useController } from 'react-hook-form';
-import { Upload, X, File, ImageIcon, AlertCircle } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import type { FileDropzoneFieldProps, UploadedFile } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
+
+import { useFormField } from '../hooks/useFormField';
+import type { FileDropzoneFieldProps, UploadedFile } from '../types/fields';
 
 export function FileDropzoneField({
     name,

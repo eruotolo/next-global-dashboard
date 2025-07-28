@@ -1,11 +1,13 @@
 'use client';
 
+import { useController } from 'react-hook-form';
+
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import type { CheckboxFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
-import { useController } from 'react-hook-form';
+
+import { useFormField } from '../hooks/useFormField';
+import type { CheckboxFieldProps } from '../types/fields';
 
 export function CheckboxField({
     name,

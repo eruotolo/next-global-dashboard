@@ -6,30 +6,35 @@
 'use server';
 
 import {
-    getAnalyticsClient,
-    getAnalyticsPublicConfig,
     ANALYTICS_CONSTANTS,
     checkAnalyticsConfiguration,
+    getAnalyticsClient,
+    getAnalyticsPublicConfig,
 } from '@/lib/analytics/client';
 import {
     getDateRanges,
-    transformToTrendData,
-    transformToTopPagesData,
     transformToDeviceData,
-    transformToTrafficSourceData,
     transformToMetrics,
+    transformToTopPagesData,
+    transformToTrafficSourceData,
+    transformToTrendData,
     validateGAResponse,
 } from '@/lib/analytics/utils';
 import type {
+    AnalyticsConfigurationStatus,
     AnalyticsDashboardData,
     AnalyticsMetrics,
-    AnalyticsTrendData,
-    TopPagesData,
-    DeviceData,
-    TrafficSourceData,
     AnalyticsQueryParams,
-    AnalyticsConfigurationStatus,
+    AnalyticsTrendData,
+    DeviceData,
+    TopPagesData,
+    TrafficSourceData,
 } from '@/types/Analytics/AnalyticsInterface';
+
+/**
+ * Server Actions para Google Analytics Data API v1
+ * Consultas y obtención de datos desde GA4
+ */
 
 // Obtener métricas principales del dashboard
 export async function getAnalyticsMetrics(

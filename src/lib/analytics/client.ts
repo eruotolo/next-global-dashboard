@@ -2,8 +2,8 @@
  * Cliente de Google Analytics Data API v1
  * Configuración y instancia para conectar con GA4
  */
-
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
+
 import type { AnalyticsConfig } from '@/types/Analytics/AnalyticsInterface';
 
 // Configuración del cliente Analytics

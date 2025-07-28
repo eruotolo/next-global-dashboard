@@ -1,10 +1,13 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState } from 'react';
+
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import { toast } from 'sonner';
+
+import type { ColumnDef } from '@tanstack/react-table';
+
 import { deleteUser } from '@/actions/Settings/Users';
 import {
     BtnChangePasswordCell,

@@ -2,7 +2,6 @@
  * Componente LoadingCard - Estados de carga para componentes Analytics
  * Skeletons profesionales con animación
  */
-
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';

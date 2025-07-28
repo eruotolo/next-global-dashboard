@@ -1,12 +1,15 @@
 'use client';
 
-import { TicketPriority, TicketStatus } from '@prisma/client';
-import Form from 'next/form';
-import Image from 'next/image';
 import { useEffect, useState, useTransition } from 'react';
 import { useFormStatus } from 'react-dom';
+
+import Form from 'next/form';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+import { TicketPriority, TicketStatus } from '@prisma/client';
+
 import { getTicketById, updateTicket } from '@/actions/Settings/Tickets';
 import TicketComments from '@/components/Modal/Setting/Tickets/TicketComments';
 import RichTextDisplay from '@/components/RichTextDisplay/RichTextDisplay';
@@ -86,7 +89,6 @@ export default function EditTicketsModal({
             if (id) {
                 try {
                     const ticket = await getTicketById(id as string);
-                    console.log('ticket:', ticket);
                     if (ticket) {
                         // Establecer datos del ticket
                         setTicketData(ticket);

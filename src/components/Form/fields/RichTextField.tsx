@@ -1,10 +1,12 @@
 'use client';
 
-import { Label } from '@/components/ui/label';
-import type { RichTextFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
-import { cn } from '@/lib/utils';
 import { useController } from 'react-hook-form';
+
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+
+import { useFormField } from '../hooks/useFormField';
+import type { RichTextFieldProps } from '../types/fields';
 
 // Simulación del RichTextEditor - reemplaza con tu implementación real
 function RichTextEditor({

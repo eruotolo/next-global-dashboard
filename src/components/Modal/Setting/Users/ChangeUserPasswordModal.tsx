@@ -1,10 +1,12 @@
 'use client';
 
-import Form from 'next/form';
 import { useState } from 'react';
 import { useFormStatus } from 'react-dom';
+
+import Form from 'next/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 import { updateUser } from '@/actions/Settings/Users';
 import {
     Dialog,

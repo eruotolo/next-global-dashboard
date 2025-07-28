@@ -1,10 +1,11 @@
 'use client';
 
-import Form from 'next/form';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { getRoleById, updateRole } from '@/actions/Settings/Roles';
 
+import Form from 'next/form';
+import { toast } from 'sonner';
+
+import { getRoleById, updateRole } from '@/actions/Settings/Roles';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,

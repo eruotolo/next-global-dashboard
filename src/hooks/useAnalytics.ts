@@ -6,11 +6,17 @@
 'use client';
 
 import useSWR from 'swr';
+
 import { getAnalyticsDashboardData } from '@/actions/Analytics';
 import type {
     AnalyticsDashboardData,
     UseAnalyticsReturn,
 } from '@/types/Analytics/AnalyticsInterface';
+
+/**
+ * Hook useAnalytics - Gestión de datos Analytics con SWR
+ * Maneja cache, revalidación automática y estados de carga
+ */
 
 interface UseAnalyticsOptions {
     startDate?: string;
@@ -65,7 +71,6 @@ export function useAnalytics(options: UseAnalyticsOptions = {}): UseAnalyticsRet
                 console.error('Error en useAnalytics:', error);
             },
             onSuccess: (data) => {
-                console.log('Datos de Analytics cargados exitosamente:', data?.lastUpdated);
             },
         },
     );

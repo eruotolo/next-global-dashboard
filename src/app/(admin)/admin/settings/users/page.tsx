@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import RoleTable from '@/components/Tables/Setting/Roles/RoleTable';
 import UserTable from '@/components/Tables/Setting/User/UserTable';

@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import '../globals.css';
 import { Toaster } from 'sonner';
+
 import { inter } from '@/app/fonts';
+
+import '../globals.css';
 
 export const metadata: Metadata = {
     title: 'Chubby Dashboard',

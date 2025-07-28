@@ -2,15 +2,15 @@
  * Componente MetricCard - Card para mostrar métricas principales
  * Muestra número principal, cambio porcentual y trend
  */
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
 
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+    calculatePercentageChange,
+    formatDuration,
     formatNumber,
     formatPercentage,
-    formatDuration,
-    calculatePercentageChange,
 } from '@/lib/analytics/utils';
 import { cn } from '@/lib/utils';
 

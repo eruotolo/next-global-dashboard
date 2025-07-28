@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const __dirname = dirname(fileURLToPath(import.meta.url));

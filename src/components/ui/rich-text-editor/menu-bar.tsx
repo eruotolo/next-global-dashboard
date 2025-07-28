@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/react';
 import {
     AlignCenter,
     AlignLeft,
@@ -16,6 +15,9 @@ import {
     Strikethrough,
 } from 'lucide-react';
 import { toast } from 'sonner';
+
+import type { Editor } from '@tiptap/react';
+
 import { Toggle } from '../toggle';
 
 export default function MenuBar({

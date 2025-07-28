@@ -1,14 +1,13 @@
 'use client';
 
-import SessionMonitor from '@/components/SessionMonitor/SessionMonitor';
-import useAuthStore from '@/store/authStore';
 import { useEffect } from 'react';
 
 import AppSidebar from '@/components/Dashboard/AppSidebar';
+import { DynamicBreadcrumb } from '@/components/DynamicBreadcrumb/DynamicBreadcrumb';
+import SessionMonitor from '@/components/SessionMonitor/SessionMonitor';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-
-import { DynamicBreadcrumb } from '@/components/DynamicBreadcrumb/DynamicBreadcrumb';
+import useAuthStore from '@/store/authStore';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const fetchSession = useAuthStore((state) => state.fetchSession);

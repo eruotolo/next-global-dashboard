@@ -1,9 +1,12 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
+
+import { ArrowUpDown } from 'lucide-react';
+
 import type { Prisma } from '@prisma/client';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';

@@ -5,12 +5,18 @@
 
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { Smartphone, Monitor, Tablet } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Monitor, Smartphone, Tablet } from 'lucide-react';
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatNumber, formatPercentage, getChartColors } from '@/lib/analytics/utils';
 import type { DeviceData } from '@/types/Analytics/AnalyticsInterface';
+
+/**
+ * Componente DevicePieChart - Gráfico circular de distribución por dispositivos
+ * Muestra la distribución de sesiones por tipo de dispositivo
+ */
 
 interface DevicePieChartProps {
     data: DeviceData[];

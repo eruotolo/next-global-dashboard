@@ -1,7 +1,7 @@
 'use server';
 
-import { getPages, type Page } from './queries';
 import { getRoles } from '../Roles/queries';
+import { type Page, getPages } from './queries';
 
 export interface Role {
     id: string;

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+
 import { verifyAuth } from '@/lib/auth';
 import { isPublicPath, isStaticPath } from '@/lib/auth/publicPaths';
 

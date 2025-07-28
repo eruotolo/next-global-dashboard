@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import NewRoleModal from '@/components/Modal/Setting/Roles/NewRoleModal';
 import NewRoleModalNew from '@/components/Modal/Setting/Roles/NewRoleModalNew';
 import { RolesColumns } from '@/components/Tables/Setting/Roles/RolesColumns';

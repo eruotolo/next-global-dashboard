@@ -1,10 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import useAuthStore from '@/store/authStore';
+
 import PagePermissionGuard from './PagePermissionGuard';
 
 interface ProtectedRouteProps {
@@ -40,7 +43,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     useEffect(() => {
         if (isInitialized && !session && !isLoading) {
-            console.log('No session found after initialization, redirecting to login');
             router.push('/login');
         }
     }, [isInitialized, session, isLoading, router]);

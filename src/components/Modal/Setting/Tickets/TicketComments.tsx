@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 import {
     createTicketComment,
     deleteTicketComment,

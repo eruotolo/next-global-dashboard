@@ -2,11 +2,11 @@
  * Componente ErrorCard - Estados de error para componentes Analytics
  * Manejo elegante de errores con opciones de retry
  */
+import { AlertCircle, RefreshCw, Settings, Wifi } from 'lucide-react';
 
-import { RefreshCw, AlertCircle, Wifi, Settings } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface ErrorCardProps {

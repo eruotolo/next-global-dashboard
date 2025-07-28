@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useController } from 'react-hook-form';
+
 import { Check, ChevronsUpDown } from 'lucide-react';
+import { useController } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
 import {
     Command,
@@ -14,9 +16,10 @@ import {
 } from '@/components/ui/command';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import type { SearchableSelectFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
+
+import { useFormField } from '../hooks/useFormField';
+import type { SearchableSelectFieldProps } from '../types/fields';
 
 export function SearchableSelectField({
     name,

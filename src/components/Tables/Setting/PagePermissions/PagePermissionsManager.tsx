@@ -1,9 +1,12 @@
 'use client';
 
-import type { Column } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+import { ArrowUpDown, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+import type { Column } from '@tanstack/react-table';
+
 import {
     createPage,
     deletePage,

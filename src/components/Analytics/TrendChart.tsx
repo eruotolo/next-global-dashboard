@@ -6,18 +6,24 @@
 'use client';
 
 import {
-    LineChart,
+    CartesianGrid,
     Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
     XAxis,
     YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
 } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDateForDisplay, formatNumber, getChartColors } from '@/lib/analytics/utils';
 import type { AnalyticsTrendData } from '@/types/Analytics/AnalyticsInterface';
+
+/**
+ * Componente TrendChart - Gráfico de líneas para tendencias
+ * Muestra evolución de métricas en el tiempo usando Recharts
+ */
 
 interface TrendChartProps {
     data: AnalyticsTrendData[];

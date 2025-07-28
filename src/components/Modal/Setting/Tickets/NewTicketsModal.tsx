@@ -1,12 +1,15 @@
 'use client';
 
-import { TicketPriority, TicketStatus } from '@prisma/client';
+import { useState } from 'react';
+
 import { FilePenLine } from 'lucide-react';
 import Form from 'next/form';
 import Image from 'next/image';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+import { TicketPriority, TicketStatus } from '@prisma/client';
+
 import { createTicket } from '@/actions/Settings/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
 import {

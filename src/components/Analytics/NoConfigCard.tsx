@@ -2,12 +2,12 @@
  * Componente NoConfigCard - Mostrar estado amigable cuando Analytics no está configurado
  * Aparece cuando faltan variables de entorno requeridas
  */
+import { Copy, ExternalLink, Settings } from 'lucide-react';
 
-import { Settings, ExternalLink, Copy } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface NoConfigCardProps {

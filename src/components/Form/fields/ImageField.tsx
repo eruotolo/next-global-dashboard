@@ -1,22 +1,24 @@
 'use client';
 
 import type React from 'react';
+import { useRef, useState } from 'react';
 
-import { useState, useRef } from 'react';
-import { Upload, X, ImageIcon } from 'lucide-react';
+import { ImageIcon, Upload, X } from 'lucide-react';
+import { useController } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import type { ImageFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
-import { useController } from 'react-hook-form';
+
+import { useFormField } from '../hooks/useFormField';
+import type { ImageFieldProps } from '../types/fields';
 
 export function ImageField({
     name,
     label,
     folder,
     preview = true,
-    maxSize = 5, // MB
+    maxSize = 3, // MB
     acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'],
     required,
     disabled,
@@ -85,7 +87,7 @@ export function ImageField({
                         <img
                             src={previewUrl || '/placeholder.svg'}
                             alt="Preview"
-                            className="h-32 w-32 rounded-lg border object-cover"
+                            className="h-[234px] w-[234px] rounded-lg border object-cover"
                         />
                         <Button
                             type="button"
@@ -118,7 +120,7 @@ export function ImageField({
                         aria-describedby={cn(description && descriptionId, hasError && errorId)}
                     />
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <ImageIcon className="mx-auto h-8 w-8 text-gray-400" />
                         <div>
                             <Button
@@ -133,8 +135,8 @@ export function ImageField({
                         </div>
                         <p className="text-muted-foreground text-xs">
                             Máximo {maxSize}MB •{' '}
-                            {acceptedTypes.map((type) => type.split('/')[1]).join(', ')} • Carpeta:{' '}
-                            {folder}
+                            {acceptedTypes.map((type) => type.split('/')[1]).join(', ')}
+                            {folder && ` • Carpeta: ${folder}`}
                         </p>
                         {selectedFile && <p className="text-sm font-medium">{selectedFile.name}</p>}
                     </div>

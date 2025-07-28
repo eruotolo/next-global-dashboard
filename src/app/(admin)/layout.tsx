@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import '../globals.css';
+import { Toaster } from 'sonner';
+
 import AdminLayout from '@/app/(admin)/AdminLayout';
 import { inter } from '@/app/fonts';
-import { Toaster } from 'sonner';
+
+import '../globals.css';
 
 export const metadata: Metadata = {
     title: 'Chubby Dashboard',

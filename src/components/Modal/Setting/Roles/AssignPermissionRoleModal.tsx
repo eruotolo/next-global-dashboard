@@ -1,9 +1,11 @@
 'use client';
 
-import Form from 'next/form';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+
+import Form from 'next/form';
 import { toast } from 'sonner';
+
 import { getAllPermissions } from '@/actions/Settings/Permission';
 import { getPermissionRoles, updatePermissionRoles } from '@/actions/Settings/PermissionRole';
 import { Button } from '@/components/ui/button';
@@ -90,7 +92,6 @@ export default function AssignPermissionRoleModal({
             const permissions = formData.getAll('permissions') as string[];
 
             const result = await updatePermissionRoles(id, permissions);
-            console.log('Result:', result);
             if (result.success) {
                 refreshAction?.();
                 onCloseAction(false);

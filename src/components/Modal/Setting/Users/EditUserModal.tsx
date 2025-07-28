@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect, useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+
 import { FilePenLine } from 'lucide-react';
 import Form from 'next/form';
 import Image from 'next/image';
-import { useEffect, useState, useTransition } from 'react';
-import { useFormStatus } from 'react-dom';
 import { toast } from 'sonner';
+
 import { getUserById, updateUser } from '@/actions/Settings/Users';
 import {
     Dialog,
@@ -52,7 +54,6 @@ export default function EditUserModal({
                         }
                     }
                 } catch (error) {
-                    console.log(error);
                 }
             }
         }

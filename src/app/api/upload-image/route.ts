@@ -1,5 +1,6 @@
-import { put } from '@vercel/blob';
 import { type NextRequest, NextResponse } from 'next/server';
+
+import { put } from '@vercel/blob';
 
 export async function POST(req: NextRequest) {
     try {

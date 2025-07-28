@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+
 import { getAllTickets } from '@/actions/Settings/Tickets';
 import NewTicketsModal from '@/components/Modal/Setting/Tickets/NewTicketsModal';
 import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
@@ -16,7 +17,6 @@ export default function TicketTable() {
         setIsLoading(true);
         try {
             const data = await getAllTickets();
-            //console.log(data);
             const transformedData = data.map((ticket) => ({
                 id: ticket.id,
                 code: ticket.code,

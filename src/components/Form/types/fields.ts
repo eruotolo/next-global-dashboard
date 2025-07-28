@@ -41,7 +41,7 @@ export interface RichTextFieldProps extends FormFieldProps {
 }
 
 export interface ImageFieldProps extends FormFieldProps {
-    folder: string;
+    folder?: string;
     preview?: boolean;
     maxSize?: number; // MB
     acceptedTypes?: string[];

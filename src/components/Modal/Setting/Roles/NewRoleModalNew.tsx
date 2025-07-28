@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+
 import { toast } from 'sonner';
+
 import { createRole } from '@/actions/Settings/Roles';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
+import { Form, RoleCreateSchema, TextField } from '@/components/Form';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -14,7 +17,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Form, TextField, RoleCreateSchema } from '@/components/Form';
 import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
 
 export default function NewRoleModalNew({ refreshAction }: UpdateData) {

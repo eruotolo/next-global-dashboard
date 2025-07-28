@@ -1,7 +1,9 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { usePathname, useRouter } from 'next/navigation';
+
 import { checkPageAccess } from '@/actions/Settings/Pages/queries';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import useAuthStore from '@/store/authStore';

@@ -1,6 +1,7 @@
 'use server';
 
 import { TicketStatus } from '@prisma/client';
+
 import prisma from '@/lib/db/db';
 
 interface CreateCommentParams {

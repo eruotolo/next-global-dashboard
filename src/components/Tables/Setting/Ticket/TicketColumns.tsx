@@ -1,11 +1,14 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState } from 'react';
+
 import { clsx } from 'clsx';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import { toast } from 'sonner';
+
+import type { ColumnDef } from '@tanstack/react-table';
+
 import { deleteTicket } from '@/actions/Settings/Tickets';
 import { BtnDeleteCell, BtnEditCell } from '@/components/BtnActionCell/BtnActionCell';
 import { Button } from '@/components/ui/button';
@@ -16,6 +19,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 const DynamicEditTicketModal = dynamic(
     () => import('@/components/Modal/Setting/Tickets/EditTicketsModal'),
@@ -23,8 +27,6 @@ const DynamicEditTicketModal = dynamic(
         ssr: false,
     },
 );
-
-import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 interface ActionCellProps {
     row: {
@@ -102,7 +104,7 @@ export const TicketColumns = (
     refreshTable: () => Promise<void>,
 ): ColumnDef<SimpleTicketQuery>[] => [
     {
-        accessorKey: 'Código',
+        accessorKey: 'code',
         header: ({ column }) => (
             <div className="flex justify-center font-semibold whitespace-nowrap">
                 <Button
@@ -124,7 +126,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'Título',
+        accessorKey: 'title',
         header: ({ column }) => (
             <Button
                 variant="ghost"
@@ -157,7 +159,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'Estado',
+        accessorKey: 'status',
         header: () => (
             <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
                 Estatus
@@ -195,7 +197,7 @@ export const TicketColumns = (
         },
     },
     {
-        accessorKey: 'Prioridad',
+        accessorKey: 'priority',
         header: () => (
             <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
                 Prioridad

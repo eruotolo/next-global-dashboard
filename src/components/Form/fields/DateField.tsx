@@ -1,17 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+import { useController } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import type { DateFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
-import { useController } from 'react-hook-form';
+
+import { useFormField } from '../hooks/useFormField';
+import type { DateFieldProps } from '../types/fields';
 
 export function DateField({
     name,
@@ -74,6 +77,7 @@ export function DateField({
                                 (maxDate && calendarDate > maxDate)
                             );
                         }}
+                        captionLayout="dropdown"
                     />
                 </PopoverContent>
             </Popover>

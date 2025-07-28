@@ -5,18 +5,25 @@
 
 'use client';
 
-import { RefreshCw, Activity, Eye, MousePointer, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Activity, Clock, Eye, MousePointer, RefreshCw } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import MetricCard from './MetricCard';
-import TrendChart from './TrendChart';
-import TopPagesTable from './TopPagesTable';
-import DevicePieChart from './DevicePieChart';
-import LoadingCard from './LoadingCard';
-import ErrorCard from './ErrorCard';
-import NoConfigCard from './NoConfigCard';
 import { cn } from '@/lib/utils';
+
+import DevicePieChart from './DevicePieChart';
+import ErrorCard from './ErrorCard';
+import LoadingCard from './LoadingCard';
+import MetricCard from './MetricCard';
+import NoConfigCard from './NoConfigCard';
+import TopPagesTable from './TopPagesTable';
+import TrendChart from './TrendChart';
+
+/**
+ * Componente AnalyticsDashboard - Dashboard principal de Google Analytics
+ * Dashboard optimizado con datos históricos confiables
+ */
 
 interface AnalyticsDashboardProps {
     className?: string;

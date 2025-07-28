@@ -1,9 +1,11 @@
 'use server';
 
+import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
+
 import { TicketPriority, TicketStatus } from '@prisma/client';
 import { put } from '@vercel/blob';
-import { revalidatePath } from 'next/cache';
-import { getServerSession } from 'next-auth';
+
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -126,10 +128,8 @@ export async function createTicket(formData: FormData) {
 
 export async function deleteTicket(id: string) {
     try {
-        console.log('🔄 [SERVER] Iniciando eliminación del ticket:', id);
 
         if (!id) {
-            console.log('❌ [SERVER] Error: Ticket ID is required');
             return { error: 'Ticket ID is required' };
         }
 
@@ -138,17 +138,14 @@ export async function deleteTicket(id: string) {
         });
 
         if (!ticketToDelete) {
-            console.log('❌ [SERVER] Error: Ticket does not exist');
             return { error: 'Ticket does not exist' };
         }
 
-        console.log('✅ [SERVER] Ticket encontrado:', ticketToDelete.title);
 
         const ticketRemoved = await prisma.ticket.delete({
             where: { id },
         });
 
-        console.log('✅ [SERVER] Ticket eliminado de la base de datos');
 
         const session = await getServerSession(authOptions);
         await logAuditEvent({
@@ -167,12 +164,10 @@ export async function deleteTicket(id: string) {
                 : undefined,
         });
 
-        console.log('✅ [SERVER] Evento de auditoría registrado');
 
         revalidatePath('/admin/settings/tickets');
 
         const result = { ticket: ticketRemoved, message: 'Ticket deleted successfully' };
-        console.log('✅ [SERVER] Retornando resultado:', result);
         return result;
     } catch (error) {
         console.error('💥 [SERVER] Error deleting ticket:', error);

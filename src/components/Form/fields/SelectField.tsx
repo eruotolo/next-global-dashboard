@@ -1,5 +1,7 @@
 'use client';
 
+import { useController } from 'react-hook-form';
+
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -8,10 +10,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import type { SelectFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
-import { useController } from 'react-hook-form';
+
+import { useFormField } from '../hooks/useFormField';
+import type { SelectFieldProps } from '../types/fields';
 
 export function SelectField({
     name,

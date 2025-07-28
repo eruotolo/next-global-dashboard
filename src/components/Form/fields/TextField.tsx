@@ -2,9 +2,10 @@
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { TextFieldProps } from '../types/fields';
-import { useFormField } from '../hooks/useFormField';
 import { cn } from '@/lib/utils';
+
+import { useFormField } from '../hooks/useFormField';
+import type { TextFieldProps } from '../types/fields';
 
 export function TextField({
     name,

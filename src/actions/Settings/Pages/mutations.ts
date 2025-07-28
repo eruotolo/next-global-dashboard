@@ -1,7 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
+
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';

@@ -1,13 +1,13 @@
 import {
+    Briefcase,
     Frame,
+    LayoutDashboard,
     LifeBuoy,
     PieChart,
     Settings2,
     Shield,
-    LayoutDashboard,
     ShoppingCart,
     Store,
-    Briefcase,
 } from 'lucide-react';
 
 export const navData = {

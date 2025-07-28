@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 
 // Definimos la interfaz para la sesión
@@ -58,13 +59,11 @@ const useAuthStore = create<AuthStore>((set) => ({
         try {
             fetchPromise = (async () => {
                 try {
-                    console.log('Fetching session...');
                     const response = await fetch(API_SESSION_URL);
                     if (!response.ok) {
                         throw new Error('Failed to fetch session');
                     }
                     const data: Session = await response.json();
-                    console.log('Session fetched successfully');
 
                     set({ session: data, isInitialized: true });
 

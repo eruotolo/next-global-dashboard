@@ -1,9 +1,11 @@
 'use server';
 
-import { put } from '@vercel/blob';
 import bcrypt from 'bcrypt';
-import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
+
+import { put } from '@vercel/blob';
+
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -53,7 +55,7 @@ export async function createUser(formData: FormData) {
                 email,
                 name,
                 lastName,
-                birthdate: new Date(birthdate),
+                birthdate: birthdate ? new Date(birthdate) : null,
                 phone,
                 address,
                 city,

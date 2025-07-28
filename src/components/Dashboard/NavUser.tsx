@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
+
 import { ChevronsUpDown, Key, LogOut, UserPen } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import { useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -10,7 +11,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-
 // Mapeo personalizado para nombres específicos de rutas
 import { customRouteNames } from '@/lib/navigation/customRouteNames';
 

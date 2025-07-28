@@ -11,12 +11,15 @@
     "quoteProps": "as-needed",
     "htmlWhitespaceSensitivity": "css",
     "embeddedLanguageFormatting": "auto",
-    "plugins": ["prettier-plugin-tailwindcss"],
+    "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+    "importOrder": ["^(react|react-dom)$", "^node:", "^[a-z]", "^@[a-z]", "^@/", "^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
     "overrides": [
         {
             "files": "*.{js,jsx,ts,tsx}",
             "options": {
-                "parser": "babel-ts"
+                "parser": "typescript"
             }
         },
         {

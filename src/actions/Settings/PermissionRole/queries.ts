@@ -1,7 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
+
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -67,7 +68,6 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
                 where: { roleId: id },
             });
 
-            console.log('Old permissions removed for role:', id);
 
             if (permissions.length === 0) {
                 return {

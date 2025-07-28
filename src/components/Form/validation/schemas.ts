@@ -16,11 +16,19 @@ export const baseUserSchema = z.object({
 // Esquemas específicos para cada formulario
 export const UserCreateSchema = baseUserSchema.extend({
     password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    phone: z.string().min(8, 'El teléfono debe tener al menos 8 caracteres'),
+    birthdate: z.date({ message: 'La fecha de nacimiento es obligatoria' }),
+    address: z.string().min(5, 'La dirección debe tener al menos 5 caracteres'),
+    city: z.string().min(2, 'La ciudad debe tener al menos 2 caracteres'),
     image: z.instanceof(File).optional(),
     roles: z.array(z.string()).optional(),
 });
 
 export const UserEditSchema = baseUserSchema.extend({
+    phone: z.string().min(8, 'El teléfono debe tener al menos 8 caracteres'),
+    birthdate: z.date({ message: 'La fecha de nacimiento es obligatoria' }),
+    address: z.string().min(5, 'La dirección debe tener al menos 5 caracteres'),
+    city: z.string().min(2, 'La ciudad debe tener al menos 2 caracteres'),
     image: z.instanceof(File).optional(),
     roles: z.array(z.string()).optional(),
 });

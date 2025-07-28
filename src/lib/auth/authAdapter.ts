@@ -1,5 +1,6 @@
 import type { User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
+
 import prisma from '@/dbprisma/db';
 
 const AuthAdapter = () => {

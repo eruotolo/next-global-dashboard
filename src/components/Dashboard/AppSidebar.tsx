@@ -7,7 +7,6 @@ import NavMain from '@/components/Dashboard/NavMain';
 import NavPrivate from '@/components/Dashboard/NavPrivate';
 import NavSetting from '@/components/Dashboard/NavSetting';
 import NavUser from '@/components/Dashboard/NavUser';
-
 import {
     Sidebar,
     SidebarContent,
@@ -17,9 +16,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
 import { navData } from '@/lib/navigation/navData';
-
 import useAuthStore from '@/store/authStore';
 
 const logo: string = '/logo-sm-wh.svg';

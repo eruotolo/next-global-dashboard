@@ -64,13 +64,12 @@ node scripts/test-analytics.js
 ### Desde código TypeScript
 
 ```typescript
-import { runAnalyticsDiagnostics, getAnalyticsStatus } from '@/lib/analytics/test';
+// Para diagnóstico y testing, usa las funciones disponibles en client.ts
+import { validateAnalyticsConfig, checkAnalyticsConfiguration } from '@/lib/analytics/client';
 
-// Diagnóstico completo (incluye conexión a API)
-const diagnostics = await runAnalyticsDiagnostics();
-
-// Solo verificar configuración (sin conexión)
-const status = getAnalyticsStatus();
+// Verificar configuración
+const isValid = validateAnalyticsConfig();
+const configStatus = checkAnalyticsConfiguration();
 ```
 
 ## 📊 Uso de las Server Actions
@@ -114,11 +113,6 @@ const test = await testAnalyticsConnection();
 - `formatNumber()` - Formatear números con separadores
 - `calculatePercentageChange()` - Calcular cambios porcentuales
 
-### `test.ts`
-
-- `checkAnalyticsConfig()` - Verificar variables de entorno
-- `runAnalyticsDiagnostics()` - Diagnóstico completo
-- `getAnalyticsStatus()` - Estado actual de configuración
 
 ## 🚨 Troubleshooting
 

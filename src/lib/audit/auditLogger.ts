@@ -1,8 +1,10 @@
 'use server';
 
-import type { Prisma } from '@prisma/client';
-import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth';
+import { headers } from 'next/headers';
+
+import type { Prisma } from '@prisma/client';
+
 import prisma from '@/dbprisma/db';
 import type { AuditAction, AuditEntity } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';
@@ -58,7 +60,6 @@ export async function logAuditEvent({
             },
         });
 
-        console.log(`Evento de auditoría registrado: ${action} - ${description}`);
     } catch (error) {
         console.error('Error al registrar evento de auditoría:', error);
     }

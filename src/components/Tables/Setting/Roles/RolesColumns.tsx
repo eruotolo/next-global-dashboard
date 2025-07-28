@@ -1,10 +1,13 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState } from 'react';
+
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import { toast } from 'sonner';
+
+import type { ColumnDef } from '@tanstack/react-table';
+
 import { deleteRole } from '@/actions/Settings/Roles';
 import {
     BtnConfigCell,
@@ -21,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUserRoleStore } from '@/store/userroleStore';
 import type { RolePermissionInterface } from '@/types/settings/Roles/RolesInterface';
+import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
 
 const DynamicEditRoleModal = dynamic(
     () => import('@/components/Modal/Setting/Roles/EditRoleModal'),
@@ -35,8 +39,6 @@ const DynamicAssignPermissionModal = dynamic(
         ssr: false,
     },
 );
-
-import type { RoleInterface } from '@/types/settings/Roles/RolesInterface';
 
 interface ActionCellProps {
     row: {

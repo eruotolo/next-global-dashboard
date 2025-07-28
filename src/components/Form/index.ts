@@ -6,6 +6,8 @@ export { TextField } from './fields/TextField';
 export { SearchableSelectField } from './fields/SearchableSelectField';
 export { CheckboxGroupField } from './fields/CheckboxGroupField';
 export { FileDropzoneField } from './fields/FileDropzoneField';
+export { DateField } from './fields/DateField';
+export { ImageField } from './fields/ImageField';
 
 // Hooks
 export { useForm } from './hooks/useForm';
