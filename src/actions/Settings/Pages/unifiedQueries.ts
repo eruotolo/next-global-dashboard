@@ -23,10 +23,7 @@ export interface PagesWithRolesResponse {
  */
 export async function getPagesWithRoles(): Promise<PagesWithRolesResponse> {
     try {
-        const [pages, roles] = await Promise.all([
-            getPages(),
-            getRoles(),
-        ]);
+        const [pages, roles] = await Promise.all([getPages(), getRoles()]);
 
         return {
             pages,
@@ -45,8 +42,8 @@ export async function getPagesWithRoles(): Promise<PagesWithRolesResponse> {
 export async function getPagesForTable(): Promise<PageWithRoles[]> {
     try {
         const { pages, roles } = await getPagesWithRoles();
-        
-        return pages.map(page => ({
+
+        return pages.map((page) => ({
             ...page,
             availableRoles: roles,
         }));

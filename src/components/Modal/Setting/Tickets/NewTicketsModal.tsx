@@ -220,7 +220,7 @@ export default function NewTicketsModal({ refreshAction }: UpdateData) {
                                 <Image
                                     src={imagePreview}
                                     width={415}
-                                    height={220}
+                                    height={230}
                                     alt="Vista previa de la imagen"
                                     className="h-[230px] w-[415px] object-cover"
                                 />

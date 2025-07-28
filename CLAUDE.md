@@ -11,11 +11,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Claude Code supports different thinking modes that control the depth of analysis before responding:
 
 ### Available Modes
+
 - **Think** - Modo normal de pensamiento (por defecto)
 - **Think Harder** - Piensa más intensamente antes de responder
 - **Ultra Think** - Piensa de manera más profunda y exhaustiva
 
 ### Usage
+
 ```
 Think: [tu consulta aquí]
 Think Harder: [consulta que necesita análisis profundo]
@@ -23,9 +25,11 @@ Ultra Think: [consulta compleja que requiere máximo análisis]
 ```
 
 ### Default Behavior
+
 Si no se especifica ningún comando, Claude utilizará el modo **Think** por defecto.
 
 ### When to Use Each Mode
+
 - **Think**: Para consultas generales y tareas rutinarias
 - **Think Harder**: Para problemas complejos que requieren análisis detallado
 - **Ultra Think**: Para arquitectura crítica, debugging complejo, o decisiones de diseño importantes
@@ -35,35 +39,45 @@ Si no se especifica ningún comando, Claude utilizará el modo **Think** por def
 Estas son las 9 reglas fundamentales que TODOS los sistemas deben seguir:
 
 ### 🔍 **Regla 1: Análisis y Planificación**
+
 Primero, analicen el problema, revisen el código base para encontrar los archivos relevantes y escriban un plan en `docs/TODO.md`.
 
 ### 📋 **Regla 2: Lista de Tareas**
+
 El plan debe incluir una lista de tareas pendientes que puedan ir completando de forma incremental.
 
 ### ✅ **Regla 3: Verificación del Plan**
+
 Antes de empezar a trabajar, contáctenme y verificaré el plan. **NO proceder sin aprobación**.
 
 ### 🔄 **Regla 4: Ejecución Incremental**
+
 Comiencen a trabajar en las tareas pendientes, marcándolas como completadas a medida que avanzan.
 
 ### 📝 **Regla 5: Explicaciones Detalladas**
+
 En cada paso, denme una explicación detallada de los cambios realizados.
 
 ### ⚡ **Regla 6: Simplicidad Máxima**
+
 Simplifiquen al máximo cada tarea y cambio de código. Evitar cambios masivos o complejos. Cada cambio debe afectar al código en la menor cantidad posible. **La clave está en la simplicidad**.
 
 ### 📊 **Regla 7: Documentación de Revisión**
+
 Agreguen una sección de revisión al archivo `docs/TODO.md` con un resumen de los cambios realizados y cualquier otra información relevante.
 
 ### 🚫 **Regla 8: ANTI-PEREZA**
+
 **NO SEAS PEREZOSO. NUNCA SEAS PEREZOSO.** Si hay un error, encuentra la causa raíz y arrégla. **NO HAY SOLUCIONES TEMPORALES.** Eres un desarrollador senior. **NUNCA SEAS PEREZOSO.**
 
 ### 🎯 **Regla 9: CÓDIGO MÍNIMO**
+
 **HAZ QUE TODAS LAS CORRECCIONES Y CAMBIOS DE CÓDIGO SEAN LO MÁS SIMPLES POSIBLES.** Solo deben afectar al código necesario y relevante para la tarea y nada más. Deben afectar al **MENOS CÓDIGO POSIBLE**. Tu objetivo es **NO INTRODUCIR NINGÚN ERROR**. Se trata de **SIMPLICIDAD**.
 
 ### 💡 **Principios Clave**
+
 - **Planificación antes de ejecución**
-- **Aprobación antes de implementación**  
+- **Aprobación antes de implementación**
 - **Simplicidad sobre complejidad**
 - **Calidad sobre velocidad**
 - **Documentación completa**

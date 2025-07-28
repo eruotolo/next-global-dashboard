@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import NewRoleModal from '@/components/Modal/Setting/Roles/NewRoleModal';
+import NewRoleModalNew from '@/components/Modal/Setting/Roles/NewRoleModalNew';
 import { RolesColumns } from '@/components/Tables/Setting/Roles/RolesColumns';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { useUserRoleStore } from '@/store/userroleStore';
@@ -24,7 +25,8 @@ export default function RoleTable() {
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>
                 </div>
                 <div>
-                    <NewRoleModal refreshAction={fetchRoles} />
+                    {/*<NewRoleModal refreshAction={fetchRoles} />*/}
+                    <NewRoleModalNew refreshAction={fetchRoles} />
                 </div>
             </div>
             <div className="mt-[20px]">

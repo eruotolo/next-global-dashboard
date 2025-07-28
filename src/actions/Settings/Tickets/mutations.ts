@@ -126,7 +126,10 @@ export async function createTicket(formData: FormData) {
 
 export async function deleteTicket(id: string) {
     try {
+        console.log('🔄 [SERVER] Iniciando eliminación del ticket:', id);
+
         if (!id) {
+            console.log('❌ [SERVER] Error: Ticket ID is required');
             return { error: 'Ticket ID is required' };
         }
 
@@ -135,12 +138,17 @@ export async function deleteTicket(id: string) {
         });
 
         if (!ticketToDelete) {
+            console.log('❌ [SERVER] Error: Ticket does not exist');
             return { error: 'Ticket does not exist' };
         }
+
+        console.log('✅ [SERVER] Ticket encontrado:', ticketToDelete.title);
 
         const ticketRemoved = await prisma.ticket.delete({
             where: { id },
         });
+
+        console.log('✅ [SERVER] Ticket eliminado de la base de datos');
 
         const session = await getServerSession(authOptions);
         await logAuditEvent({
@@ -159,10 +167,15 @@ export async function deleteTicket(id: string) {
                 : undefined,
         });
 
+        console.log('✅ [SERVER] Evento de auditoría registrado');
+
         revalidatePath('/admin/settings/tickets');
-        return { ticket: ticketRemoved, message: 'Ticket deleted successfully' };
+
+        const result = { ticket: ticketRemoved, message: 'Ticket deleted successfully' };
+        console.log('✅ [SERVER] Retornando resultado:', result);
+        return result;
     } catch (error) {
-        console.error('Error deleting ticket:', error);
+        console.error('💥 [SERVER] Error deleting ticket:', error);
         return { error: 'Error deleting ticket' };
     }
 }
