@@ -41,3 +41,7 @@ yarn-error.log*
 # Prisma
 prisma/migrations/
 prisma/sql/
+
+# Claude Code configuración personal
+.claude/settings.local.json
+dev.log

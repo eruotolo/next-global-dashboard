@@ -1,0 +1,138 @@
+{
+  "description": "Configuración de Claude Code para Next.js Global Dashboard",
+  "version": "1.0.0",
+  
+  "permissions": {
+    "allowed_tools": [
+      "bash",
+      "read",
+      "write",
+      "edit",
+      "multi_edit", 
+      "glob",
+      "grep",
+      "ls",
+      "todo_write",
+      "web_fetch",
+      "web_search",
+      "notebook_read",
+      "notebook_edit",
+      "task",
+      "exit_plan_mode"
+    ],
+    
+    "allowed_commands": [
+      "bun run bun:dev",
+      "bun run bun:build", 
+      "bun run bun:lint",
+      "bun run bun:format",
+      "bun run bun:format-prettier",
+      "bun run bun:clean",
+      "bun run bun:preview",
+      "npm run dev",
+      "npm run build",
+      "npm run start",
+      "npm run lint",
+      "npm run format",
+      "npm run clean",
+      "npm run preview",
+      "npx prisma migrate dev",
+      "npx prisma migrate deploy",
+      "npx prisma studio",
+      "npx prisma generate",
+      "npx prisma db seed",
+      "git status",
+      "git add",
+      "git commit",
+      "git push",
+      "git pull",
+      "git diff",
+      "git log",
+      "ls",
+      "cat",
+      "mkdir",
+      "rm",
+      "cp",
+      "mv"
+    ],
+
+    "restricted_paths": [
+      "node_modules/**",
+      ".next/**",
+      "bun.lock",
+      "package-lock.json",
+      "tsconfig.tsbuildinfo",
+      ".env",
+      ".env.local",
+      ".env.production",
+      "prisma/migrations/**"
+    ],
+
+    "readonly_paths": [
+      "CLAUDE.md",
+      "DEVELOPMENT_PRINCIPLES.md",
+      "PROJECT_GUIDE.md"
+    ]
+  },
+
+  "environment": {
+    "node_version": ">=18.0.0",
+    "package_manager": "bun",
+    "framework": "nextjs",
+    "database": "postgresql",
+    "orm": "prisma"
+  },
+
+  "project_context": {
+    "name": "Next.js Global Dashboard", 
+    "type": "web_application",
+    "architecture": "nextjs_app_router",
+    "features": [
+      "authentication",
+      "role_based_permissions",
+      "admin_dashboard",
+      "analytics_integration",
+      "audit_logging",
+      "user_management"
+    ],
+    "main_directories": {
+      "components": "src/components/",
+      "actions": "src/actions/",  
+      "pages": "src/app/",
+      "types": "src/types/",
+      "lib": "src/lib/",
+      "styles": "src/app/globals.css",
+      "config": "next.config.ts"
+    }
+  },
+
+  "development_rules": {
+    "workflow": [
+      "analyze",
+      "plan_in_todo",
+      "request_approval", 
+      "execute_minimal_changes",
+      "document_results"
+    ],
+    "code_standards": {
+      "linter": "biome",
+      "formatter": "biome_and_prettier",
+      "typescript": true,
+      "jsx": "react",
+      "styling": "tailwindcss"
+    },
+    "security": {
+      "no_hardcoded_secrets": true,
+      "validate_permissions": true,
+      "audit_sensitive_changes": true
+    }
+  },
+
+  "ai_instructions": {
+    "language": "spanish",
+    "follow_claude_md": true,
+    "update_todo_md": true,
+    "minimal_changes_only": true,
+    "request_approval_before_changes": true
+  }
+}

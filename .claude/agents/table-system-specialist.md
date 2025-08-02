@@ -1,9 +1,7 @@
 ---
 name: table-system
-version: 1.1
 description: Especialista en DataTableManager, configuraciones de tabla y optimización de performance
 color: red
-alias: TS
 ---
 
 # 📋 Table System Specialist (TS:)
