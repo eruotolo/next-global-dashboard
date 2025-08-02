@@ -5,6 +5,7 @@ export interface TextFieldProps extends FormFieldProps {
     placeholder?: string;
     maxLength?: number;
     minLength?: number;
+    showPasswordToggle?: boolean;
 }
 
 export interface DateFieldProps extends FormFieldProps {

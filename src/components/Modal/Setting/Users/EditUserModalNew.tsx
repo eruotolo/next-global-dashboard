@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
 import { toast } from 'sonner';
 
 import { getUserById, updateUser } from '@/actions/Settings/Users';
-import { DateField, Form, ImageField, TextField, UserEditSchema } from '@/components/Form';
+import { DateField, Form, ImageField, TextField } from '@/components/Form';
 import {
     Dialog,
     DialogContent,
@@ -13,9 +14,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { useUserRoleStore } from '@/store/userroleStore';
 import type { EditModalPropsAlt } from '@/types/settings/Generic/InterfaceGeneric';
 import type { UserQueryWithDetails } from '@/types/settings/Users/UsersInterface';
+
+import { type UserEditFormValues, UserEditSchema } from './userSchemas';
 
 export default function EditUserModalNew({
     id,
@@ -24,6 +28,7 @@ export default function EditUserModalNew({
     onCloseAction,
 }: EditModalPropsAlt) {
     const [userData, setUserData] = useState<UserQueryWithDetails | null>(null);
+    const [imagePreview, setImagePreview] = useState<string>('/shadcn.jpg');
     const { fetchUsers } = useUserRoleStore();
 
     useEffect(() => {
@@ -33,6 +38,9 @@ export default function EditUserModalNew({
                     const user = await getUserById(id as string);
                     if (user) {
                         setUserData(user);
+                        if (user.image) {
+                            setImagePreview(user.image);
+                        }
                     }
                 } catch (error) {
                     console.error('Error loading user:', error);
@@ -70,13 +78,13 @@ export default function EditUserModalNew({
     };
 
     // Preparar datos iniciales para el formulario
-    const defaultValues = userData
+    const defaultValues: UserEditFormValues | null = userData
         ? {
               name: userData.name || '',
               lastName: userData.lastName || '',
               email: userData.email || '',
               phone: userData.phone || '',
-              birthdate: userData.birthdate ? new Date(userData.birthdate) : undefined,
+              birthdate: userData.birthdate ? new Date(userData.birthdate) : new Date(),
               address: userData.address || '',
               city: userData.city || '',
           }
@@ -159,12 +167,24 @@ export default function EditUserModalNew({
                                 />
                             </div>
 
-                            <div className="col-span-1">
+                            <div className="col-span-1 space-y-4">
+                                <div>
+                                    <Label>Vista Previa Actual</Label>
+                                    <div className="mt-2">
+                                        <Image
+                                            src={imagePreview}
+                                            width={220}
+                                            height={220}
+                                            alt="Vista previa de la imagen"
+                                            className="h-[220px] w-[234px] rounded-lg border object-cover"
+                                        />
+                                    </div>
+                                </div>
                                 <ImageField
                                     name="image"
-                                    label="Foto de Perfil"
+                                    label="Cambiar Foto de Perfil"
                                     maxSize={4}
-                                    className="h-[220px]"
+                                    className="h-[160px]"
                                 />
                             </div>
                         </div>

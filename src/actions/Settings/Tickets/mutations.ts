@@ -128,7 +128,6 @@ export async function createTicket(formData: FormData) {
 
 export async function deleteTicket(id: string) {
     try {
-
         if (!id) {
             return { error: 'Ticket ID is required' };
         }
@@ -141,11 +140,9 @@ export async function deleteTicket(id: string) {
             return { error: 'Ticket does not exist' };
         }
 
-
         const ticketRemoved = await prisma.ticket.delete({
             where: { id },
         });
-
 
         const session = await getServerSession(authOptions);
         await logAuditEvent({
@@ -163,7 +160,6 @@ export async function deleteTicket(id: string) {
                 ? `${session.user.name} ${session.user.lastName || ''}`.trim()
                 : undefined,
         });
-
 
         revalidatePath('/admin/settings/tickets');
 

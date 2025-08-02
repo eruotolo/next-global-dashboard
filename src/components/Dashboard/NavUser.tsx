@@ -26,7 +26,7 @@ import {
 import useAuthStore from '@/store/authStore';
 
 const DynamicEditUserModal = dynamic(
-    () => import('@/components/Modal/Setting/Users/EditUserModal'),
+    () => import('@/components/Modal/Setting/Users/EditUserModalNew'),
     { ssr: false },
 );
 

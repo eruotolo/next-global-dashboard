@@ -68,7 +68,6 @@ export async function updatePermissionRoles(id: string, permissions: string[]) {
                 where: { roleId: id },
             });
 
-
             if (permissions.length === 0) {
                 return {
                     message: 'All permissions have been removed',

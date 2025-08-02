@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { getAllTickets } from '@/actions/Settings/Tickets';
 import NewTicketsModal from '@/components/Modal/Setting/Tickets/NewTicketsModal';
-import { TicketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
-import { DataTable } from '@/components/ui/data-table/data-table';
+import { ticketColumns } from '@/components/Tables/Setting/Ticket/TicketColumns';
+import { TanTable } from '@/components/TanTable';
 import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
 export default function TicketTable() {
@@ -29,7 +29,7 @@ export default function TicketTable() {
             setTicketData(transformedData);
             setError(null);
         } catch (error) {
-            console.error('Error al obtener los roles:', error);
+            console.error('Error al obtener los tickets:', error);
             setError('Error al obtener los tickets');
         } finally {
             setIsLoading(false);
@@ -40,10 +40,6 @@ export default function TicketTable() {
         fetchTickets();
     }, [fetchTickets]);
 
-    const refreshTable = async () => {
-        await fetchTickets();
-    };
-
     return (
         <>
             <div className="flex h-auto w-full justify-between">
@@ -53,17 +49,16 @@ export default function TicketTable() {
                     </h5>
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>
                 </div>
-                <div>
-                    <NewTicketsModal refreshAction={refreshTable} />
-                </div>
             </div>
             <div className="mt-[20px]">
                 {error && <p className="mb-4 text-red-500">{error}</p>}
-                <DataTable
-                    columns={TicketColumns(refreshTable)}
+                <TanTable
+                    columns={ticketColumns}
                     data={ticketData}
                     loading={isLoading}
                     filterPlaceholder="Buscar en todos los campos..."
+                    toolbarActions={<NewTicketsModal refreshAction={fetchTickets} />}
+                    refreshData={fetchTickets}
                 />
             </div>
         </>

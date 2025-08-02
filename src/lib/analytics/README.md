@@ -65,7 +65,7 @@ node scripts/test-analytics.js
 
 ```typescript
 // Para diagnóstico y testing, usa las funciones disponibles en client.ts
-import { validateAnalyticsConfig, checkAnalyticsConfiguration } from '@/lib/analytics/client';
+import { checkAnalyticsConfiguration, validateAnalyticsConfig } from '@/lib/analytics/client';
 
 // Verificar configuración
 const isValid = validateAnalyticsConfig();
@@ -112,7 +112,6 @@ const test = await testAnalyticsConnection();
 - `transformToTrendData()` - Transformar a datos de tendencias
 - `formatNumber()` - Formatear números con separadores
 - `calculatePercentageChange()` - Calcular cambios porcentuales
-
 
 ## 🚨 Troubleshooting
 

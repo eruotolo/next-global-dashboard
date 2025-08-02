@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { CellContext, ColumnDef } from '@tanstack/react-table';
 
 import { deleteUser } from '@/actions/Settings/Users';
 import {
@@ -14,8 +14,14 @@ import {
     BtnConfigCell,
     BtnDeleteCell,
     BtnEditCell,
+    BtnResetPasswordCell,
     BtnViewCell,
 } from '@/components/BtnActionCell/BtnActionCell';
+import {
+    createActionColumn,
+    createSortableHeader,
+} from '@/components/TanTable/ColumnFactory';
+import { useTableContext } from '@/components/TanTable/TableContext';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -24,8 +30,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { UserInterface } from '@/types/settings/Users/UsersInterface';
+import type { UserQueryWithRoles } from '@/types/settings/Users/UsersInterface';
 
+// --- Carga Dinámica de Modales ---
 const DynamicChangeUserPassModal = dynamic(
     () => import('@/components/Modal/Setting/Users/ChangeUserPasswordModal'),
     { ssr: false },
@@ -37,7 +44,7 @@ const DynamicAssignRoleUserModal = dynamic(
 );
 
 const DynamicEditUserModal = dynamic(
-    () => import('@/components/Modal/Setting/Users/EditUserModal'),
+    () => import('@/components/Modal/Setting/Users/EditUserModalNew'),
     { ssr: false },
 );
 
@@ -46,53 +53,31 @@ const DynamicPreviewUserModal = dynamic(
     { ssr: false },
 );
 
-interface ActionCellProps {
-    row: {
-        original: UserInterface;
-    };
-    refreshTable: () => Promise<void>;
-}
+const DynamicResetPassword = dynamic(
+    () => import('@/components/Modal/Setting/Users/ResetPassword'),
+    { ssr: false },
+);
 
-function ActionCell({ row, refreshTable }: ActionCellProps) {
-    const userId = row.original.id;
+// --- Componente de Celda de Acción con Lógica de Estado y UI Completa ---
+function UserActionCell(cellProps: CellContext<UserQueryWithRoles, any>) {
+    const { row } = cellProps;
+    const { refreshData } = useTableContext();
+    const user = row.original;
     const [openChangePass, setOpenChangePass] = useState(false);
     const [openAssignRoles, setOpenAssignRoles] = useState(false);
     const [openEditUser, setOpenEditUser] = useState(false);
     const [openPreviewUser, setOpenPreviewUser] = useState(false);
+    const [openResetPassword, setOpenResetPassword] = useState(false);
 
-    const handleChangePassCloseModal = (isOpen: boolean) => {
-        setOpenChangePass(isOpen);
-    };
-
-    const handleAssignRolesCloseModal = () => {
-        setOpenAssignRoles(false);
-    };
-
-    const handleEditUserCloseModal = () => {
-        setOpenEditUser(false);
-    };
-
-    const handlePreviewUserCloseModal = () => {
-        setOpenPreviewUser(false);
-    };
-
-    const handleDelete = async (userId: string) => {
-        try {
-            const success = await deleteUser(userId);
-            if (success) {
-                await refreshTable();
-                toast.success('Delete successful', {
-                    description: 'El usuario se ha eliminado.',
-                });
-            } else {
-                console.error('Error: No se pudo eliminar el elemento.');
-            }
-        } catch (error) {
-            console.error('Error al eliminar el usuario:', error);
-            toast.error('Delete Failed', {
-                description: 'Error al intentar eliminar el usuario',
-            });
-        }
+    const handleDelete = async () => {
+        toast.promise(deleteUser(user.id), {
+            loading: 'Eliminando usuario...',
+            success: () => {
+                refreshData();
+                return 'Usuario eliminado con éxito';
+            },
+            error: 'No se pudo eliminar el usuario',
+        });
     };
 
     return (
@@ -120,20 +105,26 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                         permission={['Editar']}
                     />
 
-                    <BtnChangePasswordCell
-                        onAction={() => setOpenChangePass(true)}
-                        label="Cambiar contraseña"
-                        permission={['Editar']}
-                    />
-
                     <BtnConfigCell
                         onAction={() => setOpenAssignRoles(true)}
                         label="Asignar roles"
                         permission={['Editar']}
                     />
 
+                    <BtnChangePasswordCell
+                        onAction={() => setOpenChangePass(true)}
+                        label="Cambiar contraseña"
+                        permission={['Editar']}
+                    />
+
+                    <BtnResetPasswordCell
+                        onAction={() => setOpenResetPassword(true)}
+                        label="Resetear contraseña"
+                        permission={['Editar']}
+                    />
+
                     <BtnDeleteCell
-                        itemId={userId}
+                        itemId={user.id}
                         onDelete={handleDelete}
                         permission={['Eliminar']}
                         label="Eliminar usuario"
@@ -144,55 +135,56 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
 
             {openChangePass && (
                 <DynamicChangeUserPassModal
-                    id={userId}
-                    refresh={refreshTable}
+                    id={user.id}
+                    refresh={refreshData}
                     open={openChangePass}
-                    onCloseAction={handleChangePassCloseModal}
+                    onCloseAction={(isOpen) => setOpenChangePass(isOpen)}
                     successMessage="El password se ha cambiado correctamente."
                 />
             )}
             {openAssignRoles && (
                 <DynamicAssignRoleUserModal
-                    id={userId}
-                    refreshAction={refreshTable}
+                    id={user.id}
+                    refreshAction={refreshData}
                     open={openAssignRoles}
-                    onCloseAction={handleAssignRolesCloseModal}
+                    onCloseAction={() => setOpenAssignRoles(false)}
                 />
             )}
             {openEditUser && (
                 <DynamicEditUserModal
-                    id={userId}
-                    refreshAction={refreshTable}
+                    id={user.id}
+                    refreshAction={refreshData}
                     open={openEditUser}
-                    onCloseAction={handleEditUserCloseModal}
+                    onCloseAction={() => setOpenEditUser(false)}
                 />
             )}
             {openPreviewUser && (
                 <DynamicPreviewUserModal
-                    id={userId}
+                    id={user.id}
                     open={openPreviewUser}
-                    onCloseAction={handlePreviewUserCloseModal}
+                    onCloseAction={() => setOpenPreviewUser(false)}
+                />
+            )}
+            {openResetPassword && (
+                <DynamicResetPassword
+                    userId={user.id}
+                    userName={`${user.name} ${user.lastName}`}
+                    userEmail={user.email}
+                    onSuccess={refreshData}
+                    open={openResetPassword}
+                    onCloseAction={() => setOpenResetPassword(false)}
                 />
             )}
         </>
     );
 }
 
-export const UserColumns = (
-    refreshTable: () => Promise<void>,
-): ColumnDef<UserInterface, unknown>[] => [
+// --- Definición de Columnas ---
+export const userColumns: ColumnDef<UserQueryWithRoles>[] = [
     {
         id: 'Nombre Completo',
         accessorKey: 'fullname',
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Nombre Completo
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: createSortableHeader('Nombre Completo'),
         accessorFn: (row) => `${row.name} ${row.lastName}`,
         cell: ({ row }) => {
             const fullName = `${row.original.name} ${row.original.lastName}`;
@@ -201,15 +193,7 @@ export const UserColumns = (
     },
     {
         accessorKey: 'email',
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Email
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: createSortableHeader('Email'),
         cell: ({ row }) => {
             const email = row.getValue('email') as string;
             return (
@@ -236,15 +220,7 @@ export const UserColumns = (
     },
     {
         id: 'roles',
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Roles
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: createSortableHeader('Roles'),
         accessorFn: (row) => {
             return row.roles?.map((userRole) => userRole.role?.name).join(', ') || 'Sin roles';
         },
@@ -255,8 +231,5 @@ export const UserColumns = (
             return <div className="flex w-[150px]">{roleNames}</div>;
         },
     },
-    {
-        id: 'acciones',
-        cell: ({ row }) => <ActionCell row={row} refreshTable={refreshTable} />,
-    },
+    createActionColumn(UserActionCell),
 ];

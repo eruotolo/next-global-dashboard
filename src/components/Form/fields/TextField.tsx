@@ -1,5 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
+import { Eye, EyeOff } from 'lucide-react';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -18,9 +22,20 @@ export function TextField({
     description,
     maxLength,
     minLength,
+    showPasswordToggle = false,
 }: TextFieldProps) {
+    // Estado para toggle de visibilidad de contraseña
+    const [isPasswordVisible, setPasswordVisible] = useState(false);
+
     const { error, hasError, isDisabled, fieldId, errorId, descriptionId, ...field } =
         useFormField(name);
+
+    // Determinar tipo de input
+    const inputType =
+        showPasswordToggle && type === 'password' && isPasswordVisible ? 'text' : type;
+
+    // Verificar si debe mostrar toggle
+    const shouldShowToggle = showPasswordToggle && type === 'password';
 
     return (
         <div className={cn('space-y-2', className)}>
@@ -31,17 +46,39 @@ export function TextField({
                 {label}
             </Label>
 
-            <Input
-                {...field}
-                id={fieldId}
-                type={type}
-                placeholder={placeholder}
-                disabled={disabled || isDisabled}
-                maxLength={maxLength}
-                minLength={minLength}
-                className={cn(hasError && 'border-red-500 focus-visible:ring-red-500')}
-                aria-describedby={cn(description && descriptionId, hasError && errorId)}
-            />
+            {/* Wrapper condicional relative */}
+            <div className={cn(shouldShowToggle && 'relative')}>
+                <Input
+                    {...field}
+                    id={fieldId}
+                    type={inputType}
+                    placeholder={placeholder}
+                    disabled={disabled || isDisabled}
+                    maxLength={maxLength}
+                    minLength={minLength}
+                    className={cn(
+                        hasError && 'border-red-500 focus-visible:ring-red-500',
+                        shouldShowToggle && 'pr-10', // Padding para botón
+                    )}
+                    aria-describedby={cn(description && descriptionId, hasError && errorId)}
+                />
+
+                {/* Toggle Button */}
+                {shouldShowToggle && (
+                    <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() => setPasswordVisible(!isPasswordVisible)}
+                        aria-label={isPasswordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    >
+                        {isPasswordVisible ? (
+                            <EyeOff className="h-4 w-4 cursor-pointer text-gray-400" />
+                        ) : (
+                            <Eye className="h-4 w-4 cursor-pointer text-gray-400" />
+                        )}
+                    </button>
+                )}
+            </div>
 
             {description && (
                 <p id={descriptionId} className="text-muted-foreground text-sm">

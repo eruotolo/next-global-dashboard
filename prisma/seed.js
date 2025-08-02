@@ -1,11 +1,8 @@
 import { hash } from 'bcrypt';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
     try {
@@ -71,8 +68,15 @@ async function main() {
         console.log('✅ Usuario SuperAdmin creado');
 
         // 4. Asignar el rol SuperAdministrador al usuario
-        await prisma.userRole.create({
-            data: {
+        await prisma.userRole.upsert({
+            where: {
+                userId_roleId: {
+                    userId: superAdmin.id,
+                    roleId: superRole.id,
+                },
+            },
+            update: {},
+            create: {
                 userId: superAdmin.id,
                 roleId: superRole.id,
             },

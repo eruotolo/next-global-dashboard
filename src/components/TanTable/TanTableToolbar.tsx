@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDownIcon, ColumnsIcon, Download, FileText, X } from 'lucide-react';
+import { ChevronDownIcon, Download, FileText, Settings2, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 import type { Table } from '@tanstack/react-table';
@@ -14,6 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TanTableToolbarProps<TData> {
     table: Table<TData>;
@@ -109,7 +110,7 @@ export function TanTableToolbar<TData>({
                     placeholder={filterPlaceholder}
                     value={globalFilter}
                     onChange={(event) => setGlobalFilter(event.target.value)}
-                    className="h-[40px] w-[150px] bg-white md:w-[75%]"
+                    className="h-[34px] w-[150px] bg-white md:w-[75%]"
                 />
                 {isFiltered && (
                     <Button
@@ -124,35 +125,46 @@ export function TanTableToolbar<TData>({
                         <X className="ml-2 h-4 w-4" />
                     </Button>
                 )}
-                {toolbarActions}
             </div>
+
             <div className="flex items-center gap-2">
                 {enableExport && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">
-                                <Download className="mr-2 h-4 w-4" />
-                                Exportar
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handleExportToExcel}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Exportar a Excel
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleExportToPDF}>
-                                <FileText className="mr-2 h-4 w-4" />
-                                Exportar a PDF
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="h-[34px] cursor-pointer"
+                                        >
+                                            <Download className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={handleExportToExcel}>
+                                            <Download className="mr-2 h-4 w-4" />
+                                            Exportar a Excel
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={handleExportToPDF}>
+                                            <FileText className="mr-2 h-4 w-4" />
+                                            Exportar a PDF
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Exportar</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 )}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm">
-                            <ColumnsIcon className="mr-2 h-4 w-4" />
-                            Columnas
-                            <ChevronDownIcon className="ml-2 h-4 w-4" />
+                        <Button variant="outline" size="sm" className="h-[34px] cursor-pointer">
+                            <Settings2 className="h-4 w-4" />
+                            Ver
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
@@ -173,6 +185,7 @@ export function TanTableToolbar<TData>({
                             ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                {toolbarActions}
             </div>
         </div>
     );

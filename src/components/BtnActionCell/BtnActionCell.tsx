@@ -1,10 +1,10 @@
-import { Cog, Eye, FilePenLine, Key, Trash2 } from 'lucide-react';
+import { Cog, Eye, FilePenLine, Key, RotateCcw, Trash2 } from 'lucide-react';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useUserPermissionStore } from '@/store/useUserPermissionStore';
 
 interface BtnActionCellProps {
-    onAction: () => void;
+    onAction?: () => void;
     label: string;
     className?: string;
     permission?: string[];
@@ -38,7 +38,7 @@ export function BtnViewCell({
 
     return (
         <DropdownMenuItem
-            onClick={onAction}
+            {...(onAction && { onClick: onAction })}
             className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
@@ -58,7 +58,7 @@ export function BtnEditCell({
 
     return (
         <DropdownMenuItem
-            onClick={onAction}
+            {...(onAction && { onClick: onAction })}
             className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
@@ -103,11 +103,31 @@ export function BtnChangePasswordCell({
 
     return (
         <DropdownMenuItem
-            onClick={onAction}
+            {...(onAction && { onClick: onAction })}
             className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >
             <Key className="mr-1 h-4 w-4" />
+            {label}
+        </DropdownMenuItem>
+    );
+}
+
+export function BtnResetPasswordCell({
+    onAction,
+    label,
+    className,
+    permission = ['Editar'],
+}: BtnActionCellProps) {
+    const permitted = useHasPermission(permission);
+
+    return (
+        <DropdownMenuItem
+            {...(onAction && { onClick: onAction })}
+            className={`${className} text-orange-600 ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
+            disabled={!permitted}
+        >
+            <RotateCcw className="mr-1 h-4 w-4" />
             {label}
         </DropdownMenuItem>
     );
@@ -123,7 +143,7 @@ export function BtnConfigCell({
 
     return (
         <DropdownMenuItem
-            onClick={onAction}
+            {...(onAction && { onClick: onAction })}
             className={`${className} ${!permitted ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={!permitted}
         >

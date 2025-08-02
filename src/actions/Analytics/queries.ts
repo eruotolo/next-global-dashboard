@@ -36,6 +36,26 @@ import type {
  * Consultas y obtención de datos desde GA4
  */
 
+/**
+ * Server Actions para Google Analytics Data API v1
+ * Consultas y obtención de datos desde GA4
+ */
+
+/**
+ * Server Actions para Google Analytics Data API v1
+ * Consultas y obtención de datos desde GA4
+ */
+
+/**
+ * Server Actions para Google Analytics Data API v1
+ * Consultas y obtención de datos desde GA4
+ */
+
+/**
+ * Server Actions para Google Analytics Data API v1
+ * Consultas y obtención de datos desde GA4
+ */
+
 // Obtener métricas principales del dashboard
 export async function getAnalyticsMetrics(
     startDate: string,

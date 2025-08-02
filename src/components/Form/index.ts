@@ -23,5 +23,4 @@ export type {
     UploadedFile,
 } from './types/fields';
 
-// Esquemas de validación
-export * from './validation/schemas';
+// Los esquemas de validación ahora están ubicados en cada componente específico

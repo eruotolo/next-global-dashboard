@@ -41,7 +41,3 @@ yarn-error.log*
 # Prisma
 prisma/migrations/
 prisma/sql/
-
-# Claude y documentación
-.claude/
-docs/

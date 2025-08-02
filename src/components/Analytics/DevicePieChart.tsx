@@ -18,6 +18,26 @@ import type { DeviceData } from '@/types/Analytics/AnalyticsInterface';
  * Muestra la distribución de sesiones por tipo de dispositivo
  */
 
+/**
+ * Componente DevicePieChart - Gráfico circular de distribución por dispositivos
+ * Muestra la distribución de sesiones por tipo de dispositivo
+ */
+
+/**
+ * Componente DevicePieChart - Gráfico circular de distribución por dispositivos
+ * Muestra la distribución de sesiones por tipo de dispositivo
+ */
+
+/**
+ * Componente DevicePieChart - Gráfico circular de distribución por dispositivos
+ * Muestra la distribución de sesiones por tipo de dispositivo
+ */
+
+/**
+ * Componente DevicePieChart - Gráfico circular de distribución por dispositivos
+ * Muestra la distribución de sesiones por tipo de dispositivo
+ */
+
 interface DevicePieChartProps {
     data: DeviceData[];
     title?: string;

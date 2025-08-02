@@ -25,6 +25,26 @@ import type { AnalyticsTrendData } from '@/types/Analytics/AnalyticsInterface';
  * Muestra evolución de métricas en el tiempo usando Recharts
  */
 
+/**
+ * Componente TrendChart - Gráfico de líneas para tendencias
+ * Muestra evolución de métricas en el tiempo usando Recharts
+ */
+
+/**
+ * Componente TrendChart - Gráfico de líneas para tendencias
+ * Muestra evolución de métricas en el tiempo usando Recharts
+ */
+
+/**
+ * Componente TrendChart - Gráfico de líneas para tendencias
+ * Muestra evolución de métricas en el tiempo usando Recharts
+ */
+
+/**
+ * Componente TrendChart - Gráfico de líneas para tendencias
+ * Muestra evolución de métricas en el tiempo usando Recharts
+ */
+
 interface TrendChartProps {
     data: AnalyticsTrendData[];
     title?: string;

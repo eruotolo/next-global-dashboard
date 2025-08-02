@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { createUser } from '@/actions/Settings/Users';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import { DateField, Form, ImageField, TextField, UserCreateSchema } from '@/components/Form';
+import { DateField, Form, ImageField, TextField } from '@/components/Form';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/dialog';
 import { useUserRoleStore } from '@/store/userroleStore';
 import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
+
+import { UserCreateSchema } from './userSchemas';
 
 export default function NewUserModalNew({ refreshAction }: UpdateData) {
     const [isOpen, setIsOpen] = useState(false);

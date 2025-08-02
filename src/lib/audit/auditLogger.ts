@@ -59,7 +59,6 @@ export async function logAuditEvent({
                 metadata: metadata || {},
             },
         });
-
     } catch (error) {
         console.error('Error al registrar evento de auditoría:', error);
     }

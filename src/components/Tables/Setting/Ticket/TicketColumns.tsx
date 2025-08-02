@@ -2,15 +2,20 @@
 
 import { useState } from 'react';
 
-import { clsx } from 'clsx';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { CellContext, ColumnDef } from '@tanstack/react-table';
 
 import { deleteTicket } from '@/actions/Settings/Tickets';
 import { BtnDeleteCell, BtnEditCell } from '@/components/BtnActionCell/BtnActionCell';
+import {
+    createActionColumn,
+    createBadgeCell,
+    createSortableHeader,
+} from '@/components/TanTable/ColumnFactory';
+import { useTableContext } from '@/components/TanTable/TableContext';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -21,45 +26,43 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
 
+// --- Carga Dinámica de Modales ---
 const DynamicEditTicketModal = dynamic(
     () => import('@/components/Modal/Setting/Tickets/EditTicketsModal'),
-    {
-        ssr: false,
-    },
+    { ssr: false },
 );
 
-interface ActionCellProps {
-    row: {
-        original: SimpleTicketQuery;
-    };
-    refreshTable: () => Promise<void>;
-}
+// --- Mapas de Estilo para Badges ---
+const statusColorMap: Record<string, string> = {
+    OPEN: 'text-green-500 bg-green-100 border-green-400',
+    IN_PROGRESS: 'text-yellow-500 bg-yellow-100 border-yellow-400',
+    RESOLVED: 'text-blue-500 bg-blue-100 border-blue-400',
+    CLOSED: 'text-gray-500 bg-gray-100 border-gray-400',
+};
 
-function ActionCell({ row, refreshTable }: ActionCellProps) {
-    const ticketId = row.original.id;
+const priorityColorMap: Record<string, string> = {
+    LOW: 'text-green-500 bg-green-100 border-green-400',
+    MEDIUM: 'text-yellow-500 bg-yellow-100 border-yellow-400',
+    HIGH: 'text-orange-500 bg-orange-100 border-orange-400',
+    URGENT: 'text-red-500 bg-red-100 border-red-400',
+};
+
+// --- Componente de Celda de Acción con Lógica de Estado y UI Completa ---
+function TicketActionCell(cellProps: CellContext<SimpleTicketQuery, any>) {
+    const { row } = cellProps;
+    const { refreshData } = useTableContext();
+    const ticket = row.original;
     const [openEditTicket, setOpenEditTicket] = useState(false);
 
-    const handleEditTicketCloseModal = () => {
-        setOpenEditTicket(false);
-    };
-
-    const handleDelete = async (ticketId: string) => {
-        try {
-            const success = await deleteTicket(ticketId);
-            if (success) {
-                await refreshTable();
-                toast.success('Delete successful', {
-                    description: 'El ticket se ha eliminado.',
-                });
-            } else {
-                console.error('Error: No se pudo eliminar el elemento.');
-            }
-        } catch (error) {
-            console.error('Error al eliminar el rol:', error);
-            toast.error('Delete Failed', {
-                description: 'Error al intentar eliminar el rol',
-            });
-        }
+    const handleDelete = async () => {
+        toast.promise(deleteTicket(ticket.id), {
+            loading: 'Eliminando ticket...',
+            success: () => {
+                refreshData();
+                return 'Ticket eliminado con éxito';
+            },
+            error: 'No se pudo eliminar el ticket',
+        });
     };
 
     return (
@@ -80,7 +83,7 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                         permission={['Editar']}
                     />
                     <BtnDeleteCell
-                        itemId={ticketId}
+                        itemId={ticket.id}
                         onDelete={handleDelete}
                         permission={['Eliminar']}
                         label="Eliminar ticket"
@@ -88,151 +91,46 @@ function ActionCell({ row, refreshTable }: ActionCellProps) {
                     />
                 </DropdownMenuContent>
             </DropdownMenu>
+
             {openEditTicket && (
                 <DynamicEditTicketModal
-                    id={ticketId}
-                    refreshAction={refreshTable}
+                    id={ticket.id}
+                    refreshAction={refreshData}
                     open={openEditTicket}
-                    onCloseAction={handleEditTicketCloseModal}
+                    onCloseAction={() => setOpenEditTicket(false)}
                 />
             )}
         </>
     );
 }
 
-export const TicketColumns = (
-    refreshTable: () => Promise<void>,
-): ColumnDef<SimpleTicketQuery>[] => [
+// --- Definición de Columnas ---
+export const ticketColumns: ColumnDef<SimpleTicketQuery>[] = [
     {
+        id: 'Código',
         accessorKey: 'code',
-        header: ({ column }) => (
-            <div className="flex justify-center font-semibold whitespace-nowrap">
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                >
-                    Código
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            </div>
-        ),
-        cell: ({ row }) => {
-            const code = `${row.original.code}`;
-            return (
-                <div className="flex items-center justify-center">
-                    <div>{code}</div>
-                </div>
-            );
-        },
+        header: createSortableHeader('Código'),
     },
     {
+        id: 'Título',
         accessorKey: 'title',
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Título
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => {
-            const title = `${row.original.title}`;
-            return <div>{title}</div>;
-        },
+        header: createSortableHeader('Título'),
     },
     {
         id: 'Nombre Completo',
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Usuario que subió el ticket
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        accessorKey: 'fullName',
         accessorFn: (row) => `${row.userName} ${row.userLastName}`,
-        cell: ({ row }) => {
-            const fullName = `${row.original.userName} ${row.original.userLastName}`;
-            return <div>{fullName}</div>;
-        },
+        header: createSortableHeader('Usuario'),
     },
     {
         accessorKey: 'status',
-        header: () => (
-            <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
-                Estatus
-            </div>
-        ),
-        cell: ({ row }) => {
-            const estado = `${row.original.status}`;
-            const getBgClass = () => {
-                switch (estado) {
-                    case 'OPEN':
-                        return 'text-green-500 bg-green-100 border-green-400';
-                    case 'IN_PROGRESS':
-                        return 'text-yellow-500 bg-yellow-100 border-yellow-400';
-                    case 'RESOLVED':
-                        return 'text-blue-500 bg-blue-100 border-blue-400';
-                    case 'CLOSED':
-                        return 'text-gray-500 bg-gray-100 border-gray-400';
-                    default:
-                        return 'text-gray-500 bg-gray-100 border-gray-400';
-                }
-            };
-
-            return (
-                <div className="flex items-center justify-center">
-                    <div
-                        className={clsx(
-                            'w-[120px] rounded-[30px] px-2 py-1 text-center text-[13px] font-medium',
-                            getBgClass(),
-                        )}
-                    >
-                        {estado}
-                    </div>
-                </div>
-            );
-        },
+        header: () => <div className="text-center">Estatus</div>,
+        cell: createBadgeCell('status', statusColorMap),
     },
     {
         accessorKey: 'priority',
-        header: () => (
-            <div className="flex min-w-[100px] justify-center font-semibold whitespace-nowrap">
-                Prioridad
-            </div>
-        ),
-        cell: ({ row }) => {
-            const prioridad = `${row.original.priority}`;
-            const getBgClass = () => {
-                switch (prioridad) {
-                    case 'LOW':
-                        return 'text-green-500 bg-green-100 border-green-400';
-                    case 'MEDIUM':
-                        return 'text-yellow-500 bg-yellow-100 border-yellow-400';
-                    case 'HIGH':
-                        return 'text-orange-500 bg-orange-100 border-orange-400';
-                    case 'URGENT':
-                        return 'text-red-500 bg-red-100 border-red-400';
-                }
-            };
-            return (
-                <div className="flex items-center justify-center">
-                    <div
-                        className={clsx(
-                            'w-[120px] rounded-[30px] px-2 py-1 text-center text-[13px] font-medium',
-                            getBgClass(),
-                        )}
-                    >
-                        {prioridad}
-                    </div>
-                </div>
-            );
-        },
+        header: () => <div className="text-center">Prioridad</div>,
+        cell: createBadgeCell('priority', priorityColorMap),
     },
-    {
-        id: 'Acciones',
-        cell: ({ row }) => <ActionCell row={row} refreshTable={refreshTable} />,
-    },
+    createActionColumn(TicketActionCell),
 ];

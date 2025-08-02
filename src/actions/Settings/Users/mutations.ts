@@ -12,6 +12,7 @@ import { authOptions } from '@/lib/auth/authOptions';
 import prisma from '@/lib/db/db';
 import type { UserData } from '@/types/settings/Users/UsersInterface';
 
+
 export async function createUser(formData: FormData) {
     try {
         const name = formData.get('name') as string;
@@ -136,6 +137,75 @@ export async function deleteUser(id: string) {
     } catch (error) {
         console.error('Error deleting user', error);
         throw error;
+    }
+}
+
+export async function changeUserPassword(id: string, formData: FormData) {
+    try {
+        if (!id) {
+            return { error: 'User ID is required' };
+        }
+
+        const currentPassword = formData.get('currentPassword') as string;
+        const password = formData.get('password') as string;
+        const confirmPassword = formData.get('confirmPassword') as string;
+
+        if (!currentPassword || !password || !confirmPassword) {
+            return { error: 'Todos los campos son requeridos' };
+        }
+
+        if (password !== confirmPassword) {
+            return { error: 'Las contraseñas no coinciden' };
+        }
+
+        // Obtener el usuario actual para validar la contraseña
+        const user = await prisma.user.findUnique({
+            where: { id },
+        });
+
+        if (!user) {
+            return { error: 'Usuario no encontrado' };
+        }
+
+        // Validar contraseña actual
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isCurrentPasswordValid) {
+            return { error: 'La contraseña actual es incorrecta' };
+        }
+
+        // Hash de la nueva contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Actualizar solo la contraseña
+        await prisma.user.update({
+            where: { id },
+            data: { password: hashedPassword },
+        });
+
+        // Registrar el cambio de contraseña en la auditoría
+        const session = await getServerSession(authOptions);
+        await logAuditEvent({
+            action: AUDIT_ACTIONS.USER.UPDATE,
+            entity: AUDIT_ENTITIES.USER,
+            entityId: id,
+            description: `Password changed for user "${user.name} ${user.lastName || ''}"`,
+            metadata: {
+                userId: id,
+                changeType: 'password_change',
+                previousPasswordHash: `${user.password.substring(0, 10)}...`, // Solo primeros caracteres por seguridad
+            },
+            userId: session?.user?.id,
+            userName: session?.user?.name
+                ? `${session.user.name} ${session.user.lastName || ''}`.trim()
+                : undefined,
+        });
+
+        revalidatePath('/admin/settings/users');
+
+        return { success: true, message: 'Contraseña actualizada correctamente' };
+    } catch (error) {
+        console.error('Error changing password:', error);
+        return { error: 'Error al cambiar la contraseña. Inténtelo de nuevo.' };
     }
 }
 
@@ -268,3 +338,4 @@ export async function updateUser(id: string, formData: FormData) {
         throw error;
     }
 }
+

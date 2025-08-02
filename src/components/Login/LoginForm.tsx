@@ -3,39 +3,36 @@
 import type React from 'react';
 import { useState } from 'react';
 
-import { Eye, EyeOff } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { TextField } from '@/components/Form';
+import { FormStateProvider } from '@/components/Form/FormProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import type { LoginFormInputs } from '@/types/settings/Login/LoginFormInputs';
+
+import { type LoginFormData, LoginSchema } from './loginSchema';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-    const [isPasswordHidden, setPasswordHidden] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [, setError] = useState<string | null>(null);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormInputs>({
-        mode: 'onSubmit',
-        reValidateMode: 'onSubmit',
+    const [formState, setFormState] = useState({
+        isSubmitting: false,
+        errors: {},
+        success: false,
     });
 
-    const router = useRouter();
+    const form = useForm<LoginFormData>({
+        resolver: zodResolver(LoginSchema),
+        mode: 'onChange',
+    });
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    const onSubmit = async (data: LoginFormData) => {
         setIsLoading(true);
-        setError(null);
 
         try {
             const res = await signIn('credentials', {
@@ -46,15 +43,23 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             });
 
             if (res?.error) {
+                let errorMessage = 'Ha ocurrido un error durante el inicio de sesión';
+
+                if (res.error === 'No users found') {
+                    errorMessage = 'Usuario no encontrado';
+                } else if (res.error === 'Wrong Password') {
+                    errorMessage = 'Contraseña incorrecta';
+                } else if (res.error === 'El usuario no tiene roles asignados') {
+                    errorMessage = 'El usuario no tiene roles asignados';
+                }
+
                 toast.error('Error al iniciar sesión', {
-                    description:
-                        res.error === 'No users found'
-                            ? 'Usuario no encontrado'
-                            : res.error === 'Wrong Password'
-                              ? 'Contraseña incorrecta'
-                              : 'Ha ocurrido un error durante el inicio de sesión',
+                    description: errorMessage,
                 });
-            } else if (res?.ok) {
+                return;
+            }
+
+            if (res?.ok) {
                 toast.success('Inicio de sesión exitoso', {
                     description: 'Has iniciado sesión correctamente.',
                 });
@@ -67,7 +72,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             toast.error('Error inesperado', {
                 description: 'Ha ocurrido un error inesperado. Por favor, intenta de nuevo.',
             });
-            setError('Ha ocurrido un error inesperado. Por favor, intenta de nuevo.');
         } finally {
             setIsLoading(false);
         }
@@ -85,73 +89,52 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
+                    <FormProvider {...form}>
+                        <FormStateProvider state={formState}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <TextField
+                                    name="email"
+                                    label="Email"
                                     placeholder="m@example.com"
-                                    {...register('email', {
-                                        required: 'El correo electrónico es requerido',
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: 'Dirección de email inválida',
-                                        },
-                                    })}
+                                    type="email"
+                                    required
                                 />
-                                {errors.email && (
-                                    <p className="text-destructive text-sm">
-                                        {errors.email.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Link
-                                        href="/recovery"
-                                        className="ml-auto text-sm underline-offset-4 hover:underline"
-                                    >
-                                        ¿Olvidaste tu contraseña?
-                                    </Link>
-                                </div>
-                                <div className="relative">
-                                    <Input
-                                        id="password"
-                                        type={isPasswordHidden ? 'password' : 'text'}
-                                        {...register('password', {
-                                            required: 'La contraseña es requerida',
-                                        })}
+
+                                <div className="space-y-2">
+                                    <div className="flex items-center">
+                                        <label
+                                            htmlFor="password"
+                                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 after:ml-0.5 after:text-red-500 after:content-['*']"
+                                        >
+                                            Password
+                                        </label>
+                                        <Link
+                                            href="/recovery"
+                                            className="ml-auto text-sm underline-offset-4 hover:underline"
+                                        >
+                                            ¿Olvidaste tu contraseña?
+                                        </Link>
+                                    </div>
+                                    <TextField
+                                        name="password"
+                                        label=""
+                                        type="password"
+                                        required
+                                        showPasswordToggle
+                                        className="[&>label]:sr-only"
                                     />
-                                    <button
-                                        type="button"
-                                        className="absolute inset-y-0 right-3 flex items-center"
-                                        onClick={() => setPasswordHidden(!isPasswordHidden)}
-                                    >
-                                        {isPasswordHidden ? (
-                                            <Eye className="h-4 w-4 cursor-pointer text-gray-400" />
-                                        ) : (
-                                            <EyeOff className="h-4 w-4 cursor-pointer text-gray-400" />
-                                        )}
-                                    </button>
                                 </div>
-                                {errors.password && (
-                                    <p className="text-destructive text-sm">
-                                        {errors.password.message}
-                                    </p>
-                                )}
-                            </div>
-                            <Button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full cursor-pointer"
-                            >
-                                {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-                            </Button>
-                        </div>
-                    </form>
+
+                                <Button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full cursor-pointer"
+                                >
+                                    {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                                </Button>
+                            </form>
+                        </FormStateProvider>
+                    </FormProvider>
                 </CardContent>
             </Card>
             <div className="text-muted-foreground [&_a]:hover:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">

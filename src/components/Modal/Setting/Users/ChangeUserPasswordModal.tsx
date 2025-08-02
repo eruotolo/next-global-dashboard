@@ -1,45 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { useFormStatus } from 'react-dom';
-
-import Form from 'next/form';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { updateUser } from '@/actions/Settings/Users';
+import { changeUserPassword } from '@/actions/Settings/Users/mutations';
+import { Form, TextField } from '@/components/Form';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import type { ChangePassModalProps, UserFormPassData } from '@/types/settings/Users/UsersInterface';
+import type { ChangePassModalProps } from '@/types/settings/Users/UsersInterface';
 
-function SubmitButton({
-    isValid,
-    password,
-    confirmPassword,
-}: {
-    isValid: boolean;
-    password: string;
-    confirmPassword: string;
-}) {
-    const { pending } = useFormStatus();
-    return (
-        <button
-            type="submit"
-            disabled={pending || !isValid || password !== confirmPassword}
-            className="custom-button"
-        >
-            {pending ? 'Actualizando...' : 'Actualizar'}
-        </button>
-    );
-}
+import { ChangePasswordSchema } from './userSchemas';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -53,48 +27,29 @@ export default function ChangePasswordModal({
     shouldSignOut = false,
     signOutDelay = 5000,
 }: ChangePassModalProps) {
-    const [error, setError] = useState('');
-    const {
-        register,
-        watch,
-        reset,
-        formState: { errors, isValid },
-    } = useForm<UserFormPassData>({
-        mode: 'onChange',
-    });
+    const handleSuccess = async () => {
+        toast.success('Change Password Successful', {
+            description: successMessage,
+        });
+        refresh?.();
+        onCloseAction(false);
 
-    const password = watch('password');
-    const confirmPassword = watch('confirmPassword');
+        if (shouldSignOut && signOut) {
+            await delay(signOutDelay);
+            await signOut();
+        }
+    };
 
-    const onSubmit = async (formData: FormData) => {
-        try {
-            const result = await updateUser(id.toString(), formData);
-            if (result.error) {
-                setError(result.error);
-                toast.error('Change Password Failed', {
-                    description: result.error,
-                });
-                return;
-            }
+    const handleError = (error: string) => {
+        toast.error('Change Password Failed', {
+            description: error,
+        });
+    };
 
-            refresh?.();
-            reset();
-            setError('');
-            onCloseAction(false);
-            toast.success('Change Password Successful', {
-                description: successMessage,
-            });
-
-            if (shouldSignOut && signOut) {
-                await delay(signOutDelay); // espera configurable
-                await signOut();
-            }
-        } catch (err) {
-            console.error('Error changing password:', err);
-            setError('Error al cambiar la contraseña. Inténtalo de nuevo.');
-            toast.error('Change Password Failed', {
-                description: 'Error al intentar cambiar el password',
-            });
+    const handleChangePassword = async (formData: FormData) => {
+        const result = await changeUserPassword(id.toString(), formData);
+        if (result?.error) {
+            throw new Error(result.error);
         }
     };
 
@@ -108,52 +63,40 @@ export default function ChangePasswordModal({
                         los requisitos de seguridad antes de guardar los cambios.
                     </DialogDescription>
                 </DialogHeader>
-                <Form action={onSubmit}>
-                    <div className="mb-[15px] grid">
-                        <div className="mb-[15px]">
-                            <Label className="custom-label">Ingrese La Nueva Contraseña</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="Contraseña"
-                                {...register('password', {
-                                    required: 'La contraseña es obligatoria',
-                                    minLength: { value: 6, message: 'Mínimo 6 caracteres' },
-                                })}
-                            />
-                            {errors.password && (
-                                <p className="custome-form-error">{errors.password.message}</p>
-                            )}
-                        </div>
 
-                        <div className="mb-[15px]">
-                            <Label className="custom-label">Confirmar La Nueva Contraseña</Label>
-                            <Input
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="Ingresar nuevamente la contraseña"
-                                {...register('confirmPassword', {
-                                    required: 'Contenido Requerido',
-                                    validate: (value) =>
-                                        value === password || 'Las contraseñas no coinciden',
-                                })}
-                            />
-                            {errors.confirmPassword && (
-                                <p className="custome-form-error">
-                                    {errors.confirmPassword.message}
-                                </p>
-                            )}
-                        </div>
-
-                        {error && <p className="custome-form-error">{error}</p>}
-                    </div>
-                    <DialogFooter>
-                        <SubmitButton
-                            isValid={isValid}
-                            password={password}
-                            confirmPassword={confirmPassword}
-                        />
-                    </DialogFooter>
+                <Form
+                    schema={ChangePasswordSchema}
+                    action={handleChangePassword}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
+                    submitText="Actualizar"
+                    onCancel={() => onCloseAction(false)}
+                    className="space-y-4"
+                >
+                    <TextField
+                        name="currentPassword"
+                        label="Contraseña Actual"
+                        type="password"
+                        placeholder="Ingrese su contraseña actual"
+                        required
+                        showPasswordToggle={true}
+                    />
+                    <TextField
+                        name="password"
+                        label="Nueva Contraseña"
+                        type="password"
+                        placeholder="Ingrese la nueva contraseña"
+                        required
+                        showPasswordToggle={true}
+                    />
+                    <TextField
+                        name="confirmPassword"
+                        label="Confirmar Nueva Contraseña"
+                        type="password"
+                        placeholder="Confirme la nueva contraseña"
+                        required
+                        showPasswordToggle={true}
+                    />
                 </Form>
             </DialogContent>
         </Dialog>

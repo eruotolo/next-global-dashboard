@@ -25,6 +25,26 @@ import TrendChart from './TrendChart';
  * Dashboard optimizado con datos históricos confiables
  */
 
+/**
+ * Componente AnalyticsDashboard - Dashboard principal de Google Analytics
+ * Dashboard optimizado con datos históricos confiables
+ */
+
+/**
+ * Componente AnalyticsDashboard - Dashboard principal de Google Analytics
+ * Dashboard optimizado con datos históricos confiables
+ */
+
+/**
+ * Componente AnalyticsDashboard - Dashboard principal de Google Analytics
+ * Dashboard optimizado con datos históricos confiables
+ */
+
+/**
+ * Componente AnalyticsDashboard - Dashboard principal de Google Analytics
+ * Dashboard optimizado con datos históricos confiables
+ */
+
 interface AnalyticsDashboardProps {
     className?: string;
     startDate?: string;

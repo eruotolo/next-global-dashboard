@@ -1,19 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import NewRoleModal from '@/components/Modal/Setting/Roles/NewRoleModal';
-import NewRoleModalNew from '@/components/Modal/Setting/Roles/NewRoleModalNew';
 import { RolesColumns } from '@/components/Tables/Setting/Roles/RolesColumns';
-import { DataTable } from '@/components/ui/data-table/data-table';
+import { TanTable } from '@/components/TanTable';
 import { useUserRoleStore } from '@/store/userroleStore';
 
 export default function RoleTable() {
     const { rolesData, isLoadingRoles, fetchRoles } = useUserRoleStore();
+    const [error, setError] = useState<string | null>(null);
 
-    // Inicializar datos de roles cuando se monta el componente
     useEffect(() => {
-        fetchRoles();
+        const loadRoles = async () => {
+            try {
+                await fetchRoles();
+                setError(null);
+            } catch (error) {
+                console.error('Error al obtener los roles:', error);
+                setError('Error al obtener los roles');
+            }
+        };
+
+        loadRoles();
     }, [fetchRoles]);
 
     return (
@@ -25,17 +34,16 @@ export default function RoleTable() {
                     </h5>
                     <p className="text-muted-foreground text-[13px]">Crear, Editar y Eliminar</p>
                 </div>
-                <div>
-                    {/*<NewRoleModal refreshAction={fetchRoles} />*/}
-                    <NewRoleModalNew refreshAction={fetchRoles} />
-                </div>
             </div>
             <div className="mt-[20px]">
-                <DataTable
-                    columns={RolesColumns()}
+                {error && <p className="mb-4 text-red-500">{error}</p>}
+                <TanTable
+                    columns={RolesColumns}
                     data={rolesData}
                     loading={isLoadingRoles}
                     filterPlaceholder="Buscar..."
+                    toolbarActions={<NewRoleModal refreshAction={fetchRoles} />}
+                    refreshData={fetchRoles}
                 />
             </div>
         </>
