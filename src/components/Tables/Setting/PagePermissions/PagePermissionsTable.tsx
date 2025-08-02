@@ -42,12 +42,10 @@ export default function PagePermissionsTable() {
         fetchData();
     }, [fetchData]);
 
-
     const handleEdit = useCallback((page: Page) => {
         setEditingPage(page);
         setIsEditModalOpen(true);
     }, []);
-
 
     // Generar columnas dinámicamente incluyendo roles
     const columns = getPagePermissionsColumns(roles, pages, setPages, handleEdit);
@@ -76,7 +74,7 @@ export default function PagePermissionsTable() {
                     toolbarActions={toolbarActions}
                     refreshData={fetchData}
                 />
-                
+
                 <EditPageModal
                     page={editingPage}
                     isOpen={isEditModalOpen}

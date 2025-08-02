@@ -19,7 +19,7 @@ export async function recoverUserPassword(formData: FormData): Promise<PasswordR
         return {
             success: false,
             error: 'Email requerido',
-            message: 'Email requerido'
+            message: 'Email requerido',
         };
     }
 
@@ -34,14 +34,14 @@ export async function recoverUserPassword(formData: FormData): Promise<PasswordR
  * Usado en paneles de administración
  */
 export async function resetUserPassword(
-    userId: string, 
-    options?: { sendEmail?: boolean }
+    userId: string,
+    options?: { sendEmail?: boolean },
 ): Promise<PasswordResetResult> {
     if (!userId) {
         return {
             success: false,
             error: 'User ID is required',
-            message: 'User ID is required'
+            message: 'User ID is required',
         };
     }
 

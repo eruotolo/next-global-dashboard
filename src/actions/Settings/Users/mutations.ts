@@ -12,7 +12,6 @@ import { authOptions } from '@/lib/auth/authOptions';
 import prisma from '@/lib/db/db';
 import type { UserData } from '@/types/settings/Users/UsersInterface';
 
-
 export async function createUser(formData: FormData) {
     try {
         const name = formData.get('name') as string;
@@ -338,4 +337,3 @@ export async function updateUser(id: string, formData: FormData) {
         throw error;
     }
 }
-

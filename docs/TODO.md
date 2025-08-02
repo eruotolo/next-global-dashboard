@@ -48,9 +48,9 @@ Los schemas de validación están mal ubicados en `/src/components/Form/validati
 - [x] **Problema**: `onAction` era obligatorio en `BtnActionCellProps` pero `BtnResetPasswordCell` se usa como wrapper sin `onAction`
 - [x] **Solución**: Hacer `onAction` opcional en la interfaz `BtnActionCellProps`
 - [x] **Cambios aplicados**:
-  - Modificado `BtnActionCellProps.onAction: () => void` → `onAction?: () => void`
-  - Agregado verificación `onClick={onAction || undefined}` en todos los componentes
-  - Compatibilidad mantenida para uso tradicional y wrapper
+    - Modificado `BtnActionCellProps.onAction: () => void` → `onAction?: () => void`
+    - Agregado verificación `onClick={onAction || undefined}` en todos los componentes
+    - Compatibilidad mantenida para uso tradicional y wrapper
 - [x] **Componentes afectados**: `BtnViewCell`, `BtnEditCell`, `BtnChangePasswordCell`, `BtnResetPasswordCell`, `BtnConfigCell`
 - [x] **Verificación**: TypeScript compila sin errores
 
@@ -486,6 +486,7 @@ export default function ChangeUserPasswordModalNew({
 **Estado del Workflow CLAUDE.md**: ✅ **COMPLETADO EXITOSAMENTE**
 
 ### Checklist Workflow CLAUDE.md:
+
 - [x] ✅ Analicé el problema comparando LoginForm vs ChangeUserPasswordModal
 - [x] ✅ Planifiqué la implementación en este documento
 - [x] ✅ Tuve aprobación explícita del usuario
@@ -493,11 +494,13 @@ export default function ChangeUserPasswordModalNew({
 - [x] ✅ Documenté el resultado completamente
 
 ### Archivos Modificados:
+
 1. `/src/components/Form/types/fields.ts` - Agregado `showPasswordToggle?: boolean`
 2. `/src/components/Form/fields/TextField.tsx` - Implementación completa del toggle
 3. `/src/components/Modal/Setting/Users/ChangeUserPasswordModal.tsx` - Aplicado a 3 campos password
 
 ### Funcionalidades Implementadas:
+
 - ✅ **Toggle opcional**: Solo activo con `showPasswordToggle={true}` + `type="password"`
 - ✅ **Compatibilidad total**: Sin breaking changes en TextFields existentes
 - ✅ **UX consistente**: Mismo patrón que LoginForm.tsx (Eye/EyeOff icons)
@@ -505,8 +508,9 @@ export default function ChangeUserPasswordModalNew({
 - ✅ **Performance**: Estado local optimizado
 
 ### API Resultante:
+
 ```tsx
-<TextField 
+<TextField
     type="password"
     name="password"
     label="Contraseña"
@@ -515,6 +519,7 @@ export default function ChangeUserPasswordModalNew({
 ```
 
 ### Resultado:
+
 ✅ **IMPLEMENTACIÓN 100% EXITOSA** - El sistema Form ahora soporta toggle de visibilidad de contraseñas. ChangeUserPasswordModal tiene los 3 campos con funcionalidad de "ojo" para mostrar/ocultar contraseñas, manteniendo UX consistente con LoginForm.
 
 **Estado**: ✅ **PRODUCCIÓN READY** - Funcionalidad lista para uso inmediato
@@ -529,6 +534,7 @@ export default function ChangeUserPasswordModalNew({
 **Estado del Workflow CLAUDE.md**: ✅ **COMPLETADO EXITOSAMENTE**
 
 ### Checklist Workflow CLAUDE.md:
+
 - [x] ✅ Analicé el problema y código existente (UserColumns.tsx, Recovery.ts)
 - [x] ✅ Planifiqué la implementación completa con múltiples agentes
 - [x] ✅ Tuve aprobación explícita del usuario
@@ -538,38 +544,43 @@ export default function ChangeUserPasswordModalNew({
 ### Implementación Realizada:
 
 #### **1. UI Components (ui-system)**
-- **BtnResetPasswordCell** en `/src/components/BtnActionCell/BtnActionCell.tsx`
-  - Icono: `RotateCcw` de lucide-react
-  - Color: `text-orange-600` (distintivo)
-  - Permisos: `['Editar']`
-  - Integración completa con sistema de permisos
 
-#### **2. Server Action (backend-system)**  
+- **BtnResetPasswordCell** en `/src/components/BtnActionCell/BtnActionCell.tsx`
+    - Icono: `RotateCcw` de lucide-react
+    - Color: `text-orange-600` (distintivo)
+    - Permisos: `['Editar']`
+    - Integración completa con sistema de permisos
+
+#### **2. Server Action (backend-system)**
+
 - **resetUserPassword** en `/src/actions/Settings/Users/mutations.ts`
-  - Validación de usuario existente
-  - Generación segura de contraseña temporal (12 chars)
-  - Hash bcrypt + actualización DB
-  - Auditoría completa con metadatos
-  - Retorno: `{ success: true, temporaryPassword, message }` o `{ error }`
+    - Validación de usuario existente
+    - Generación segura de contraseña temporal (12 chars)
+    - Hash bcrypt + actualización DB
+    - Auditoría completa con metadatos
+    - Retorno: `{ success: true, temporaryPassword, message }` o `{ error }`
 
 #### **3. Table Integration (table-system)**
+
 - **Acción "Restablecer contraseña"** en UserColumns.tsx
-  - Posición: Entre "Cambiar contraseña" y "Asignar roles"
-  - Confirmación antes de ejecutar
-  - Toast de éxito (10s) + Alert con contraseña temporal
-  - Manejo robusto de errores
-  - Refresh automático de tabla
+    - Posición: Entre "Cambiar contraseña" y "Asignar roles"
+    - Confirmación antes de ejecutar
+    - Toast de éxito (10s) + Alert con contraseña temporal
+    - Manejo robusto de errores
+    - Refresh automático de tabla
 
 #### **4. Recovery.ts Optimización (backend-system)**
+
 - **Correcciones críticas de seguridad**:
-  - Generación segura con `crypto.randomBytes()` (antes Math.random())
-  - Configuración correcta de Brevo SDK
-  - Validación Zod para emails
-  - Sistema de auditoría integrado
-  - Manejo robusto de errores API
-  - Template HTML profesional
+    - Generación segura con `crypto.randomBytes()` (antes Math.random())
+    - Configuración correcta de Brevo SDK
+    - Validación Zod para emails
+    - Sistema de auditoría integrado
+    - Manejo robusto de errores API
+    - Template HTML profesional
 
 ### Archivos Modificados:
+
 1. `/src/components/BtnActionCell/BtnActionCell.tsx` - Nuevo BtnResetPasswordCell
 2. `/src/actions/Settings/Users/mutations.ts` - Nueva función resetUserPassword
 3. `/src/components/Tables/Setting/User/UserColumns.tsx` - Integración en dropdown
@@ -577,10 +588,11 @@ export default function ChangeUserPasswordModalNew({
 5. `/src/components/Login/ForgotPassword.tsx` - Compatibilidad con nuevo patrón
 
 ### Nueva Funcionalidad en UI:
+
 ```
 Dropdown de Acciones de Usuario:
 • Ver perfil
-• Editar usuario  
+• Editar usuario
 • Cambiar contraseña
 • Restablecer contraseña ← NUEVA (autogenera y envía por email)
 • Asignar roles
@@ -588,6 +600,7 @@ Dropdown de Acciones de Usuario:
 ```
 
 ### Características Técnicas:
+
 - ✅ **Seguridad**: Generación criptográficamente segura de contraseñas
 - ✅ **UX**: Confirmación + notificaciones + contraseña visible al admin
 - ✅ **Email**: Envío automático via Brevo con template profesional
@@ -596,6 +609,7 @@ Dropdown de Acciones de Usuario:
 - ✅ **Compatibilidad**: Sin breaking changes en código existente
 
 ### Resultado:
+
 ✅ **IMPLEMENTACIÓN 100% EXITOSA** - Nueva acción "Reset Password" completamente funcional que permite a administradores resetear contraseñas de usuarios con generación automática y envío por email, manteniendo máxima seguridad y UX profesional.
 
 **Estado**: ✅ **PRODUCCIÓN READY** - Funcionalidad lista para uso inmediato por administradores
@@ -610,6 +624,7 @@ Dropdown de Acciones de Usuario:
 **Estado del Workflow CLAUDE.md**: ✅ **COMPLETADO EXITOSAMENTE**
 
 ### Checklist Workflow CLAUDE.md:
+
 - [x] ✅ Analicé la mejora propuesta y estructura actual
 - [x] ✅ Planifiqué la refactorización completa siguiendo mejores prácticas
 - [x] ✅ Tuve aprobación explícita del usuario
@@ -619,6 +634,7 @@ Dropdown de Acciones de Usuario:
 ### Refactorización Realizada:
 
 #### **1. Schema Reorganization (backend-system)**
+
 - **ForgotPasswordSchema movido** de `/src/lib/validation/schemas.ts` a `/src/components/Modal/Setting/Users/userSchemas.ts`
 - **Tipo derivado agregado**: `ForgotPasswordFormValues` para type safety
 - **Imports actualizados**: Recovery.ts ahora importa desde userSchemas.ts
@@ -626,43 +642,47 @@ Dropdown de Acciones de Usuario:
 - **Principio aplicado**: Schemas organizados por dominio, no genéricamente
 
 #### **2. Componente ResetPassword.tsx (ui-system)**
+
 - **Ubicación**: `/src/components/Modal/Setting/Users/ResetPassword.tsx`
 - **Props**: `userId`, `userName`, `userEmail`, `onSuccess`, `children`
 - **Componentes shadcn/ui**:
-  - Dialog con DialogTrigger, DialogContent, DialogHeader
-  - Alert con AlertTriangle para confirmación
-  - Button con variantes outline (Cancelar) y destructive (Confirmar)
-  - Icons: RotateCcw, AlertTriangle, Copy, Check
+    - Dialog con DialogTrigger, DialogContent, DialogHeader
+    - Alert con AlertTriangle para confirmación
+    - Button con variantes outline (Cancelar) y destructive (Confirmar)
+    - Icons: RotateCcw, AlertTriangle, Copy, Check
 - **Funcionalidades**:
-  - Estado interno para modal open/close
-  - Integración con resetUserPassword Server Action
-  - Loading states con spinner animado
-  - Copy-to-clipboard para contraseña temporal
-  - Error handling robusto con toast notifications
+    - Estado interno para modal open/close
+    - Integración con resetUserPassword Server Action
+    - Loading states con spinner animado
+    - Copy-to-clipboard para contraseña temporal
+    - Error handling robusto con toast notifications
 
 #### **3. UserColumns.tsx Refactorizado (table-system)**
+
 - **Código eliminado**: handleResetPassword (~40 líneas)
 - **Import eliminado**: resetUserPassword Server Action
 - **Dynamic import agregado**: DynamicResetPassword component
 - **Implementación limpia**:
-  ```tsx
-  <DynamicResetPassword
-      userId={userId}
-      userName={`${row.original.name} ${row.original.lastName}`}
-      userEmail={row.original.email}
-      onSuccess={refreshTable}
-  >
-      <BtnResetPasswordCell label="Resetear contraseña" permission={['Editar']} />
-  </DynamicResetPassword>
-  ```
+    ```tsx
+    <DynamicResetPassword
+        userId={userId}
+        userName={`${row.original.name} ${row.original.lastName}`}
+        userEmail={row.original.email}
+        onSuccess={refreshTable}
+    >
+        <BtnResetPasswordCell label="Resetear contraseña" permission={['Editar']} />
+    </DynamicResetPassword>
+    ```
 
 #### **4. BtnActionCell Optimización (ui-system)**
+
 - **onAction opcional**: Prop `onAction?` para compatibilidad con wrappers
 - **Verificación agregada**: `onClick={onAction || undefined}`
 - **Componentes afectados**: Todos los BtnXxxCell components
 - **Compatibilidad**: Funciona en modo tradicional y wrapper
 
 ### Archivos Modificados:
+
 1. `/src/components/Modal/Setting/Users/userSchemas.ts` - ForgotPasswordSchema agregado
 2. `/src/components/Modal/Setting/Users/ResetPassword.tsx` - Nuevo componente
 3. `/src/components/Tables/Setting/User/UserColumns.tsx` - Refactorizado
@@ -673,29 +693,34 @@ Dropdown de Acciones de Usuario:
 ### Beneficios Obtenidos:
 
 #### **Separación de Responsabilidades**
+
 - UserColumns.tsx: Solo configuración de tabla (-40 líneas)
 - ResetPassword.tsx: Lógica específica encapsulada
 - userSchemas.ts: Schemas organizados por dominio
 
 #### **UX Mejorada**
+
 - Alert profesional de shadcn/ui vs window.confirm()
 - Información clara del usuario antes de confirmar
 - Copy-to-clipboard para contraseña temporal
 - Loading states y feedback visual mejorado
 
 #### **Arquitectura Mejorada**
+
 - Schemas por dominio (no genéricos en /lib/validation)
 - Componente reutilizable y testeable
 - Dynamic imports consistentes
 - Código más limpio y mantenible
 
 #### **Consistencia del Proyecto**
+
 - Sigue patrón de otros modales existentes
 - Compatibilidad con sistema de permisos
 - Error handling consistente
 - TypeScript interfaces bien definidas
 
 ### Validación Técnica:
+
 - ✅ **Build exitoso**: Next.js compila sin errores
 - ✅ **Linting**: Sin errores de código
 - ✅ **TypeScript**: Tipos correctos y consistentes
@@ -703,6 +728,7 @@ Dropdown de Acciones de Usuario:
 - ✅ **UX**: Modal mejorado con confirmación profesional
 
 ### Resultado:
+
 ✅ **REFACTORIZACIÓN 100% EXITOSA** - La funcionalidad Reset Password ahora sigue mejores prácticas con separación de responsabilidades, schemas organizados por dominio, componente dedicado con UX profesional usando shadcn/ui, y código más limpio y mantenible.
 
 **Estado**: ✅ **PRODUCCIÓN READY** - Refactorización completa lista para uso inmediato
@@ -850,6 +876,8 @@ import { cn } from '@/lib/utils';
 
 import { useFormField } from '../hooks/useFormField';
 import type { TextFieldProps } from '../types/fields';
+
+// En /src/components/Form/fields/TextField.tsx
 
 // En /src/components/Form/fields/TextField.tsx
 
@@ -1036,10 +1064,12 @@ export function TextField({
 ### 🎯 Implementación Realizada
 
 #### 1. **Actualización de tipos**: `/src/components/Form/types/fields.ts`
+
 - ✅ Agregada prop opcional `showPasswordToggle?: boolean` a `TextFieldProps`
 - ✅ Mantiene compatibilidad completa con código existente
 
 #### 2. **Extensión de TextField**: `/src/components/Form/fields/TextField.tsx`
+
 - ✅ Importadas dependencias: `useState`, `Eye`, `EyeOff` de lucide-react
 - ✅ Estado interno para controlar visibilidad de contraseña
 - ✅ Lógica condicional para type dinámico (password/text)
@@ -1050,21 +1080,24 @@ export function TextField({
 - ✅ Solo se activa con `type="password"` y `showPasswordToggle={true}`
 
 #### 3. **Integración en ChangeUserPasswordModal**: `/src/components/Modal/Setting/Users/ChangeUserPasswordModal.tsx`
+
 - ✅ Agregado `showPasswordToggle={true}` a los 3 campos de contraseña:
-  - currentPassword
-  - password  
-  - confirmPassword
+    - currentPassword
+    - password
+    - confirmPassword
 - ✅ Toggle funcional en todos los campos del modal
 
 ### 🔍 Validación Técnica
 
 #### Archivos Modificados:
+
 1. `/src/components/Form/types/fields.ts` - Nueva prop showPasswordToggle
 2. `/src/components/Form/fields/TextField.tsx` - Funcionalidad completa implementada
 3. `/src/components/Modal/Setting/Users/ChangeUserPasswordModal.tsx` - Toggle habilitado
 4. `/docs/TODO.md` - Documentación actualizada
 
 #### Tests de Calidad:
+
 - ✅ **Formatting**: Prettier ejecutado exitosamente
 - ✅ **TypeScript**: Tipos correctos sin errores de compilación
 - ✅ **Compatibilidad**: Props opcionales, sin breaking changes
@@ -1084,6 +1117,7 @@ export function TextField({
 ### 📋 Resultado Final
 
 **✅ IMPLEMENTACIÓN 100% EXITOSA**
+
 - TextField con toggle de visibilidad opcional completamente implementado
 - ChangeUserPasswordModal actualizado con toggle en los 3 campos
 - Compatibilidad total con todos los TextFields existentes
@@ -1095,12 +1129,14 @@ export function TextField({
 ### Comparación Antes/Después
 
 **ANTES (Sistema Form sin toggle):**
+
 ```tsx
 <TextField type="password" name="password" label="Contraseña" />
 // → Input de password sin opción de mostrar/ocultar
 ```
 
 **DESPUÉS (Con toggle opcional):**
+
 ```tsx
 <TextField type="password" name="password" label="Contraseña" showPasswordToggle={true} />
 // → Input de password con botón ojo para mostrar/ocultar
@@ -1158,7 +1194,7 @@ export function TextField({
 **Problemas Identificados:**
 
 1. **Generación de contraseñas insegura**: Uso de `Math.random()` en lugar de crypto seguro
-2. **Configuración incorrecta de Brevo SDK**: Patrón de importación y configuración obsoleto  
+2. **Configuración incorrecta de Brevo SDK**: Patrón de importación y configuración obsoleto
 3. **Falta validación Zod**: No usa schemas de validación del proyecto
 4. **Sin auditoría**: No registra eventos de recuperación de contraseña
 5. **Manejo de errores inconsistente**: No sigue patrón `{ error }` del proyecto
@@ -1175,13 +1211,15 @@ export function TextField({
 
 #### 1. Generación Segura de Contraseñas
 
-**Problema actual**: 
+**Problema actual**:
+
 ```typescript
 // Inseguro - usa Math.random()
 const randomIndex = Math.floor(Math.random() * charset.length);
 ```
 
 **Solución**: Usar `crypto.randomBytes` como en `mutations.ts`:
+
 ```typescript
 import { randomBytes } from 'crypto';
 
@@ -1201,6 +1239,7 @@ function generateSecurePassword(length = 12): string {
 **Problema actual**: Configuración compleja y posiblemente obsoleta
 
 **Solución**: Simplificar siguiendo documentación oficial de Brevo:
+
 ```typescript
 import * as brevo from '@getbrevo/brevo';
 
@@ -1212,6 +1251,7 @@ apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BR
 #### 3. Validación con Zod
 
 **Integración**: Usar `ForgotPasswordSchema` existente:
+
 ```typescript
 import { ForgotPasswordSchema } from '@/lib/validation/schemas';
 
@@ -1222,6 +1262,7 @@ const validatedData = ForgotPasswordSchema.parse({ email });
 #### 4. Sistema de Auditoría
 
 **Integración**: Usar `logAuditEvent` con tipos apropiados:
+
 ```typescript
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
@@ -1231,13 +1272,14 @@ await logAuditEvent({
     entity: AUDIT_ENTITIES.USER,
     entityId: user.id,
     description: `Password recovery initiated for ${user.email}`,
-    metadata: { email, recoveryMethod: 'email' }
+    metadata: { email, recoveryMethod: 'email' },
 });
 ```
 
 #### 5. Patrón de Manejo de Errores
 
 **Consistencia**: Seguir patrón `{ error }` del proyecto:
+
 ```typescript
 // En lugar de: return { message: 'Error: ...' };
 return { error: 'No se encontró un usuario con ese email' };
@@ -1249,6 +1291,7 @@ return { success: true, message: 'Se ha enviado una nueva contraseña a tu email
 #### 6. Validación de Variables de Entorno
 
 **Seguridad**: Validar BREVO_API_KEY al inicio:
+
 ```typescript
 if (!process.env.BREVO_API_KEY) {
     console.error('BREVO_API_KEY no está configurada');
@@ -1259,6 +1302,7 @@ if (!process.env.BREVO_API_KEY) {
 ### 📋 Checklist de Implementación
 
 #### Pre-implementación
+
 - [x] ✅ Analizar código actual de Recovery.ts
 - [x] ✅ Estudiar patrones en mutations.ts
 - [x] ✅ Identificar schema ForgotPasswordSchema existente
@@ -1266,6 +1310,7 @@ if (!process.env.BREVO_API_KEY) {
 - [x] ✅ Planificar cambios en docs/TODO.md
 
 #### Implementación Principal
+
 - [x] ✅ Implementar generación segura con crypto.randomBytes
 - [x] ✅ Corregir configuración de Brevo SDK
 - [x] ✅ Agregar validación Zod con ForgotPasswordSchema
@@ -1274,6 +1319,7 @@ if (!process.env.BREVO_API_KEY) {
 - [x] ✅ Agregar validación de variables de entorno
 
 #### Post-implementación
+
 - [x] ✅ Verificar funcionamiento con build exitoso
 - [x] ✅ Confirmar auditoría integrada correctamente
 - [x] ✅ Validar generación segura de contraseñas implementada
@@ -1284,11 +1330,11 @@ if (!process.env.BREVO_API_KEY) {
 ### 🔧 Archivos a Modificar
 
 1. **Principal**: `/src/actions/Settings/Recovery/Recovery.ts` - Implementación completa de mejoras
-2. **Imports requeridos**: 
-   - `crypto` (Node.js built-in)
-   - `@/lib/validation/schemas` (ForgotPasswordSchema)
-   - `@/lib/audit/auditLogger` (logAuditEvent)
-   - `@/lib/audit/auditType` (AUDIT_ACTIONS, AUDIT_ENTITIES)
+2. **Imports requeridos**:
+    - `crypto` (Node.js built-in)
+    - `@/lib/validation/schemas` (ForgotPasswordSchema)
+    - `@/lib/audit/auditLogger` (logAuditEvent)
+    - `@/lib/audit/auditType` (AUDIT_ACTIONS, AUDIT_ENTITIES)
 
 ### 🎯 Resultado Esperado
 
@@ -1313,43 +1359,51 @@ if (!process.env.BREVO_API_KEY) {
 ### 🎯 Implementación Realizada
 
 #### 1. **Generación Segura de Contraseñas**: ✅ COMPLETADO
+
 - **Antes**: `Math.random()` (inseguro)
 - **Después**: `crypto.randomBytes()` (criptográficamente seguro)
 - **Mejora**: Generación de contraseñas con entropía criptográfica real
 - **Import**: Usando protocolo `node:crypto` para mejores prácticas
 
-#### 2. **Configuración Brevo SDK**: ✅ COMPLETADO  
+#### 2. **Configuración Brevo SDK**: ✅ COMPLETADO
+
 - **Antes**: Configuración compleja con imports dinámicos
 - **Después**: Import directo y configuración simplificada
 - **Mejora**: Código más limpio y mantenible
 - **API**: `import * as brevo from '@getbrevo/brevo'`
 
 #### 3. **Validación Zod**: ✅ COMPLETADO
+
 - **Integración**: `ForgotPasswordSchema` existente del proyecto
 - **Validación**: Entrada de email validada antes de procesamiento
 - **Error handling**: Manejo específico para errores de validación Zod
 
 #### 4. **Sistema de Auditoría**: ✅ COMPLETADO
+
 - **Integración**: `logAuditEvent` con `AUDIT_ACTIONS.USER.UPDATE`
 - **Metadata**: Email, método de recuperación, timestamp, nombre de usuario
 - **Trazabilidad**: Registro completo de eventos de recuperación de contraseña
 
 #### 5. **Manejo de Errores Consistente**: ✅ COMPLETADO
+
 - **Patrón**: `{ error }` para errores, `{ success: true, message }` para éxito
 - **Consistencia**: Siguiendo patrones de `mutations.ts`
 - **Tipos específicos**: Error Zod, email no encontrado, configuración faltante
 
 #### 6. **Validación Variables de Entorno**: ✅ COMPLETADO
+
 - **Validación**: `BREVO_API_KEY` verificada al inicio
 - **Error seguro**: No expone detalles de configuración
 - **Robustez**: Función falla elegantemente si falta configuración
 
 #### 7. **Compatibilidad Frontend**: ✅ COMPLETADO
+
 - **Actualizado**: `ForgotPassword.tsx` compatible con nuevo patrón de respuestas
 - **Manejo**: Distingue entre errores y éxitos correctamente
 - **UX**: Mensajes de error rojos, éxito verde
 
 #### 8. **Template de Email Mejorado**: ✅ COMPLETADO
+
 - **HTML**: Template completo con estilos inline
 - **Información**: Contraseña temporal destacada visualmente
 - **Instrucciones**: Guías claras de seguridad para el usuario
@@ -1358,10 +1412,12 @@ if (!process.env.BREVO_API_KEY) {
 ### 🔍 Validación Técnica
 
 #### Archivos Modificados:
+
 1. `/src/actions/Settings/Recovery/Recovery.ts` - Implementación completa de mejoras
 2. `/src/components/Login/ForgotPassword.tsx` - Compatibilidad con nuevo patrón
 
 #### Tests de Calidad:
+
 - ✅ **Build**: Next.js build exitoso sin errores
 - ✅ **Formatting**: Prettier aplicado correctamente
 - ✅ **TypeScript**: Compatible con tipos del proyecto
@@ -1403,6 +1459,7 @@ if (!process.env.BREVO_API_KEY) {
 **Estado del Workflow CLAUDE.md**: ✅ **COMPLETADO EXITOSAMENTE**
 
 ### Checklist Workflow CLAUDE.md:
+
 - [x] ✅ Analicé el código existente y identifiqué duplicación de schemas
 - [x] ✅ Planifiqué la reorganización centralizando en userSchemas.ts
 - [x] ✅ Tuve aprobación explícita del usuario para proceder
@@ -1412,6 +1469,7 @@ if (!process.env.BREVO_API_KEY) {
 ### 🎯 Reorganización Ejecutada:
 
 #### 1. **Schema movido a userSchemas.ts**:
+
 ```typescript
 // Schema para recuperación de contraseña
 export const ForgotPasswordSchema = z.object({
@@ -1423,19 +1481,22 @@ export type ForgotPasswordFormValues = z.infer<typeof ForgotPasswordSchema>;
 ```
 
 #### 2. **Import actualizado en Recovery.ts**:
+
 ```typescript
 // ANTES
 import { ForgotPasswordSchema } from '@/lib/validation/schemas';
 
-// DESPUÉS  
+// DESPUÉS
 import { ForgotPasswordSchema } from '@/components/Modal/Setting/Users/userSchemas';
 ```
 
 #### 3. **Schema duplicado eliminado**:
+
 - ❌ Eliminado ForgotPasswordSchema de `/src/lib/validation/schemas.ts`
 - ✅ Conservado únicamente en `/src/components/Modal/Setting/Users/userSchemas.ts`
 
 #### 4. **Verificación exitosa**:
+
 ```bash
 ✓ Compiled successfully in 12.0s
 ✓ Checking validity of types ...
@@ -1466,17 +1527,19 @@ import { ForgotPasswordSchema } from '@/components/Modal/Setting/Users/userSchem
 ### Comparación Antes/Después
 
 **ANTES (Inseguro y sin integración):**
+
 ```typescript
 // Generación insegura
 const randomIndex = Math.floor(Math.random() * charset.length);
 
 // Sin validación
-// Sin auditoría  
+// Sin auditoría
 // Configuración Brevo compleja
 // return { message: 'Error: ...' } // Inconsistente
 ```
 
 **DESPUÉS (Seguro e integrado):**
+
 ```typescript
 // Generación segura
 import { randomBytes } from 'node:crypto';
@@ -1504,6 +1567,7 @@ const apiInstance = new brevo.TransactionalEmailsApi();
 **Estado del Workflow CLAUDE.md**: ✅ **COMPLETADO EXITOSAMENTE**
 
 ### Checklist Workflow CLAUDE.md:
+
 - [x] ✅ Analicé el código existente y entendí la estructura de UserColumns.tsx
 - [x] ✅ Planifiqué la implementación siguiendo el patrón de otras acciones
 - [x] ✅ Tuve aprobación explícita del usuario para proceder
@@ -1513,49 +1577,51 @@ const apiInstance = new brevo.TransactionalEmailsApi();
 ### Implementación Realizada:
 
 #### 1. **Imports agregados**:
+
 ```tsx
 // Server Action importada
 import { deleteUser, resetUserPassword } from '@/actions/Settings/Users';
-
 // Componente BtnResetPasswordCell agregado
 import {
     BtnChangePasswordCell,
     BtnConfigCell,
     BtnDeleteCell,
     BtnEditCell,
-    BtnResetPasswordCell, // ← NUEVO
+    BtnResetPasswordCell,
+    // ← NUEVO
     BtnViewCell,
 } from '@/components/BtnActionCell/BtnActionCell';
 ```
 
 #### 2. **Función handleResetPassword implementada**:
+
 ```tsx
 const handleResetPassword = async (userId: string) => {
     // Confirmación del usuario
     const confirmed = window.confirm(
         '¿Estás seguro de que deseas resetear la contraseña de este usuario?\n\n' +
-        'Esto generará una nueva contraseña temporal y la anterior será invalidada.'
+            'Esto generará una nueva contraseña temporal y la anterior será invalidada.',
     );
-    
+
     if (!confirmed) return;
 
     try {
         const result = await resetUserPassword(userId);
-        
+
         if (result.success && result.temporaryPassword) {
             await refreshTable();
-            
+
             // Toast con contraseña temporal (10 segundos)
             toast.success('Contraseña reseteada exitosamente', {
                 description: `Nueva contraseña temporal: ${result.temporaryPassword}`,
                 duration: 10000,
             });
-            
+
             // Alert adicional para facilitar copia
             alert(
                 `Contraseña reseteada exitosamente\n\n` +
-                `Nueva contraseña temporal: ${result.temporaryPassword}\n\n` +
-                `Por favor, copia esta contraseña y compártela de forma segura con el usuario.`
+                    `Nueva contraseña temporal: ${result.temporaryPassword}\n\n` +
+                    `Por favor, copia esta contraseña y compártela de forma segura con el usuario.`,
             );
         } else {
             toast.error('Error al resetear contraseña', {
@@ -1572,10 +1638,11 @@ const handleResetPassword = async (userId: string) => {
 ```
 
 #### 3. **BtnResetPasswordCell agregado en posición apropiada**:
+
 ```tsx
 // Orden de acciones en el dropdown:
 <BtnViewCell />            // Ver perfil
-<BtnEditCell />            // Editar usuario  
+<BtnEditCell />            // Editar usuario
 <BtnChangePasswordCell />  // Cambiar contraseña
 <BtnResetPasswordCell      // ← NUEVO (posición lógica)
     onAction={() => handleResetPassword(userId)}
@@ -1587,12 +1654,14 @@ const handleResetPassword = async (userId: string) => {
 ```
 
 ### Archivos Modificados:
+
 1. `/src/components/Tables/Setting/User/UserColumns.tsx` - Implementación completa
 
 ### Funcionalidades Implementadas:
+
 - ✅ **Server Action**: Utiliza `resetUserPassword` existente de mutations.ts
 - ✅ **Componente Button**: Usa `BtnResetPasswordCell` existente con ícono RotateCcw
-- ✅ **Confirmación**: Modal de confirmación antes de proceder  
+- ✅ **Confirmación**: Modal de confirmación antes de proceder
 - ✅ **Manejo de errores**: Try-catch completo con toasts informativos
 - ✅ **UX mejorada**: Muestra contraseña temporal en toast (10s) + alert para copia
 - ✅ **Refresh**: Actualiza tabla después de operación exitosa
@@ -1600,18 +1669,20 @@ const handleResetPassword = async (userId: string) => {
 - ✅ **Posicionamiento**: Entre "Cambiar contraseña" y "Asignar roles" (lógico)
 
 ### Validación Técnica:
+
 - ✅ **Server Action**: `resetUserPassword` ya existe con generación de contraseña temporal
-- ✅ **Component**: `BtnResetPasswordCell` ya existe con ícono y estilos apropiados  
+- ✅ **Component**: `BtnResetPasswordCell` ya existe con ícono y estilos apropiados
 - ✅ **Pattern**: Sigue exactamente el patrón de `handleDelete` y otras acciones
 - ✅ **Imports**: Todos necesarios agregados correctamente
 - ✅ **TypeScript**: Sin errores de tipos
 - ✅ **Server**: Se ejecuta correctamente sin errores de compilación
 
 ### Resultado Final:
+
 ✅ **IMPLEMENTACIÓN 100% EXITOSA** - La funcionalidad "Reset Password" está completamente implementada en UserColumns.tsx siguiendo los patrones establecidos del sistema. La acción:
 
 1. Aparece en el dropdown de acciones de cada usuario
-2. Requiere confirmación antes de proceder  
+2. Requiere confirmación antes de proceder
 3. Llama al server action `resetUserPassword` existente
 4. Muestra la contraseña temporal generada al administrador
 5. Actualiza la tabla después de la operación
@@ -1621,9 +1692,10 @@ const handleResetPassword = async (userId: string) => {
 **Estado**: ✅ **PRODUCCIÓN READY** - Funcionalidad lista para uso inmediato por administradores
 
 ### API Resultante:
+
 ```tsx
 // En el dropdown de acciones de cada usuario ahora aparece:
-"Resetear contraseña" // ← NUEVA ACCIÓN
+'Resetear contraseña'; // ← NUEVA ACCIÓN
 // ↓ Genera contraseña temporal automáticamente
 // ↓ Muestra la contraseña al admin para compartir
 // ↓ Invalida la contraseña anterior inmediatamente

@@ -7,11 +7,7 @@ import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import prisma from '@/lib/db/db';
 
 import { passwordEmailService } from '../email/passwordEmailService';
-import type { 
-    PasswordResetOptions, 
-    PasswordResetResult, 
-    UserPasswordResetData 
-} from './types';
+import type { PasswordResetOptions, PasswordResetResult, UserPasswordResetData } from './types';
 
 /**
  * Genera una contraseña temporal segura usando crypto.randomBytes
@@ -76,9 +72,10 @@ async function logPasswordResetEvent(
     options: PasswordResetOptions,
     emailSent: boolean,
 ): Promise<void> {
-    const description = options.resetType === 'user_recovery' 
-        ? `Password recovery completed for ${user.email}`
-        : `Password reset for user "${user.name} ${user.lastName || ''}"`;
+    const description =
+        options.resetType === 'user_recovery'
+            ? `Password recovery completed for ${user.email}`
+            : `Password reset for user "${user.name} ${user.lastName || ''}"`;
 
     await logAuditEvent({
         action: AUDIT_ACTIONS.USER.UPDATE,
@@ -111,23 +108,23 @@ export async function handlePasswordReset(
     try {
         // 1. Buscar usuario según el tipo de reset
         let user: UserPasswordResetData | null;
-        
+
         if (options.resetType === 'user_recovery') {
             user = await findUserByEmail(identifier);
             if (!user) {
-                return { 
-                    success: false, 
+                return {
+                    success: false,
                     error: 'No se encontró un usuario con ese email',
-                    message: 'Usuario no encontrado'
+                    message: 'Usuario no encontrado',
                 };
             }
         } else {
             user = await findUserById(identifier);
             if (!user) {
-                return { 
-                    success: false, 
+                return {
+                    success: false,
                     error: 'User not found',
-                    message: 'Usuario no encontrado'
+                    message: 'Usuario no encontrado',
                 };
             }
         }
@@ -141,11 +138,12 @@ export async function handlePasswordReset(
 
         // 4. Enviar email si está habilitado
         let emailSent = false;
-        
+
         if (options.sendEmail && passwordEmailService.isConfigured()) {
-            const resetBy = options.resetType === 'user_recovery' 
-                ? 'Usuario' 
-                : options.resetByUserName || 'Administrador';
+            const resetBy =
+                options.resetType === 'user_recovery'
+                    ? 'Usuario'
+                    : options.resetByUserName || 'Administrador';
 
             const emailResult = await passwordEmailService.sendPasswordResetEmail({
                 userName: `${user.name} ${user.lastName || ''}`.trim(),
@@ -155,7 +153,7 @@ export async function handlePasswordReset(
             });
 
             emailSent = emailResult.success;
-            
+
             if (!emailResult.success) {
                 console.error('❌ Email sending failed:', emailResult.error);
             }
@@ -167,13 +165,14 @@ export async function handlePasswordReset(
         await logPasswordResetEvent(user, options, emailSent);
 
         // 6. Retornar resultado
-        const successMessage = options.resetType === 'user_recovery'
-            ? emailSent 
-                ? 'Se ha enviado una nueva contraseña temporal a tu email'
-                : 'Nueva contraseña temporal generada'
-            : emailSent 
-                ? 'Password reset successfully and email sent'
-                : 'Password reset successfully';
+        const successMessage =
+            options.resetType === 'user_recovery'
+                ? emailSent
+                    ? 'Se ha enviado una nueva contraseña temporal a tu email'
+                    : 'Nueva contraseña temporal generada'
+                : emailSent
+                  ? 'Password reset successfully and email sent'
+                  : 'Password reset successfully';
 
         return {
             success: true,
@@ -183,15 +182,16 @@ export async function handlePasswordReset(
         };
     } catch (error) {
         console.error('Error in handlePasswordReset:', error);
-        
-        const errorMessage = options.resetType === 'user_recovery'
-            ? 'No se pudo procesar la solicitud. Inténtelo de nuevo.'
-            : 'Error resetting password. Please try again.';
 
-        return { 
-            success: false, 
+        const errorMessage =
+            options.resetType === 'user_recovery'
+                ? 'No se pudo procesar la solicitud. Inténtelo de nuevo.'
+                : 'Error resetting password. Please try again.';
+
+        return {
+            success: false,
             error: errorMessage,
-            message: errorMessage
+            message: errorMessage,
         };
     }
 }

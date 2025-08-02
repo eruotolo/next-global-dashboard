@@ -14,10 +14,7 @@ export const PageCreateSchema = z.object({
         .regex(/^\/.*/, 'La ruta debe comenzar con /')
         .regex(/^[\/\w\-]*$/, 'La ruta solo puede contener letras, números, guiones y barras')
         .max(100, 'La ruta no puede exceder 100 caracteres'),
-    description: z
-        .string()
-        .max(200, 'La descripción no puede exceder 200 caracteres')
-        .optional(),
+    description: z.string().max(200, 'La descripción no puede exceder 200 caracteres').optional(),
 });
 
 // Schema para editar páginas (igual que crear)
@@ -36,16 +33,15 @@ export const PageCompleteSchema: z.ZodType<Page> = z.object({
         .regex(/^\/.*/, 'La ruta debe comenzar con /')
         .regex(/^[\/\w\-]*$/, 'La ruta solo puede contener letras, números, guiones y barras')
         .max(100, 'La ruta no puede exceder 100 caracteres'),
-    description: z
-        .string()
-        .max(200, 'La descripción no puede exceder 200 caracteres')
-        .nullable(),
-    pageRoles: z.array(z.object({
-        roleId: z.string(),
-        role: z.object({
-            name: z.string(),
+    description: z.string().max(200, 'La descripción no puede exceder 200 caracteres').nullable(),
+    pageRoles: z.array(
+        z.object({
+            roleId: z.string(),
+            role: z.object({
+                name: z.string(),
+            }),
         }),
-    })),
+    ),
 });
 
 // Tipos derivados para inferencia automática

@@ -1,12 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import { toast } from 'sonner';
 
 import { updatePage } from '@/actions/Settings/Pages/mutations';
 import type { Page } from '@/actions/Settings/Pages/queries';
-import { Form, TextField, TextAreaField } from '@/components/Form';
+import { Form, TextAreaField, TextField } from '@/components/Form';
 import {
     Dialog,
     DialogContent,
@@ -52,7 +50,7 @@ export default function EditPageModal({
         await updatePage(page.id, {
             name: formData.get('name') as string,
             path: formData.get('path') as string,
-            description: formData.get('description') as string || undefined,
+            description: (formData.get('description') as string) || undefined,
         });
     };
 
@@ -87,7 +85,7 @@ export default function EditPageModal({
                             placeholder="Introduce el nombre de la página"
                             required
                         />
-                        
+
                         <TextField
                             name="path"
                             label="Ruta"
@@ -95,7 +93,7 @@ export default function EditPageModal({
                             required
                             description="La ruta debe comenzar con /"
                         />
-                        
+
                         <TextAreaField
                             name="description"
                             label="Descripción"

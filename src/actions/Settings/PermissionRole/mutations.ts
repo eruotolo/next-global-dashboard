@@ -3,11 +3,11 @@
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
+import { AssignPermissionRoleSchema } from '@/components/Modal/Setting/Roles/roleSchemas';
 import { logAuditEvent } from '@/lib/audit/auditLogger';
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from '@/lib/audit/auditType';
 import { authOptions } from '@/lib/auth/authOptions';
 import prisma from '@/lib/db/db';
-import { AssignPermissionRoleSchema } from '@/components/Modal/Setting/Roles/roleSchemas';
 
 export async function assignPermissionsToRole(formData: FormData) {
     try {

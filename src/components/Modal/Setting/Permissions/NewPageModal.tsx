@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { createPage } from '@/actions/Settings/Pages/mutations';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
-import { Form, TextField, TextAreaField } from '@/components/Form';
+import { Form, TextAreaField, TextField } from '@/components/Form';
 import {
     Dialog,
     DialogContent,
@@ -43,7 +43,7 @@ export default function NewPageModal({ refreshAction }: UpdateData) {
         await createPage({
             name: formData.get('name') as string,
             path: formData.get('path') as string,
-            description: formData.get('description') as string || undefined,
+            description: (formData.get('description') as string) || undefined,
         });
     };
 
@@ -73,7 +73,7 @@ export default function NewPageModal({ refreshAction }: UpdateData) {
                         placeholder="Introduce el nombre de la página"
                         required
                     />
-                    
+
                     <TextField
                         name="path"
                         label="Ruta"
@@ -81,7 +81,7 @@ export default function NewPageModal({ refreshAction }: UpdateData) {
                         required
                         description="La ruta debe comenzar con /"
                     />
-                    
+
                     <TextAreaField
                         name="description"
                         label="Descripción"

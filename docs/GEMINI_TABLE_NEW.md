@@ -104,6 +104,8 @@ import { columns } from './columns';
 
 // /app/admin/settings/users/page.tsx
 
+// /app/admin/settings/users/page.tsx
+
 // SE NECESITA MUCHO CÓDIGO REPETITIVO PARA CONFIGURAR EL ESTADO
 export default function UsersPage() {
     const { users, isLoading } = useUsers();
@@ -145,6 +147,8 @@ import { Button } from '@/components/ui/button';
 import { useUsers } from '@/hooks/useUsers';
 
 import { columns } from './columns';
+
+// /app/admin/settings/users/page.tsx
 
 // /app/admin/settings/users/page.tsx
 

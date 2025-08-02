@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { AlertTriangle, Mail, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { resetUserPassword } from '@/lib/auth/password/passwordService';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,6 +15,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { resetUserPassword } from '@/lib/auth/password/passwordService';
 
 interface ResetPasswordProps {
     userId: string;
@@ -59,20 +59,23 @@ export default function ResetPassword({
             }
 
             if (result?.success && result?.temporaryPassword) {
-                const description = result.emailSent 
+                const description = result.emailSent
                     ? `Se ha enviado la nueva contraseña temporal por email a ${userEmail}`
                     : 'Se ha generado una contraseña temporal.';
 
                 toast.success('Contraseña reseteada exitosamente', {
                     description,
-                    action: !result.emailSent && result.temporaryPassword ? {
-                        label: copiedPassword ? 'Copiado!' : 'Copiar contraseña',
-                        onClick: () => {
-                            if (result.temporaryPassword) {
-                                copyToClipboard(result.temporaryPassword);
-                            }
-                        },
-                    } : undefined,
+                    action:
+                        !result.emailSent && result.temporaryPassword
+                            ? {
+                                  label: copiedPassword ? 'Copiado!' : 'Copiar contraseña',
+                                  onClick: () => {
+                                      if (result.temporaryPassword) {
+                                          copyToClipboard(result.temporaryPassword);
+                                      }
+                                  },
+                              }
+                            : undefined,
                     duration: result.emailSent ? 5000 : 10000,
                 });
 
@@ -144,11 +147,10 @@ export default function ResetPassword({
                                         <span className="font-medium">Email:</span> {userEmail}
                                     </p>
                                 </div>
-                                <p className="text-xs text-muted-foreground">
-                                    {sendEmail 
+                                <p className="text-muted-foreground text-xs">
+                                    {sendEmail
                                         ? 'Se enviará la nueva contraseña temporal por email al usuario.'
-                                        : 'Se generará una contraseña temporal que deberá proporcionar al usuario para que pueda acceder y cambiar su contraseña.'
-                                    }
+                                        : 'Se generará una contraseña temporal que deberá proporcionar al usuario para que pueda acceder y cambiar su contraseña.'}
                                 </p>
                             </div>
                         </AlertDescription>
@@ -162,7 +164,7 @@ export default function ResetPassword({
                         />
                         <label
                             htmlFor="sendEmail"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+                            className="flex items-center gap-2 text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                             <Mail className="h-4 w-4" />
                             Enviar contraseña por email
@@ -186,7 +188,7 @@ export default function ResetPassword({
                         >
                             {isLoading ? (
                                 <div className="flex items-center gap-2">
-                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                                    <div className="border-background h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                                     Procesando...
                                 </div>
                             ) : (

@@ -145,17 +145,13 @@ export function getPagePermissionsColumns(
         {
             accessorKey: 'name',
             header: createSortableHeader('Página'),
-            cell: ({ row }) => (
-                <div className="font-mono text-[13px]">{row.original.name}</div>
-            ),
+            cell: ({ row }) => <div className="font-mono text-[13px]">{row.original.name}</div>,
         },
         // Columna de Ruta
         {
             accessorKey: 'path',
             header: createSortableHeader('Ruta'),
-            cell: ({ row }) => (
-                <div className="font-mono text-[13px]">{row.original.path}</div>
-            ),
+            cell: ({ row }) => <div className="font-mono text-[13px]">{row.original.path}</div>,
         },
         // Columnas dinámicas para cada rol
         ...roles.map((role) => ({

@@ -38,6 +38,11 @@ import type {
  * Maneja cache, revalidación automática y estados de carga
  */
 
+/**
+ * Hook useAnalytics - Gestión de datos Analytics con SWR
+ * Maneja cache, revalidación automática y estados de carga
+ */
+
 interface UseAnalyticsOptions {
     startDate?: string;
     endDate?: string;

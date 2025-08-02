@@ -30,44 +30,45 @@ export default function ResetPasswordEmail({
                     <Section style={logoSection}>
                         <Heading style={h1}>🔐 Chubby Dashboard</Heading>
                     </Section>
-                    
+
                     <Section style={section}>
                         <Heading style={h2}>Contraseña Reseteada</Heading>
                         <Text style={text}>
                             Hola <strong>{userName}</strong>,
                         </Text>
                         <Text style={text}>
-                            Tu contraseña ha sido reseteada por un {resetBy}. 
-                            Hemos generado una nueva contraseña temporal para tu cuenta:
+                            Tu contraseña ha sido reseteada por un {resetBy}. Hemos generado una
+                            nueva contraseña temporal para tu cuenta:
                         </Text>
-                        
+
                         <Section style={passwordSection}>
-                            <Text style={passwordText}>
-                                {temporaryPassword}
-                            </Text>
+                            <Text style={passwordText}>{temporaryPassword}</Text>
                         </Section>
-                        
+
                         <Section style={warningSection}>
                             <Text style={warningTitle}>⚠️ Importante:</Text>
                             <Text style={warningText}>
-                                • Esta contraseña es temporal y debe cambiarse después del primer inicio de sesión
+                                • Esta contraseña es temporal y debe cambiarse después del primer
+                                inicio de sesión
                             </Text>
                             <Text style={warningText}>
                                 • Por seguridad, no compartas esta contraseña con nadie
                             </Text>
                             <Text style={warningText}>
-                                • Si no solicitaste este cambio, contacta inmediatamente al administrador
+                                • Si no solicitaste este cambio, contacta inmediatamente al
+                                administrador
                             </Text>
                         </Section>
-                        
+
                         <Section style={buttonSection}>
                             <Button style={button} href={process.env.NEXTAUTH_URL || '#'}>
                                 Iniciar Sesión
                             </Button>
                         </Section>
-                        
+
                         <Text style={footer}>
-                            Saludos,<br />
+                            Saludos,
+                            <br />
                             <strong>Equipo Chubby Dashboard</strong>
                         </Text>
                     </Section>
@@ -80,7 +81,8 @@ export default function ResetPasswordEmail({
 // Estilos
 const main = {
     backgroundColor: '#f6f9fc',
-    fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+    fontFamily:
+        '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
 const container = {

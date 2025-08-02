@@ -20,7 +20,6 @@ import type { RolePermissionInterface, UserRoleQuery } from '@/types/settings/Ro
 
 import { type AssignRoleUserFormValues, AssignRoleUserSchema } from './userSchemas';
 
-
 export default function AssignRoleUserModal({
     id,
     open,
@@ -61,7 +60,6 @@ export default function AssignRoleUserModal({
         }
         fetchData();
     }, [open, id]);
-
 
     const handleUpdateRoles = async (formData: FormData) => {
         const roles = formData.getAll('roles[]') as string[];

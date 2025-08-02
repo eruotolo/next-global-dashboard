@@ -17,10 +17,7 @@ import {
     BtnResetPasswordCell,
     BtnViewCell,
 } from '@/components/BtnActionCell/BtnActionCell';
-import {
-    createActionColumn,
-    createSortableHeader,
-} from '@/components/TanTable/ColumnFactory';
+import { createActionColumn, createSortableHeader } from '@/components/TanTable/ColumnFactory';
 import { useTableContext } from '@/components/TanTable/TableContext';
 import { Button } from '@/components/ui/button';
 import {
