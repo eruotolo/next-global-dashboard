@@ -3,6 +3,7 @@ export { Form } from './Form';
 
 // Campos con React Hook Form
 export { TextField } from './fields/TextField';
+export { TextAreaField } from './fields/TextAreaField';
 export { SearchableSelectField } from './fields/SearchableSelectField';
 export { CheckboxGroupField } from './fields/CheckboxGroupField';
 export { FileDropzoneField } from './fields/FileDropzoneField';
@@ -17,6 +18,7 @@ export { useFormField } from './hooks/useFormField';
 export type { FormProps, FormFieldProps, SelectOption } from './types/form';
 export type {
     TextFieldProps,
+    TextAreaFieldProps,
     SearchableSelectFieldProps,
     CheckboxGroupFieldProps,
     FileDropzoneFieldProps,

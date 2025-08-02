@@ -36,7 +36,14 @@ export async function createPage(data: CreatePageData) {
 
         revalidatePath('/admin/settings/permissions');
         return { success: true, page };
-    } catch (error) {
+    } catch (error: any) {
+        // Manejar error de constraint único para path
+        if (error?.code === 'P2002' && error?.meta?.target?.includes('path')) {
+            console.error(`Page creation failed: Path already exists - ${data.path}`);
+            throw new Error('Ya existe una página con esta ruta. Por favor, usa una ruta diferente.');
+        }
+        
+        // Para otros errores, log completo para debugging
         console.error('Error creating page:', error);
         throw error;
     }
@@ -65,7 +72,14 @@ export async function updatePage(id: string, data: Partial<CreatePageData>) {
 
         revalidatePath('/admin/settings/permissions');
         return { success: true, page };
-    } catch (error) {
+    } catch (error: any) {
+        // Manejar error de constraint único para path
+        if (error?.code === 'P2002' && error?.meta?.target?.includes('path')) {
+            console.error(`Page update failed: Path already exists - ${data.path}`);
+            throw new Error('Ya existe una página con esta ruta. Por favor, usa una ruta diferente.');
+        }
+        
+        // Para otros errores, log completo para debugging
         console.error('Error updating page:', error);
         throw error;
     }
