@@ -1,0 +1,75 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUnusedImports": "off",
+                "noUnusedVariables": "warn",
+                "useExhaustiveDependencies": "warn"
+            },
+            "suspicious": {
+                "noConsole": {
+                    "level": "warn",
+                    "options": {
+                        "allow": ["warn", "error"]
+                    }
+                },
+                "noExplicitAny": "warn",
+                "noImplicitAnyLet": "warn",
+                "noDuplicateCase": "off"
+            },
+            "style": {
+                "useConst": "error",
+                "useEnumInitializers": "off",
+                "noUselessElse": "error",
+                "useTemplate": "error",
+                "useSelfClosingElements": "off",
+                "noParameterAssign": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error"
+            },
+            "a11y": {
+                "useKeyWithClickEvents": "off",
+                "noSvgWithoutTitle": "off"
+            },
+            "complexity": {
+                "noBannedTypes": "warn",
+                "noStaticOnlyClass": "warn",
+                "noExcessiveCognitiveComplexity": "off"
+            },
+            "nursery": {}
+        }
+    },
+    "formatter": {
+        "enabled": false
+    },
+    "json": {
+        "parser": {
+            "allowComments": true
+        }
+    },
+    "css": {
+        "linter": {
+            "enabled": true
+        }
+    },
+    "files": {
+        "ignore": [
+            ".next/**",
+            "node_modules/**",
+            "public/**",
+            "dist/**",
+            ".vercel/**",
+            "prisma/generated/**"
+        ]
+    }
+}

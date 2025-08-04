@@ -4,7 +4,7 @@ import type { z } from 'zod';
 
 export interface FormProps<T extends z.ZodType> {
     schema: T;
-    action: (formData: FormData) => Promise<void>;
+    action: (formData: FormData) => Promise<any>;
     defaultValues?: Partial<z.infer<T>>;
     onSuccess?: () => void;
     onError?: (error: string) => void;
@@ -14,6 +14,7 @@ export interface FormProps<T extends z.ZodType> {
     submitText?: string;
     cancelText?: string;
     onCancel?: () => void;
+    disabled?: boolean;
 }
 
 export interface FormFieldProps {

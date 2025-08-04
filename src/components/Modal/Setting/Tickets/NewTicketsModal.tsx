@@ -2,259 +2,200 @@
 
 import { useState } from 'react';
 
-import { FilePenLine } from 'lucide-react';
-import Form from 'next/form';
-import Image from 'next/image';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { TicketPriority, TicketStatus } from '@prisma/client';
 
 import { createTicket } from '@/actions/Settings/Tickets';
 import BtnActionNew from '@/components/BtnActionNew/BtnActionNew';
+import { Form, ImageField, RichTextField, SelectField, TextField } from '@/components/Form';
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import RichTextEditor from '@/components/ui/rich-text-editor';
-//import { Textarea } from '@/components/ui/textarea';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import useAuthStore from '@/store/authStore';
 import type { UpdateData } from '@/types/settings/Generic/InterfaceGeneric';
-import type { SimpleTicketQuery } from '@/types/settings/Tickets/TicketInterface';
+
+import { PRIORITY_LABELS, STATUS_LABELS, TicketCreateSchema } from './ticketSchemas';
 
 export default function NewTicketsModal({ refreshAction }: UpdateData) {
-    const {
-        register,
-        reset,
-        formState: { errors, isValid },
-        setValue,
-    } = useForm<SimpleTicketQuery>({
-        mode: 'onChange',
-        defaultValues: {
-            status: TicketStatus.OPEN,
-            priority: TicketPriority.LOW,
-        },
-    });
-
-    const [error, setError] = useState('');
-    const [imagePreview, setImagePreview] = useState('/soporte.png');
+    const [isOpen, setIsOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const session = useAuthStore((state) => state.session);
-    const [description, setDescription] = useState('');
 
-    // Manejar cambio de imagen y vista previa
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        const maxSizeInBytes = 2000000; // 2MB
-
-        if (file) {
-            if (file.size > maxSizeInBytes) {
-                setError('La imagen no puede superar 1MB.');
-                e.target.value = '';
-                setImagePreview('/soporte.png');
-                return;
-            }
-            setError('');
-            const previewUrl = URL.createObjectURL(file);
-            setImagePreview(previewUrl);
-        }
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
     };
 
-    const onSubmit = async (formData: FormData) => {
-        formData.append('userId', session?.user?.id || '');
-        formData.append('userName', session?.user?.name || '');
-        formData.append('userLastName', session?.user?.lastName || '');
-        formData.append('description', description);
+    // Opciones para los Select fields
+    const statusOptions = Object.entries(STATUS_LABELS).map(([value, label]) => ({
+        value,
+        label,
+    }));
 
+    const priorityOptions = Object.entries(PRIORITY_LABELS).map(([value, label]) => ({
+        value,
+        label,
+    }));
+
+    const handleSuccess = () => {
+        toast.success('Nuevo Ticket Successful', {
+            description: 'El ticket se ha creado correctamente.',
+        });
+        refreshAction?.();
+        setIsOpen(false);
+        setIsSubmitting(false);
+    };
+
+    const handleError = (error: string) => {
+        toast.error('Nuevo Ticket Failed', {
+            description: error || 'Error al intentar crear el ticket',
+        });
+        setIsSubmitting(false);
+    };
+
+    const handleCreateTicket = async (formData: FormData) => {
+        setIsSubmitting(true);
         try {
-            const response = await createTicket(formData);
+            // Agregar datos de usuario de la sesión
+            formData.append('userId', session?.user?.id || '');
+            formData.append('userName', session?.user?.name || '');
+            formData.append('userLastName', session?.user?.lastName || '');
 
-            if (response.error) {
-                setError(response.error);
-                return;
+            const result = await createTicket(formData);
+
+            if (result?.error) {
+                throw new Error(result.error);
             }
-
-            // Éxito: cerrar modal, refrescar tabla y resetear formulario
-            refreshAction();
-            reset();
-            toast.success('Nuevo Ticket Successful', {
-                description: 'El ticket se ha creado correctamente.',
-            });
-            setImagePreview('/soporte.png');
-            setDescription('');
-            setError('');
         } catch (error) {
-            reset();
-            toast.error('Nuevo Ticket Failed', {
-                description: 'Error al intentar crear el ticket',
-            });
-            setImagePreview('/soporte.png');
-            setError('Error al crear el ticket. Inténtalo de nuevo.');
-            console.error(error);
+            setIsSubmitting(false);
+            throw error;
         }
     };
 
     return (
-        <>
-            <Dialog>
-                <BtnActionNew label="Nuevo" permission={['Ver']} />
-                <DialogContent className="overflow-hidden sm:max-w-[900px]">
-                    <DialogHeader>
-                        <DialogTitle>Crear Nuevo Tickets</DialogTitle>
-                        <DialogDescription>
-                            Introduce los detalles del nuevo ticket de soporte técnico, como el
-                            título y la descripción del problema. Asegúrate de que toda la
-                            información esté correcta antes de proceder a crear el ticket.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form action={onSubmit}>
-                        <div className="grid grid-cols-4 gap-4">
-                            <div className="col-span-2 mb-[15px]">
-                                <div className="mb-[15px]">
-                                    <Input
-                                        id="title"
-                                        type="text"
-                                        placeholder="Ingrese el titulo"
-                                        {...register('title', {
-                                            required: 'El titulo es obligatorio',
-                                        })}
-                                    />
-                                    {errors.title && (
-                                        <p className="custome-form-error">{errors.title.message}</p>
-                                    )}
-                                </div>
-                                <div className="mb-[15px] grid grid-cols-2 gap-4">
-                                    <div className="col-span-1">
-                                        <div>
-                                            <Select
-                                                onValueChange={(value) =>
-                                                    setValue('status', value as TicketStatus)
-                                                }
-                                                {...register('status')}
-                                                defaultValue=""
-                                            >
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Seleccione estado" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value={TicketStatus.OPEN}>
-                                                        Abierto
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <input
-                                                type="hidden"
-                                                {...register('status', {
-                                                    required: 'El estado es obligatorio',
-                                                })}
-                                            />
-                                            {errors.status && (
-                                                <p className="custome-form-error">
-                                                    {errors.status.message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="col-span-1">
-                                        <Select
-                                            onValueChange={(value) =>
-                                                setValue('priority', value as TicketPriority)
-                                            }
-                                            defaultValue=""
-                                            {...register('priority')}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Seleccione prioridad" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value={TicketPriority.LOW}>
-                                                    Baja
-                                                </SelectItem>
-                                                <SelectItem value={TicketPriority.MEDIUM}>
-                                                    Media
-                                                </SelectItem>
-                                                <SelectItem value={TicketPriority.HIGH}>
-                                                    Alta
-                                                </SelectItem>
-                                                <SelectItem value={TicketPriority.URGENT}>
-                                                    Urgente
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <input
-                                            type="hidden"
-                                            {...register('priority', {
-                                                required: 'La prioridad es obligatoria',
-                                            })}
-                                        />
-                                        {errors.priority && (
-                                            <p className="custome-form-error">
-                                                {errors.priority.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="mb-[15px]">
-                                    <RichTextEditor
-                                        content={description}
-                                        onChangeAction={(content) => {
-                                            setDescription(content);
-                                            setValue('description', content, {
-                                                shouldValidate: true,
-                                            });
-                                        }}
-                                        imageFolder="editor-images"
-                                    />
-                                </div>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            <BtnActionNew label="Nuevo" permission={['Ver']} />
+            <DialogContent className="max-h-[90vh] overflow-hidden overflow-y-auto sm:max-w-[900px] lg:max-w-[1000px]">
+                <DialogHeader>
+                    <DialogTitle>Crear Nuevo Ticket</DialogTitle>
+                    <DialogDescription>
+                        Complete los campos requeridos para crear un nuevo ticket de soporte
+                        técnico. Asegúrese de proporcionar información detallada para una mejor
+                        asistencia.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <Form
+                    schema={TicketCreateSchema}
+                    action={handleCreateTicket}
+                    defaultValues={{
+                        status: TicketStatus.OPEN,
+                        priority: TicketPriority.LOW,
+                        title: '',
+                        description: '',
+                    }}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
+                    submitText={isSubmitting ? 'Creando...' : 'Crear'}
+                    onCancel={() => setIsOpen(false)}
+                    layout="grid"
+                    className="grid-cols-1 gap-4 lg:grid-cols-4"
+                    disabled={isSubmitting}
+                    aria-label="Formulario de creación de ticket"
+                >
+                    <div className="col-span-1 space-y-4 lg:col-span-2">
+                        <TextField
+                            name="title"
+                            label="Título del ticket"
+                            placeholder="Ej: Error en módulo de facturación"
+                            required
+                            maxLength={100}
+                            aria-describedby="title-help"
+                            disabled={isSubmitting}
+                        />
+                        <div id="title-help" className="text-muted-foreground text-xs">
+                            Proporcione un título descriptivo (5-100 caracteres)
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <SelectField
+                                name="status"
+                                label="Estado inicial"
+                                options={statusOptions}
+                                placeholder="Seleccione estado"
+                                required
+                                aria-describedby="status-create-help"
+                                disabled={isSubmitting}
+                            />
+
+                            <SelectField
+                                name="priority"
+                                label="Nivel de prioridad"
+                                options={priorityOptions}
+                                placeholder="Seleccione prioridad"
+                                required
+                                aria-describedby="priority-create-help"
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                        <div className="text-muted-foreground space-y-1 text-xs">
+                            <div id="status-create-help">
+                                Estado: Generalmente se inicia como "Abierto"
                             </div>
-                            <div className="col-span-2 mb-[15px]">
-                                <Image
-                                    src={imagePreview}
-                                    width={415}
-                                    height={230}
-                                    alt="Vista previa de la imagen"
-                                    className="h-[230px] w-[415px] object-cover"
-                                />
-                                <label
-                                    htmlFor="file-upload"
-                                    className="mt-[34px] flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-                                >
-                                    <FilePenLine className="mr-2 h-5 w-5" />
-                                    Cambiar foto de perfil
-                                </label>
-                                <Input
-                                    id="file-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    {...register('image')}
-                                    onChange={handleImageChange}
-                                />
+                            <div id="priority-create-help">
+                                Prioridad: Seleccione según la urgencia del problema
                             </div>
                         </div>
-                        {error && <p className="text-sm text-red-500">{error}</p>}
-                        <DialogFooter className="mt-6">
-                            <DialogClose asChild>
-                                <button type="submit" className="custom-button" disabled={!isValid}>
-                                    Crear
-                                </button>
-                            </DialogClose>
-                        </DialogFooter>
-                    </Form>
-                </DialogContent>
-            </Dialog>
-        </>
+
+                        <div>
+                            <RichTextField
+                                name="description"
+                                label="Descripción detallada"
+                                placeholder="Describe el problema paso a paso, cuándo ocurre, qué intentaste hacer..."
+                                imageFolder="editor-images"
+                                required
+                                aria-describedby="description-help"
+                                disabled={isSubmitting}
+                            />
+                            <div
+                                id="description-help"
+                                className="text-muted-foreground mt-1 text-xs"
+                            >
+                                Incluya detalles específicos para facilitar la resolución (mínimo 10
+                                caracteres)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-span-1 lg:col-span-2">
+                        <div className="space-y-2">
+                            <ImageField
+                                name="image"
+                                label="Imagen de soporte (opcional)"
+                                preview
+                                maxSize={2}
+                                acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                                disabled={isSubmitting}
+                                aria-describedby="image-help"
+                            />
+                            <div id="image-help" className="text-muted-foreground text-xs">
+                                Adjunte una captura de pantalla o imagen que ayude a explicar el
+                                problema (máx. 2MB)
+                            </div>
+                            {isSubmitting && (
+                                <div className="flex items-center gap-2 text-sm text-blue-600">
+                                    <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                                    Procesando ticket...
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </Form>
+            </DialogContent>
+        </Dialog>
     );
 }

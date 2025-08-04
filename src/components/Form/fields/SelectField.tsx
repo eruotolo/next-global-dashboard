@@ -48,7 +48,7 @@ export function SelectField({
             >
                 <SelectTrigger
                     id={fieldId}
-                    className={cn(hasError && 'border-red-500')}
+                    className={cn('w-full', hasError && 'border-red-500')}
                     aria-describedby={cn(description && descriptionId, hasError && errorId)}
                 >
                     <SelectValue placeholder={placeholder} />

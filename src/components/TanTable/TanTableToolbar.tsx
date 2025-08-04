@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDownIcon, Download, FileText, Settings2, X } from 'lucide-react';
+import { Download, FileText, Settings2, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 import type { Table } from '@tanstack/react-table';

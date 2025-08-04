@@ -3,40 +3,11 @@
 import { useController } from 'react-hook-form';
 
 import { Label } from '@/components/ui/label';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 import { cn } from '@/lib/utils';
 
 import { useFormField } from '../hooks/useFormField';
 import type { RichTextFieldProps } from '../types/fields';
-
-// Simulación del RichTextEditor - reemplaza con tu implementación real
-function RichTextEditor({
-    content,
-    onChangeAction,
-    imageFolder,
-    placeholder,
-    disabled,
-}: {
-    content: string;
-    onChangeAction: (content: string) => void;
-    imageFolder?: string;
-    placeholder?: string;
-    disabled?: boolean;
-}) {
-    return (
-        <div className="min-h-[200px] rounded-md border p-3">
-            <textarea
-                value={content}
-                onChange={(e) => onChangeAction(e.target.value)}
-                placeholder={placeholder}
-                disabled={disabled}
-                className="h-full min-h-[180px] w-full resize-none border-none outline-none disabled:opacity-50"
-            />
-            <div className="text-muted-foreground mt-2 text-xs">
-                Rich Text Editor con upload a: {imageFolder || 'default'}
-            </div>
-        </div>
-    );
-}
 
 export function RichTextField({
     name,
@@ -72,8 +43,6 @@ export function RichTextField({
                     content={field.value}
                     onChangeAction={field.onChange}
                     imageFolder={imageFolder}
-                    placeholder={placeholder}
-                    disabled={isFieldDisabled}
                 />
             </div>
 

@@ -45,3 +45,4 @@ prisma/sql/
 # Claude Code configuración personal
 .claude/settings.local.json
 dev.log
+!/docs/TODO.md

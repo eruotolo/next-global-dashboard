@@ -21,10 +21,8 @@ import {
     validateGAResponse,
 } from '@/lib/analytics/utils';
 import type {
-    AnalyticsConfigurationStatus,
     AnalyticsDashboardData,
     AnalyticsMetrics,
-    AnalyticsQueryParams,
     AnalyticsTrendData,
     DeviceData,
     TopPagesData,

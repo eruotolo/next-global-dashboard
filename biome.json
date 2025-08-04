@@ -8,45 +8,78 @@
         "rules": {
             "recommended": true,
             "correctness": {
-                "noUnusedImports": "off",
-                "noUnusedVariables": "warn",
-                "useExhaustiveDependencies": "warn"
+                "noUnusedImports": "error",
+                "noUnusedVariables": "error",
+                "useExhaustiveDependencies": "error",
+                "noUnreachable": "error",
+                "useHookAtTopLevel": "error",
+                "noChildrenProp": "error",
+                "useJsxKeyInIterable": "error"
             },
             "suspicious": {
                 "noConsole": {
                     "level": "warn",
                     "options": {
-                        "allow": ["warn", "error"]
+                        "allow": ["warn", "error", "info"]
                     }
                 },
-                "noExplicitAny": "warn",
-                "noImplicitAnyLet": "warn",
-                "noDuplicateCase": "off"
+                "noExplicitAny": "error",
+                "noImplicitAnyLet": "error",
+                "noDuplicateCase": "error",
+                "noArrayIndexKey": "warn",
+                "noEmptyBlockStatements": "error",
+                "noConfusingVoidType": "error"
             },
             "style": {
                 "useConst": "error",
                 "useEnumInitializers": "off",
                 "noUselessElse": "error",
                 "useTemplate": "error",
-                "useSelfClosingElements": "off",
+                "useSelfClosingElements": "error",
                 "noParameterAssign": "error",
                 "useAsConstAssertion": "error",
                 "useDefaultParameterLast": "error",
                 "useSingleVarDeclarator": "error",
                 "noUnusedTemplateLiteral": "error",
                 "useNumberNamespace": "error",
-                "noInferrableTypes": "error"
+                "noInferrableTypes": "error",
+                "useFragmentSyntax": "error",
+                "useShorthandArrayType": "error",
+                "useShorthandAssign": "error"
             },
             "a11y": {
-                "useKeyWithClickEvents": "off",
-                "noSvgWithoutTitle": "off"
+                "useKeyWithClickEvents": "warn",
+                "noSvgWithoutTitle": "warn",
+                "useAriaPropsForRole": "error",
+                "useValidAriaProps": "error",
+                "noAccessKey": "error"
             },
             "complexity": {
                 "noBannedTypes": "warn",
                 "noStaticOnlyClass": "warn",
-                "noExcessiveCognitiveComplexity": "off"
+                "noExcessiveCognitiveComplexity": {
+                    "level": "warn",
+                    "options": {
+                        "maxAllowedComplexity": 15
+                    }
+                },
+                "noForEach": "off",
+                "useOptionalChain": "error",
+                "useLiteralKeys": "error",
+                "useSimplifiedLogicExpression": "error"
             },
-            "nursery": {}
+            "nursery": {
+                "useSortedClasses": {
+                    "level": "error",
+                    "options": {
+                        "attributes": ["className", "class"],
+                        "functions": ["clsx", "cva", "tw", "cn"]
+                    }
+                }
+            },
+            "security": {
+                "noDangerouslySetInnerHtml": "warn"
+            }
         }
     },
     "formatter": {
@@ -69,7 +102,23 @@
             "public/**",
             "dist/**",
             ".vercel/**",
-            "prisma/generated/**"
+            "prisma/generated/**",
+            "**/*.config.js",
+            "**/*.config.ts",
+            "*.min.js",
+            "*.min.css",
+            ".env*",
+            "coverage/**"
+        ],
+        "include": [
+            "src/**/*.ts",
+            "src/**/*.tsx",
+            "src/**/*.js",
+            "src/**/*.jsx",
+            "app/**/*.ts",
+            "app/**/*.tsx",
+            "components/**/*.ts",
+            "components/**/*.tsx"
         ]
     }
 }

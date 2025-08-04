@@ -6,11 +6,11 @@
 'use client';
 
 import { Monitor, Smartphone, Tablet } from 'lucide-react';
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatNumber, formatPercentage, getChartColors } from '@/lib/analytics/utils';
+import { formatNumber, formatPercentage, } from '@/lib/analytics/utils';
 import type { DeviceData } from '@/types/Analytics/AnalyticsInterface';
 
 /**

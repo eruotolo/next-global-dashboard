@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 

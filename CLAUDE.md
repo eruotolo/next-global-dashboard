@@ -38,3 +38,18 @@ Guía principal para Claude en este proyecto. Contiene el resumen, workflow obli
 - [ ] Tengo aprobación explícita
 - [ ] Mis cambios son mínimos y seguros
 - [ ] Documenté el resultado
+
+---
+
+## 🚫 Reglas de Validación Zod
+
+### ❌ NO HACER:
+- **NO crear validaciones genéricas** en `src/lib/validations/`
+- **NO centralizar schemas** de diferentes componentes
+- **NO crear carpetas compartidas** para validaciones
+
+### ✅ SÍ HACER:
+- **Validaciones Zod en la misma carpeta** que los componentes
+- **Seguir el patrón** de `roleSchemas.ts` en `src/components/Modal/Setting/Roles/`
+- **Un archivo de schemas por módulo** (ej: `ticketSchemas.ts`, `userSchemas.ts`)
+- **Incluir constantes relacionadas** en el mismo archivo de schemas

@@ -22,6 +22,7 @@ export function Form<T extends z.ZodType>({
     submitText = 'Guardar',
     cancelText = 'Cancelar',
     onCancel,
+    disabled = false,
 }: FormProps<T>) {
     const { form, state, isPending, submitForm } = useForm(
         schema,
@@ -45,12 +46,12 @@ export function Form<T extends z.ZodType>({
                                 type="button"
                                 variant="outline"
                                 onClick={onCancel}
-                                disabled={isPending}
+                                disabled={isPending || disabled}
                             >
                                 {cancelText}
                             </Button>
                         )}
-                        <Button type="submit" disabled={isPending}>
+                        <Button type="submit" disabled={isPending || disabled}>
                             {isPending ? 'Guardando...' : submitText}
                         </Button>
                     </div>
