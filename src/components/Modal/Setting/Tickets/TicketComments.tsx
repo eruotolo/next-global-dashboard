@@ -50,73 +50,75 @@ const LoadingSpinner = memo(({ message = 'Cargando...' }: { message?: string }) 
 LoadingSpinner.displayName = 'LoadingSpinner';
 
 // Componente de comentario individual optimizado
-const CommentItem = memo(({
-    comment,
-    isSuperAdmin,
-    onDelete,
-    isDeletingComment,
-}: CommentItemProps) => {
-    const handleDelete = useCallback(() => {
-        onDelete(comment.id);
-    }, [onDelete, comment.id]);
+const CommentItem = memo(
+    ({ comment, isSuperAdmin, onDelete, isDeletingComment }: CommentItemProps) => {
+        const handleDelete = useCallback(() => {
+            onDelete(comment.id);
+        }, [onDelete, comment.id]);
 
-    const formattedDate = useMemo(() => {
-        return format(comment.createdAt, "d 'de' MMMM 'de' yyyy, HH:mm", {
-            locale: es,
-        });
-    }, [comment.createdAt]);
+        const formattedDate = useMemo(() => {
+            return format(comment.createdAt, "d 'de' MMMM 'de' yyyy, HH:mm", {
+                locale: es,
+            });
+        }, [comment.createdAt]);
 
-    return (
-        <article
-            className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 shadow-sm transition-shadow hover:shadow-md"
-            aria-labelledby={`comment-author-${comment.id}`}
-            aria-describedby={`comment-content-${comment.id}`}
-        >
-            <div className="mb-2 flex items-start justify-between">
-                <div
-                    id={`comment-author-${comment.id}`}
-                    className="font-mono font-medium text-gray-900"
-                >
-                    {comment.userName} {comment.userLastName}
-                </div>
-                <div className="flex items-center gap-2">
-                    <time
-                        className="font-mono text-sm text-gray-500"
-                        dateTime={comment.createdAt.toISOString()}
-                    >
-                        {formattedDate}
-                    </time>
-                    {isSuperAdmin && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-700 focus:ring-2 focus:ring-red-500"
-                            onClick={handleDelete}
-                            disabled={isDeletingComment}
-                            aria-label={`Eliminar comentario de ${comment.userName} ${comment.userLastName}`}
-                            aria-busy={isDeletingComment}
-                        >
-                            {isDeletingComment ? (
-                                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                            ) : (
-                                <Trash2 className="h-4 w-4" aria-hidden="true" />
-                            )}
-                            <span className="sr-only">
-                                {isDeletingComment ? 'Eliminando comentario...' : 'Eliminar comentario'}
-                            </span>
-                        </Button>
-                    )}
-                </div>
-            </div>
-            <p
-                id={`comment-content-${comment.id}`}
-                className="font-mono text-[13px] whitespace-pre-wrap text-gray-700"
+        return (
+            <article
+                className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 shadow-sm transition-shadow hover:shadow-md"
+                aria-labelledby={`comment-author-${comment.id}`}
+                aria-describedby={`comment-content-${comment.id}`}
             >
-                {comment.content}
-            </p>
-        </article>
-    );
-});
+                <div className="mb-2 flex items-start justify-between">
+                    <div
+                        id={`comment-author-${comment.id}`}
+                        // biome-ignore lint/nursery/useSortedClasses: <explanation>
+                        className="font-mono font-medium text-gray-900"
+                    >
+                        {comment.userName} {comment.userLastName}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <time
+                            // biome-ignore lint/nursery/useSortedClasses: <explanation>
+                            className="font-mono text-sm text-gray-500"
+                            dateTime={comment.createdAt.toISOString()}
+                        >
+                            {formattedDate}
+                        </time>
+                        {isSuperAdmin && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-700 focus:ring-2 focus:ring-red-500"
+                                onClick={handleDelete}
+                                disabled={isDeletingComment}
+                                aria-label={`Eliminar comentario de ${comment.userName} ${comment.userLastName}`}
+                                aria-busy={isDeletingComment}
+                            >
+                                {isDeletingComment ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                                ) : (
+                                    <Trash2 className="h-4 w-4" aria-hidden="true" />
+                                )}
+                                <span className="sr-only">
+                                    {isDeletingComment
+                                        ? 'Eliminando comentario...'
+                                        : 'Eliminar comentario'}
+                                </span>
+                            </Button>
+                        )}
+                    </div>
+                </div>
+                <p
+                    id={`comment-content-${comment.id}`}
+                    // biome-ignore lint/nursery/useSortedClasses: <explanation>
+                    className="font-mono text-[13px] whitespace-pre-wrap text-gray-700"
+                >
+                    {comment.content}
+                </p>
+            </article>
+        );
+    },
+);
 
 CommentItem.displayName = 'CommentItem';
 
@@ -124,9 +126,8 @@ CommentItem.displayName = 'CommentItem';
 const EmptyCommentsList = memo(() => (
     <div className="block py-8 text-center">
         <p className="mb-2 text-gray-500">No hay comentarios aún</p>
-        <p className="text-sm text-gray-400">
-            Sea el primero en comentar este ticket
-        </p>
+
+        <p className="text-sm text-gray-400">Sea el primero en comentar este ticket</p>
     </div>
 ));
 
@@ -138,12 +139,12 @@ export default function TicketComments({ ticketId }: TicketCommentsProps) {
     const [isLoadingComments, setIsLoadingComments] = useState(true);
     const [isSubmittingComment, setIsSubmittingComment] = useState(false);
     const [formKey, setFormKey] = useState(0);
-    
+
     const session = useAuthStore((state) => state.session);
 
-    const isSuperAdmin = useMemo(() => 
-        session?.user?.roles.includes('SuperAdministrador') ?? false,
-        [session?.user?.roles]
+    const isSuperAdmin = useMemo(
+        () => session?.user?.roles.includes('SuperAdministrador') ?? false,
+        [session?.user?.roles],
     );
 
     const fetchComments = useCallback(
@@ -172,40 +173,43 @@ export default function TicketComments({ ticketId }: TicketCommentsProps) {
         fetchComments();
     }, [fetchComments]);
 
-    const handleCreateComment = useCallback(async (formData: FormData) => {
-        if (!session?.user?.id || !session?.user?.name || !session?.user?.lastName) {
-            return;
-        }
-
-        setIsSubmittingComment(true);
-        try {
-            const content = formData.get('content') as string;
-
-            const { error } = await createTicketComment({
-                content,
-                ticketId,
-                userId: session.user.id,
-                userName: session.user.name,
-                userLastName: session.user.lastName,
-            });
-
-            if (error) {
-                toast.error('Error al agregar comentario', {
-                    description: error,
-                });
+    const handleCreateComment = useCallback(
+        async (formData: FormData) => {
+            if (!(session?.user?.id && session?.user?.name && session?.user?.lastName)) {
                 return;
             }
 
-            toast.success('Comentario agregado exitosamente');
-            fetchComments(false);
-            setFormKey((prev) => prev + 1);
-        } catch (error) {
-            console.error('Error al crear comentario:', error);
-            toast.error('Error al agregar comentario');
-        } finally {
-            setIsSubmittingComment(false);
-        }
-    }, [session?.user, ticketId, fetchComments]);
+            setIsSubmittingComment(true);
+            try {
+                const content = formData.get('content') as string;
+
+                const { error } = await createTicketComment({
+                    content,
+                    ticketId,
+                    userId: session.user.id,
+                    userName: session.user.name,
+                    userLastName: session.user.lastName,
+                });
+
+                if (error) {
+                    toast.error('Error al agregar comentario', {
+                        description: error,
+                    });
+                    return;
+                }
+
+                toast.success('Comentario agregado exitosamente');
+                fetchComments(false);
+                setFormKey((prev) => prev + 1);
+            } catch (error) {
+                console.error('Error al crear comentario:', error);
+                toast.error('Error al agregar comentario');
+            } finally {
+                setIsSubmittingComment(false);
+            }
+        },
+        [session?.user, ticketId, fetchComments],
+    );
 
     const handleSuccess = useCallback(() => {
         fetchComments(false);
@@ -220,36 +224,42 @@ export default function TicketComments({ ticketId }: TicketCommentsProps) {
         setIsSubmittingComment(false);
     }, []);
 
-    const handleDeleteComment = useCallback(async (commentId: string) => {
-        if (!isSuperAdmin) return;
+    const handleDeleteComment = useCallback(
+        async (commentId: string) => {
+            if (!isSuperAdmin) return;
 
-        setDeletingCommentId(commentId);
-        try {
-            const { error } = await deleteTicketComment(commentId);
-            if (error) {
-                toast.error(error);
-                return;
+            setDeletingCommentId(commentId);
+            try {
+                const { error } = await deleteTicketComment(commentId);
+                if (error) {
+                    toast.error(error);
+                    return;
+                }
+                setComments((prevComments) =>
+                    prevComments.filter((comment) => comment.id !== commentId),
+                );
+                toast.success('Comentario eliminado exitosamente');
+            } catch (error) {
+                console.error('Error al eliminar el comentario:', error);
+                toast.error('Error al eliminar el comentario');
+            } finally {
+                setDeletingCommentId(null);
             }
-            setComments((prevComments) =>
-                prevComments.filter((comment) => comment.id !== commentId),
-            );
-            toast.success('Comentario eliminado exitosamente');
-        } catch (error) {
-            console.error('Error al eliminar el comentario:', error);
-            toast.error('Error al eliminar el comentario');
-        } finally {
-            setDeletingCommentId(null);
-        }
-    }, [isSuperAdmin]);
-
-    const submitTextLabel = useMemo(() => 
-        isSubmittingComment ? 'Enviando...' : 'Enviar comentario',
-        [isSubmittingComment]
+        },
+        [isSuperAdmin],
     );
 
-    const defaultValues = useMemo<Partial<TicketCommentFormValues>>(() => ({
-        content: '',
-    }), []);
+    const submitTextLabel = useMemo(
+        () => (isSubmittingComment ? 'Enviando...' : 'Enviar comentario'),
+        [isSubmittingComment],
+    );
+
+    const defaultValues = useMemo<Partial<TicketCommentFormValues>>(
+        () => ({
+            content: '',
+        }),
+        [],
+    );
 
     return (
         <div className="space-y-6">

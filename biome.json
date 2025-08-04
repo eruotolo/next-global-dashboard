@@ -68,15 +68,6 @@
                 "useLiteralKeys": "error",
                 "useSimplifiedLogicExpression": "error"
             },
-            "nursery": {
-                "useSortedClasses": {
-                    "level": "error",
-                    "options": {
-                        "attributes": ["className", "class"],
-                        "functions": ["clsx", "cva", "tw", "cn"]
-                    }
-                }
-            },
             "security": {
                 "noDangerouslySetInnerHtml": "warn"
             }
